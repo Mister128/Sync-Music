@@ -1,0 +1,29 @@
+{
+  "app": {
+    "title": "Sync Music"
+  },
+  "nav": {
+    "favorites": "Favorites",
+    "playlists": "Playlists",
+    "tracks": "Tracks",
+    "albums": "Albums",
+    "artists": "Artists"
+  },
+  "common": {
+    "inDevelopment": "In Development"
+  },
+  "settings": {
+    "title": "Settings",
+    "appearance": "Appearance",
+    "theme": "Theme",
+    "themeSystem": "Auto",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+    "language": "Language",
+    "debug": "Debug",
+    "debugLogs": "Logs",
+    "debugLogsSubtitle": "In-app log viewer",
+    "about": "About",
+    "version": "Version"
+  }
+}

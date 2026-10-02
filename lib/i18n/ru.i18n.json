@@ -1,0 +1,29 @@
+{
+  "app": {
+    "title": "Sync Music"
+  },
+  "nav": {
+    "favorites": "Избранное",
+    "playlists": "Плейлисты",
+    "tracks": "Треки",
+    "albums": "Альбомы",
+    "artists": "Артисты"
+  },
+  "common": {
+    "inDevelopment": "В разработке"
+  },
+  "settings": {
+    "title": "Настройки",
+    "appearance": "Оформление",
+    "theme": "Тема",
+    "themeSystem": "Системная",
+    "themeLight": "Светлая",
+    "themeDark": "Тёмная",
+    "language": "Язык",
+    "debug": "Отладка",
+    "debugLogs": "Логи",
+    "debugLogsSubtitle": "Встроенный журнал логов",
+    "about": "О приложении",
+    "version": "Версия"
+  }
+}
