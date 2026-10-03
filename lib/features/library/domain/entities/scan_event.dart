@@ -1,3 +1,1 @@
-sealed class ScanEvent {
-
-}
+sealed class ScanEvent;

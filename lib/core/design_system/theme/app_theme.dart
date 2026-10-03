@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:sync_music/core/design_system/theme/app_colors.dart';
 import 'package:sync_music/core/design_system/theme/app_typography.dart';

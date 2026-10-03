@@ -6,7 +6,7 @@ import 'package:sync_music/core/design_system/theme/app_spacing.dart';
 /// MiniPlayer. It lives in the SHELL (outside branches) — that's exactly why
 /// playback controls won't flicker or restart on tab switches.
 class MiniPlayerPlaceholder extends StatelessWidget {
-  const MiniPlayerPlaceholder({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +20,8 @@ class MiniPlayerPlaceholder extends StatelessWidget {
       child: Center(
         child: Text(
           'mini player',
-          style: Theme.of(context).textTheme.labelSmall?.copyWith(
-            color: scheme.onSurfaceVariant,
-          ),
+          style: Theme.of(context).textTheme.labelSmall
+              ?.copyWith(color: scheme.onSurfaceVariant),
         ),
       ),
     );

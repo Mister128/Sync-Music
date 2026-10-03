@@ -9,7 +9,7 @@ extension ResponsiveBuildContext on BuildContext {
   /// (phone layout: bottom NavigationBar, no rail).
   bool get isCompact => MediaQuery.sizeOf(this).width < AppBreakpoints.medium;
 
-  // TODO: grow this into a `windowSizeClass` getter returning
+  // TODO(Mister128): grow this into a `windowSizeClass` getter returning
   // an enum (compact/medium/expanded) when the desktop 2-3 panel layouts
   // arrive. One extension = one place for all responsive questions.
 }

@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-
-import 'package:sync_music/core/design_system/widgets/placeholder_page.dart';
-import 'package:sync_music/core/design_system/theme/app_spacing.dart';
-import 'package:sync_music/app/shell/mini_player_placeholder.dart';
 import 'package:sync_music/app/router/routes.dart';
+import 'package:sync_music/app/shell/mini_player_placeholder.dart';
+import 'package:sync_music/core/design_system/theme/app_spacing.dart';
+import 'package:sync_music/core/design_system/widgets/placeholder_page.dart';
 import 'package:sync_music/i18n/strings.g.dart';
 
 class PhoneShell extends StatelessWidget {
-  const PhoneShell({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {
     final t = Translations.of(context);
     final scheme = Theme.of(context).colorScheme;
-    final sections = PlaceholderSection.values;
+    const sections = PlaceholderSection.values;
 
     return DefaultTabController(
       length: sections.length,

@@ -1,15 +1,14 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:talker_flutter/talker_flutter.dart';
-
 import 'package:sync_music/core/design_system/theme/app_spacing.dart';
 import 'package:sync_music/core/logging/app_logger.dart';
 import 'package:sync_music/features/settings/presentation/controllers/theme_controller.dart';
 import 'package:sync_music/i18n/strings.g.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 
 class SettingsPage extends ConsumerWidget {
-  const SettingsPage({super.key});
+  const new({super.key});
 
   /// Language names are shown as endonyms and are NEVER translated,
   /// so they live here instead of the i18n files.
@@ -54,9 +53,9 @@ class SettingsPage extends ConsumerWidget {
                 ),
               ],
               selected: {themeMode},
-              onSelectionChanged: (selection) => ref
-                  .read(themeControllerProvider.notifier)
-                  .setMode(selection.first),
+              onSelectionChanged: (selection) =>
+                  ref.read(themeControllerProvider.notifier).mode =
+                      selection.first,
             ),
           ),
 
@@ -116,7 +115,7 @@ class SettingsPage extends ConsumerWidget {
 
 /// Uppercase section title row, e.g. "APPEARANCE".
 class _SectionHeader extends StatelessWidget {
-  const _SectionHeader({required this.title});
+  const new({required this.title});
 
   final String title;
 
@@ -144,7 +143,7 @@ class _SectionHeader extends StatelessWidget {
 
 /// Small caption above a control ("Theme", "Language").
 class _ControlLabel extends StatelessWidget {
-  const _ControlLabel({required this.text});
+  const new({required this.text});
 
   final String text;
 

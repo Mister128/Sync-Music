@@ -48,7 +48,7 @@ class $TracksTable extends Tracks with TableInfo<$TracksTable, Track> {
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: false,
-    defaultValue: const Constant("Unknown artist"),
+    defaultValue: const Constant('Unknown artist'),
   );
   static const VerificationMeta _albumTitleMeta = const VerificationMeta(
     'albumTitle',

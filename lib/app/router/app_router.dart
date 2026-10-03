@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'package:sync_music/features/settings/presentation/pages/settings_page.dart';
-import 'package:sync_music/app/shell/scaffold_shell.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sync_music/app/router/routes.dart';
+import 'package:sync_music/app/shell/scaffold_shell.dart';
+import 'package:sync_music/features/settings/presentation/pages/settings_page.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   final rootKey = GlobalKey<NavigatorState>(debugLabel: 'root');

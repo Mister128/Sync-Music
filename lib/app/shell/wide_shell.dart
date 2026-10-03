@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-
 import 'package:sync_music/app/router/routes.dart';
 import 'package:sync_music/app/shell/mini_player_placeholder.dart';
 import 'package:sync_music/core/design_system/theme/app_spacing.dart';
@@ -8,7 +7,7 @@ import 'package:sync_music/core/design_system/widgets/placeholder_page.dart';
 import 'package:sync_music/i18n/strings.g.dart';
 
 class WideShell extends StatefulWidget {
-  const WideShell({super.key});
+  const new({super.key});
 
   @override
   State<WideShell> createState() => _WideShellState();
@@ -22,7 +21,7 @@ class _WideShellState extends State<WideShell> {
   @override
   Widget build(BuildContext context) {
     final t = Translations.of(context);
-    final sections = PlaceholderSection.values;
+    const sections = PlaceholderSection.values;
 
     return Scaffold(
       body: Row(
@@ -78,7 +77,7 @@ class _WideShellState extends State<WideShell> {
 
 /// One navigation item.
 class _RailTile extends StatelessWidget {
-  const _RailTile({
+  const new({
     required this.icon,
     required this.label,
     required this.selected,
@@ -102,7 +101,7 @@ class _RailTile extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),
-        // TODO: if this radius starts repeating across the app,
+        // TODO(Mister128): if this radius starts repeating across the app,
         child: Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: AppSpacing.sm,

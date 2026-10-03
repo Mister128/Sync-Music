@@ -5,7 +5,7 @@ class Tracks extends Table {
   TextColumn get contentHash => text().unique()();
   TextColumn get title => text()();
   TextColumn get artistName =>
-      text().withDefault(const Constant("Unknown artist"))();
+      text().withDefault(const Constant('Unknown artist'))();
   TextColumn get albumTitle => text().nullable()();
   IntColumn get durationMs => integer().nullable()();
   TextColumn get localPath => text().nullable()();

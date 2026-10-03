@@ -5,7 +5,7 @@ import 'package:sync_music/app/shell/wide_shell.dart';
 import 'package:sync_music/core/extensions/build_context_x.dart';
 
 class ScaffoldShell extends StatelessWidget {
-  const ScaffoldShell({super.key});
+  const new({super.key});
 
   @override
   Widget build(BuildContext context) {

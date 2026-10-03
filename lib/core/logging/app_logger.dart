@@ -14,7 +14,7 @@ abstract final class AppLogger {
 
 /// Tiny wrapper: `[scanner] found 120 files` instead of `found 120 files`.
 class ScopedLogger {
-  const ScopedLogger._(this._tag, this._talker);
+  const new _(this._tag, this._talker);
 
   final String _tag;
   final Talker _talker;

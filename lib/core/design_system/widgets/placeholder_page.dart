@@ -30,7 +30,7 @@ extension PlaceholderSectionX on PlaceholderSection {
 /// Temporary section content. NO Scaffold/AppBar here — the shell owns them.
 /// Tab pages are plain content widgets.
 class PlaceholderPage extends StatelessWidget {
-  const PlaceholderPage({required this.section, super.key});
+  const new({required this.section, super.key});
 
   final PlaceholderSection section;
 

@@ -10,7 +10,7 @@ part 'app_database.g.dart';
 @DriftDatabase(tables: [Tracks, LibraryRoots])
 class AppDatabase extends _$AppDatabase {
   /// Production: file-backed DB, drift_flutter handles paths per platform.
-  AppDatabase()
+  new()
     : super(
         driftDatabase(
           name: 'sync_music',
@@ -21,7 +21,7 @@ class AppDatabase extends _$AppDatabase {
       );
 
   /// Tests: in-memory, no files, fast.
-  AppDatabase.forTesting(super.e);
+  new forTesting(super.e);
 
   @override
   int get schemaVersion => 1;
