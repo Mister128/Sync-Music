@@ -1,4 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:sync_music/core/logging/app_logger.dart';
@@ -11,6 +15,11 @@ Future<void> bootstrap() async {
   AppLogger.init();
   final log = AppLogger.scope('bootstrap');
   log.info('Starting Sync Music');
+
+  if (kDebugMode) {
+    final dir = await getApplicationSupportDirectory();
+    AppLogger.scope('storage').info('DB file: ${dir.path}${Platform.pathSeparator}sync_music.sqlite');
+  }
 
   LocaleSettings.useDeviceLocale();
 
