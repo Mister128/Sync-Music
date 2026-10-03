@@ -7,7 +7,7 @@ No cloud. No accounts. Your music never leaves your hardware.**
 
 ![Flutter](https://img.shields.io/badge/Flutter-3.47-02569B?style=flat&logo=flutter&logoColor=white)
 ![Dart](https://img.shields.io/badge/Dart-3.13-0175C2?style=flat&logo=dart&logoColor=white)
-[![License: MIT](https://img.shields.io/badge/License-MIT-g.svg)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-46af0a.svg)](LICENSE)
 ![Platforms](https://img.shields.io/badge/platforms-Android%20%C2%B7%20Desktop-087d5a)
 ![Status](https://img.shields.io/badge/status-in_development-yellow?style=flat)
 
@@ -34,7 +34,7 @@ playback position in sync between phone and PC directly over the local network.
 - [ ] **P2P sync over LAN**: mDNS discovery, QR pairing, encrypted operation-log sync, file transfer with resume
 
 If had time:
-- [ ] Party mode (synchronized playback) — if time permits
+- [ ] Party mode (synchronized playback)
 
 ## Tech stack
 
@@ -55,7 +55,7 @@ Prerequisites: Flutter stable with Android and Windows desktop support
 
 ```bash
 git clone https://github.com/Mister128/Sync-Music.git
-cd sync_music
+cd Sync-Music
 flutter pub get
 dart run build_runner build --delete-conflicting-outputs  # i18n + drift codegen
 flutter run
@@ -72,7 +72,7 @@ lib/
 └── i18n/       # translations (slang, generated strings.g.dart)
 ```
 
-Clean architecture: `presentation → domain ← data`. Features never import each other.
+Clean architecture: `presentation -> domain <- data`. Features never import each other.
 
 ## Development
 

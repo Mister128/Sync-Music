@@ -7,7 +7,7 @@
 
 ![Flutter](https://img.shields.io/badge/Flutter-3.47-02569B?style=flat&logo=flutter&logoColor=white)
 ![Dart](https://img.shields.io/badge/Dart-3.13-0175C2?style=flat&logo=dart&logoColor=white)
-[![License: MIT](https://img.shields.io/badge/License-MIT-g.svg)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-46af0a.svg)](LICENSE)
 ![Platforms](https://img.shields.io/badge/platforms-Android%20%C2%B7%20Desktop-087d5a)
 ![Status](https://img.shields.io/badge/status-in_development-yellow?style=flat)
 
@@ -23,7 +23,7 @@ Sync Music сканирует локальную музыкальную библ
 
 ## Возможности
 
-**В планах**
+**Дорожная карта**
 - [x] Адаптивный UI в духе Samsung Music: свайпаемые табы сверху на телефоне, navigation rail на десктопе
 - [x] Светлая/тёмная темы Material 3 с брендовой палитрой
 - [x] Локализация: English, Русский
@@ -34,7 +34,7 @@ Sync Music сканирует локальную музыкальную библ
 - [ ] **P2P-синхронизация по локальной сети**: mDNS-discovery, QR-pairing, шифрованный operation-log sync, передача файлов с докачкой
 
 Если будет время:
-- [ ] Party mode (синхронное воспроизведение) — если хватит времени
+- [ ] Party mode (синхронное воспроизведение)
 
 ## Стек
 
@@ -55,7 +55,7 @@ Sync Music сканирует локальную музыкальную библ
 
 ```bash
 git clone https://github.com/Mister128/Sync-Music.git
-cd sync_music
+cd Sync-Music
 flutter pub get
 dart run build_runner build --delete-conflicting-outputs  # кодогенерация i18n + drift
 flutter run
