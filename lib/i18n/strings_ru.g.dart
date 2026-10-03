@@ -11,7 +11,7 @@ import 'package:slang/generated.dart';
 import 'strings.g.dart';
 
 // Path: <root>
-class TranslationsRu with BaseTranslations<AppLocale, Translations> implements Translations {
+class TranslationsRu extends Translations with BaseTranslations<AppLocale, Translations> {
 	/// You can call this constructor and build your own translation instance of this locale.
 	/// Constructing via the enum [AppLocale.build] is preferred.
 	TranslationsRu({Map<String, Node>? overrides, PluralResolver? cardinalResolver, PluralResolver? ordinalResolver, TranslationMetadata<AppLocale, Translations>? meta})
@@ -21,7 +21,8 @@ class TranslationsRu with BaseTranslations<AppLocale, Translations> implements T
 		    overrides: overrides ?? {},
 		    cardinalResolver: cardinalResolver,
 		    ordinalResolver: ordinalResolver,
-		  ) {
+		  ),
+		  super(cardinalResolver: cardinalResolver, ordinalResolver: ordinalResolver) {
 		_meta.setFlatMapFunction(_flatMapFunction);
 	}
 
@@ -30,7 +31,7 @@ class TranslationsRu with BaseTranslations<AppLocale, Translations> implements T
 	@override TranslationMetadata<AppLocale, Translations> get $meta => _meta;
 
 	/// Access flat map
-	@override dynamic operator[](String key) => _meta.getTranslation(key);
+	@override dynamic operator[](String key) => _meta.getTranslation(key) ?? super[key];
 
 	late final TranslationsRu _root = this; // ignore: unused_field
 
@@ -45,8 +46,8 @@ class TranslationsRu with BaseTranslations<AppLocale, Translations> implements T
 }
 
 // Path: app
-class _Translations$app$ru implements Translations$app$en {
-	_Translations$app$ru._(this._root);
+class _Translations$app$ru extends Translations$app$en {
+	_Translations$app$ru._(TranslationsRu root) : this._root = root, super.internal(root);
 
 	final TranslationsRu _root; // ignore: unused_field
 
@@ -55,8 +56,8 @@ class _Translations$app$ru implements Translations$app$en {
 }
 
 // Path: nav
-class _Translations$nav$ru implements Translations$nav$en {
-	_Translations$nav$ru._(this._root);
+class _Translations$nav$ru extends Translations$nav$en {
+	_Translations$nav$ru._(TranslationsRu root) : this._root = root, super.internal(root);
 
 	final TranslationsRu _root; // ignore: unused_field
 
@@ -69,8 +70,8 @@ class _Translations$nav$ru implements Translations$nav$en {
 }
 
 // Path: common
-class _Translations$common$ru implements Translations$common$en {
-	_Translations$common$ru._(this._root);
+class _Translations$common$ru extends Translations$common$en {
+	_Translations$common$ru._(TranslationsRu root) : this._root = root, super.internal(root);
 
 	final TranslationsRu _root; // ignore: unused_field
 
@@ -79,8 +80,8 @@ class _Translations$common$ru implements Translations$common$en {
 }
 
 // Path: settings
-class _Translations$settings$ru implements Translations$settings$en {
-	_Translations$settings$ru._(this._root);
+class _Translations$settings$ru extends Translations$settings$en {
+	_Translations$settings$ru._(TranslationsRu root) : this._root = root, super.internal(root);
 
 	final TranslationsRu _root; // ignore: unused_field
 

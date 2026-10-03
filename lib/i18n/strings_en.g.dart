@@ -41,15 +41,15 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	Translations $copyWith({TranslationMetadata<AppLocale, Translations>? meta}) => Translations(meta: meta ?? this.$meta);
 
 	// Translations
-	late final Translations$app$en app = Translations$app$en._(_root);
-	late final Translations$nav$en nav = Translations$nav$en._(_root);
-	late final Translations$common$en common = Translations$common$en._(_root);
-	late final Translations$settings$en settings = Translations$settings$en._(_root);
+	late final Translations$app$en app = Translations$app$en.internal(_root);
+	late final Translations$nav$en nav = Translations$nav$en.internal(_root);
+	late final Translations$common$en common = Translations$common$en.internal(_root);
+	late final Translations$settings$en settings = Translations$settings$en.internal(_root);
 }
 
 // Path: app
 class Translations$app$en {
-	Translations$app$en._(this._root);
+	Translations$app$en.internal(this._root);
 
 	final Translations _root; // ignore: unused_field
 
@@ -61,7 +61,7 @@ class Translations$app$en {
 
 // Path: nav
 class Translations$nav$en {
-	Translations$nav$en._(this._root);
+	Translations$nav$en.internal(this._root);
 
 	final Translations _root; // ignore: unused_field
 
@@ -85,7 +85,7 @@ class Translations$nav$en {
 
 // Path: common
 class Translations$common$en {
-	Translations$common$en._(this._root);
+	Translations$common$en.internal(this._root);
 
 	final Translations _root; // ignore: unused_field
 
@@ -97,7 +97,7 @@ class Translations$common$en {
 
 // Path: settings
 class Translations$settings$en {
-	Translations$settings$en._(this._root);
+	Translations$settings$en.internal(this._root);
 
 	final Translations _root; // ignore: unused_field
 
