@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sync_music/app/router/routes.dart';
 import 'package:sync_music/app/shell/mini_player_placeholder.dart';
+import 'package:sync_music/app/shell/section_page.dart';
 import 'package:sync_music/core/design_system/theme/app_spacing.dart';
 import 'package:sync_music/core/design_system/widgets/placeholder_page.dart';
 import 'package:sync_music/i18n/strings.g.dart';
@@ -49,7 +50,7 @@ class PhoneShell extends StatelessWidget {
               child: TabBarView(
                 children: [
                   for (final section in sections)
-                    PlaceholderPage(section: section),
+                    buildSectionPage(section),
                 ],
               ),
             ),

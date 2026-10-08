@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:sync_music/core/design_system/theme/app_spacing.dart';
 import 'package:sync_music/features/library/data/library_providers.dart';
+import 'package:sync_music/features/library/presentation/controllers/library_scan_controller.dart';
 import 'package:sync_music/i18n/strings.g.dart';
 
 class LibrarySection extends ConsumerWidget {
@@ -12,6 +13,7 @@ class LibrarySection extends ConsumerWidget {
   /// Opens the system folder picker and persists the chosen path.
   Future<void> _pickFolder(WidgetRef ref, Translations t) async {
     final dao = ref.read(libraryRootsDaoProvider);
+    final scan = ref.read(libraryScanControllerProvider.notifier);
 
     final path = await FilePicker.getDirectoryPath(
       dialogTitle: t.settings.addFolderDialog,
@@ -19,6 +21,7 @@ class LibrarySection extends ConsumerWidget {
     if (path == null) return;
 
     await dao.addRoot(path);
+    await scan.startScan();
   }
 
   @override
@@ -64,8 +67,12 @@ class LibrarySection extends ConsumerWidget {
               trailing: IconButton(
                 icon: const Icon(Icons.close),
                 tooltip: t.settings.removeFolder,
-                onPressed: () =>
-                    ref.read(libraryRootsDaoProvider).removeRoot(root.path),
+                onPressed: () async {
+                  final dao = ref.read(libraryRootsDaoProvider);
+                  final scan = ref.read(libraryScanControllerProvider.notifier);
+                  await dao.removeRoot(root.path);
+                  await scan.startScan();
+                },
               ),
             ),
           _AddFolderButton(onPressed: () => _pickFolder(ref, t)),
