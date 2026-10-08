@@ -10,7 +10,8 @@
     "artists": "Artists"
   },
   "common": {
-    "inDevelopment": "In Development"
+    "inDevelopment": "In Development",
+    "error": "Something went wrong"
   },
   "settings": {
     "title": "Settings",
@@ -24,6 +25,13 @@
     "debugLogs": "Logs",
     "debugLogsSubtitle": "In-app log viewer",
     "about": "About",
-    "version": "Version"
+    "version": "Version",
+    "library": "Library",
+    "libraryEmpty": "No music folders yet",
+    "libraryEmptyHint": "Add a folder to build your collection",
+    "addFolder": "Add folder",
+    "addFolderDialog": "Choose a music folder",
+    "notScanned": "Not scanned yet",
+    "removeFolder": "Remove"
   }
 }

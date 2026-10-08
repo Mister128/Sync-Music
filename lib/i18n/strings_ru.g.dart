@@ -77,6 +77,7 @@ class _Translations$common$ru extends Translations$common$en {
 
 	// Translations
 	@override String get inDevelopment => 'В разработке';
+	@override String get error => 'Что-то пошло не так';
 }
 
 // Path: settings
@@ -98,6 +99,13 @@ class _Translations$settings$ru extends Translations$settings$en {
 	@override String get debugLogsSubtitle => 'Встроенный журнал логов';
 	@override String get about => 'О приложении';
 	@override String get version => 'Версия';
+	@override String get library => 'Библиотека';
+	@override String get libraryEmpty => 'Ещё нет папок с музыкой';
+	@override String get libraryEmptyHint => 'Добавьте папку, чтобы собрать коллекцию';
+	@override String get addFolder => 'Добавить папку';
+	@override String get addFolderDialog => 'Выберите папку с музыкой';
+	@override String get notScanned => 'Ещё не сканировалась';
+	@override String get removeFolder => 'Убрать';
 }
 
 /// The flat map containing all translations for locale <ru>.
@@ -115,6 +123,7 @@ extension on TranslationsRu {
 			'nav.albums' => 'Альбомы',
 			'nav.artists' => 'Артисты',
 			'common.inDevelopment' => 'В разработке',
+			'common.error' => 'Что-то пошло не так',
 			'settings.title' => 'Настройки',
 			'settings.appearance' => 'Оформление',
 			'settings.theme' => 'Тема',
@@ -127,6 +136,13 @@ extension on TranslationsRu {
 			'settings.debugLogsSubtitle' => 'Встроенный журнал логов',
 			'settings.about' => 'О приложении',
 			'settings.version' => 'Версия',
+			'settings.library' => 'Библиотека',
+			'settings.libraryEmpty' => 'Ещё нет папок с музыкой',
+			'settings.libraryEmptyHint' => 'Добавьте папку, чтобы собрать коллекцию',
+			'settings.addFolder' => 'Добавить папку',
+			'settings.addFolderDialog' => 'Выберите папку с музыкой',
+			'settings.notScanned' => 'Ещё не сканировалась',
+			'settings.removeFolder' => 'Убрать',
 			_ => null,
 		};
 	}

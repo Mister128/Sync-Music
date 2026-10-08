@@ -93,6 +93,9 @@ class Translations$common$en {
 
 	/// en: 'In Development'
 	String get inDevelopment => 'In Development';
+
+	/// en: 'Something went wrong'
+	String get error => 'Something went wrong';
 }
 
 // Path: settings
@@ -138,6 +141,27 @@ class Translations$settings$en {
 
 	/// en: 'Version'
 	String get version => 'Version';
+
+	/// en: 'Library'
+	String get library => 'Library';
+
+	/// en: 'No music folders yet'
+	String get libraryEmpty => 'No music folders yet';
+
+	/// en: 'Add a folder to build your collection'
+	String get libraryEmptyHint => 'Add a folder to build your collection';
+
+	/// en: 'Add folder'
+	String get addFolder => 'Add folder';
+
+	/// en: 'Choose a music folder'
+	String get addFolderDialog => 'Choose a music folder';
+
+	/// en: 'Not scanned yet'
+	String get notScanned => 'Not scanned yet';
+
+	/// en: 'Remove'
+	String get removeFolder => 'Remove';
 }
 
 /// The flat map containing all translations for locale <en>.
@@ -155,6 +179,7 @@ extension on Translations {
 			'nav.albums' => 'Albums',
 			'nav.artists' => 'Artists',
 			'common.inDevelopment' => 'In Development',
+			'common.error' => 'Something went wrong',
 			'settings.title' => 'Settings',
 			'settings.appearance' => 'Appearance',
 			'settings.theme' => 'Theme',
@@ -167,6 +192,13 @@ extension on Translations {
 			'settings.debugLogsSubtitle' => 'In-app log viewer',
 			'settings.about' => 'About',
 			'settings.version' => 'Version',
+			'settings.library' => 'Library',
+			'settings.libraryEmpty' => 'No music folders yet',
+			'settings.libraryEmptyHint' => 'Add a folder to build your collection',
+			'settings.addFolder' => 'Add folder',
+			'settings.addFolderDialog' => 'Choose a music folder',
+			'settings.notScanned' => 'Not scanned yet',
+			'settings.removeFolder' => 'Remove',
 			_ => null,
 		};
 	}

@@ -10,7 +10,8 @@
     "artists": "Артисты"
   },
   "common": {
-    "inDevelopment": "В разработке"
+    "inDevelopment": "В разработке",
+    "error": "Что-то пошло не так"
   },
   "settings": {
     "title": "Настройки",
@@ -24,6 +25,13 @@
     "debugLogs": "Логи",
     "debugLogsSubtitle": "Встроенный журнал логов",
     "about": "О приложении",
-    "version": "Версия"
+    "version": "Версия",
+    "library": "Библиотека",
+    "libraryEmpty": "Ещё нет папок с музыкой",
+    "libraryEmptyHint": "Добавьте папку, чтобы собрать коллекцию",
+    "addFolder": "Добавить папку",
+    "addFolderDialog": "Выберите папку с музыкой",
+    "notScanned": "Ещё не сканировалась",
+    "removeFolder": "Убрать"
   }
 }
