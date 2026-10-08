@@ -19,8 +19,12 @@ class ScopedLogger {
   final String _tag;
   final Talker _talker;
 
+  void debug(Object? message) => _talker.debug('[$_tag] $message');
+
   void info(Object? message) => _talker.info('[$_tag] $message');
 
-  void error(Object? message, [Object? error, StackTrace? st]) =>
-      _talker.error('$message \n\n ERROR \n $error \n\n $st');
+  void warn(Object? message) => _talker.warning('[$_tag] $message');
+
+  void error(Object? message, [Object? error, StackTrace? stackTrace]) =>
+      _talker.error('[$_tag] $message', error, stackTrace);
 }
