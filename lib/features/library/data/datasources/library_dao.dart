@@ -27,32 +27,26 @@ class LibraryDao extends DatabaseAccessor<AppDatabase> with _$LibraryDaoMixin {
 
   /// Inserts new tracks. contentHash collisions (same song in two folders)
   /// are silently ignored - first copy wins.
-  Future<void> insertScanned(List<ScannedTrack> scanned) {
+  Future<int> insertScanned(List<ScannedTrack> scanned) async {
     final now = DateTime.now().millisecondsSinceEpoch;
-    return batch(
-      (b) => b.insertAll(tracks, [
-        for (final t in scanned)
-          TracksCompanion.insert(
-            id: newId(),
-            contentHash: t.contentHash,
-            title: t.title,
-            addedAtMs: now,
-            updatedAtMs: now,
-            artistName: Value(t.artistName),
-            albumTitle: Value(t.albumTitle),
-            durationMs: Value(t.durationMs),
-            localPath: Value(t.path),
-            sizeBytes: Value(t.sizeBytes),
-            fileMtimeMs: Value(t.mtimeMs),
-            trackNumber: Value(t.trackNumber),
-            discNumber: Value(t.discNumber),
-            year: Value(t.year),
-            genre: Value(t.genre),
-            bitrate: Value(t.bitrate),
-            sampleRate: Value(t.sampleRate),
-          ),
-      ], mode: InsertMode.insertOrIgnore),
-    );
+    var affected = 0;
+
+    for (final t in scanned) {
+      final existingQuery = select(tracks)
+        ..where((r) => r.contentHash.equals(t.contentHash))
+        ..limit(1);
+      final existing = await existingQuery.getSingleOrNull();
+
+      if (existing == null) {
+        await into(tracks).insert(_insertCompanion(t, now));
+        affected++;
+      } else if (existing.deletedAtMs != null) {
+        final query = update(tracks)..where((r) => r.id.equals(existing.id));
+        await query.write(_reviveCompanion(t, now));
+        affected++;
+      }
+    }
+    return affected;
   }
 
   /// Re-tags an existing row matched by path (file content changed).
@@ -90,3 +84,42 @@ class LibraryDao extends DatabaseAccessor<AppDatabase> with _$LibraryDaoMixin {
     );
   }
 }
+
+TracksCompanion _insertCompanion(ScannedTrack t, int now) =>
+    TracksCompanion.insert(
+      id: newId(),
+      contentHash: t.contentHash,
+      title: t.title,
+      addedAtMs: now,
+      updatedAtMs: now,
+      artistName: Value(t.artistName),
+      albumTitle: Value(t.albumTitle),
+      durationMs: Value(t.durationMs),
+      localPath: Value(t.path),
+      sizeBytes: Value(t.sizeBytes),
+      fileMtimeMs: Value(t.mtimeMs),
+      trackNumber: Value(t.trackNumber),
+      discNumber: Value(t.discNumber),
+      year: Value(t.year),
+      genre: Value(t.genre),
+      bitrate: Value(t.bitrate),
+      sampleRate: Value(t.sampleRate),
+    );
+
+TracksCompanion _reviveCompanion(ScannedTrack t, int now) => TracksCompanion(
+  title: Value(t.title),
+  artistName: Value(t.artistName),
+  albumTitle: Value(t.albumTitle),
+  durationMs: Value(t.durationMs),
+  localPath: Value(t.path),
+  sizeBytes: Value(t.sizeBytes),
+  fileMtimeMs: Value(t.mtimeMs),
+  trackNumber: Value(t.trackNumber),
+  discNumber: Value(t.discNumber),
+  year: Value(t.year),
+  genre: Value(t.genre),
+  bitrate: Value(t.bitrate),
+  sampleRate: Value(t.sampleRate),
+  updatedAtMs: Value(now),
+  deletedAtMs: const Value(null), // <- THE resurrection
+);

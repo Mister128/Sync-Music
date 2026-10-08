@@ -3,9 +3,23 @@ import 'dart:io';
 import 'package:sync_music/core/constants/audio_extensions.dart';
 import 'package:sync_music/features/library/domain/entities/file_entry.dart';
 
-typedef WalkResult = ({List<FileEntry> entries, List<String> warnings});
+typedef WalkResult = ({
+  List<FileEntry> entries,
+  List<String> warnings,
+  bool rootAvailable, // false -> orchestrator skips this root ENTIRELY
+});
 
 Future<WalkResult> walkAudioFiles(String rootPath) async {
+  // A missing/unpluggable root is NOT "an empty folder with zero tracks":
+  // pretending it's empty would tombstone the whole library section.
+  if (!Directory(rootPath).existsSync()) {
+    return (
+      entries: const <FileEntry>[],
+      warnings: ['$rootPath: folder is missing = skipped, tracks preserved'],
+      rootAvailable: false,
+    );
+  }
+
   final entries = <FileEntry>[];
   final warnings = <String>[];
 
@@ -27,7 +41,8 @@ Future<WalkResult> walkAudioFiles(String rootPath) async {
     }
   } on FileSystemException catch (e) {
     warnings.add('$rootPath: scan incomplete ($e) ');
+    return (entries: entries, warnings: warnings, rootAvailable: false);
   }
 
-  return (entries: entries, warnings: warnings);
+  return (entries: entries, warnings: warnings, rootAvailable: true);
 }

@@ -144,9 +144,58 @@ void main() {
     final events = await rescan().toList();
     final finished = events.whereType<ScanFinished>().single;
 
-    // KNOWN v1 wart (backlog): `added` counts attempts, insertOrIgnore
-    // silently skips the dupe; the second copy will be re-parsed every scan.
-    expect(finished.added, 2);
+    // The duplicate is skipped entirely: not inserted, not counted.
+    // `added` is an HONEST count of inserted/revived rows (it used to
+    // count attempts back in the insertOrIgnore era).
+    expect(finished.added, 1);
     expect(await tracksDao.getAllOnce(), hasLength(1)); // first copy wins
+  });
+
+  test('deleted file restored later comes back to life', () async {
+    final f = writeWav('zombie.wav');
+    await rootsDao.addRoot(tempDir.path);
+    await rescan().toList();
+    expect(await tracksDao.getAllOnce(), hasLength(1));
+
+    f.deleteSync();
+    await rescan().toList();
+    expect(await tracksDao.watchTracks().first, isEmpty);
+
+    writeWav('zombie.wav'); // user restores the file
+    final events = await rescan().toList();
+    expect(events.whereType<ScanFinished>().single.added, 1);
+
+    final alive = await tracksDao.watchTracks().first;
+    expect(alive, hasLength(1));
+    expect(await tracksDao.getAllOnce(), hasLength(1));
+  });
+
+  test('missing root folder does NOT tombstone its tracks', () async {
+    final musicDir = Directory(p.join(tempDir.path, 'music'))..createSync();
+    File(p.join(musicDir.path, 'song.wav')).writeAsBytesSync(buildTinyWav());
+    await rootsDao.addRoot(musicDir.path);
+    await rescan().toList();
+    expect(await tracksDao.getAllOnce(), hasLength(1));
+
+    // "External drive unplugged": folder gone, root still registered.
+    musicDir.deleteSync(recursive: true);
+    final events = await rescan().toList();
+
+    expect(events.whereType<ScanFinished>().single.removed, 0); // <- protection
+    expect(await tracksDao.watchTracks().first, hasLength(1));  // track survives
+  });
+
+  test('removing a root tombstones its tracks on the next scan', () async {
+    final song = writeWav('doomed.wav');
+    await rootsDao.addRoot(tempDir.path);
+    await rescan().toList();
+    expect(await tracksDao.getAllOnce(), hasLength(1));
+
+    await rootsDao.removeRoot(tempDir.path); // user action, file stays on disk
+    final events = await rescan().toList();
+
+    expect(events.whereType<ScanFinished>().single.removed, 1);
+    expect(await tracksDao.watchTracks().first, isEmpty);
+    expect(song.existsSync(), isTrue); // we never delete user files
   });
 }
