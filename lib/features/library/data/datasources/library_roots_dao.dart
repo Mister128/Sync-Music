@@ -14,7 +14,7 @@ class LibraryRootsDao extends DatabaseAccessor<AppDatabase>
 
   /// Adds a folder; duplicates are ignored silently (path is the PK -
   /// picking the same folder twice must not crash).
-  Future<void> addRoot(String path) async => await into(libraryRoots).insert(
+  Future<void> addRoot(String path) => into(libraryRoots).insert(
     LibraryRootsCompanion.insert(
       path: path,
       addedAtMs: DateTime.now().millisecondsSinceEpoch,

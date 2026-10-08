@@ -24,9 +24,21 @@ class AppDatabase extends _$AppDatabase {
   new forTesting(super.e);
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 
   @override
-  MigrationStrategy get migration =>
-      MigrationStrategy(onCreate: (m) => m.createAll());
+  MigrationStrategy get migration => MigrationStrategy(
+    onCreate: (m) => m.createAll(),
+    onUpgrade: (m, from, to) async {
+      if (from < 2) {
+        await customStatement('ALTER TABLE tracks RENAME COLUMN delete_at_ms TO deleted_at_ms');
+        await customStatement('ALTER TABLE tracks ADD COLUMN track_number INTEGER');
+        await customStatement('ALTER TABLE tracks ADD COLUMN disc_number INTEGER');
+        await customStatement('ALTER TABLE tracks ADD COLUMN year INTEGER');
+        await customStatement('ALTER TABLE tracks ADD COLUMN genre TEXT');
+        await customStatement('ALTER TABLE tracks ADD COLUMN bitrate INTEGER');
+        await customStatement('ALTER TABLE tracks ADD COLUMN sample_rate INTEGER');
+      }
+    },
+  );
 }

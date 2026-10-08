@@ -14,7 +14,13 @@ class Tracks extends Table {
   TextColumn get artworkHash => text().nullable()();
   IntColumn get addedAtMs => integer()();
   IntColumn get updatedAtMs => integer()();
-  IntColumn get deleteAtMs => integer().nullable()();
+  IntColumn get deletedAtMs => integer().nullable()();
+  IntColumn get trackNumber => integer().nullable()();
+  IntColumn get discNumber => integer().nullable()();
+  IntColumn get bitrate => integer().nullable()();
+  IntColumn get sampleRate => integer().nullable()();
+  IntColumn get year => integer().nullable()();
+  TextColumn get genre => text().nullable()();
 
   @override
   Set<Column<Object>>? get primaryKey => {id};

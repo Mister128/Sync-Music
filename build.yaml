@@ -8,3 +8,7 @@ targets:
           input_directory: lib/i18n
           output_directory: lib/i18n
           output_file_name: strings.g.dart
+      drift_dev:
+        options:
+          databases:
+            sync_music: lib/core/database/app_database.dart

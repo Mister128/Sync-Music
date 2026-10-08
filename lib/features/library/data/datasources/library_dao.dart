@@ -9,7 +9,7 @@ class LibraryDao extends DatabaseAccessor<AppDatabase> with _$LibraryDaoMixin {
   new(super.attachedDatabase);
 
   Stream<List<Track>> watchTracks() {
-    final query = select(tracks)..where((t) => t.deleteAtMs.isNull());
+    final query = select(tracks)..where((t) => t.deletedAtMs.isNull());
     return query.watch();
   }
 
