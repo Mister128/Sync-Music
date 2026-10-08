@@ -45,6 +45,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$nav$en nav = Translations$nav$en.internal(_root);
 	late final Translations$common$en common = Translations$common$en.internal(_root);
 	late final Translations$settings$en settings = Translations$settings$en.internal(_root);
+	late final Translations$library$en library = Translations$library$en.internal(_root);
 }
 
 // Path: app
@@ -165,6 +166,27 @@ class Translations$settings$en {
 
 	/// en: 'Remove'
 	String get removeFolder => 'Remove';
+
+	/// en: 'Scan library now'
+	String get scanNow => 'Scan library now';
+
+	/// en: 'Scanning... $processed of $total'
+	String scanning({required Object processed, required Object total}) => 'Scanning... ${processed} of ${total}';
+}
+
+// Path: library
+class Translations$library$en {
+	Translations$library$en.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'No tracks yet'
+	String get tracksEmpty => 'No tracks yet';
+
+	/// en: 'Add music or music folder in Settings'
+	String get tracksEmptyHint => 'Add music or music folder in Settings';
 }
 
 /// The flat map containing all translations for locale <en>.
@@ -203,6 +225,10 @@ extension on Translations {
 			'settings.notScanned' => 'Not scanned yet',
 			'settings.lastScanned' => ({required Object date}) => 'Scanned ${date}',
 			'settings.removeFolder' => 'Remove',
+			'settings.scanNow' => 'Scan library now',
+			'settings.scanning' => ({required Object processed, required Object total}) => 'Scanning... ${processed} of ${total}',
+			'library.tracksEmpty' => 'No tracks yet',
+			'library.tracksEmptyHint' => 'Add music or music folder in Settings',
 			_ => null,
 		};
 	}

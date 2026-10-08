@@ -33,6 +33,12 @@
     "addFolderDialog": "Choose a music folder",
     "notScanned": "Not scanned yet",
     "lastScanned": "Scanned $date",
-    "removeFolder": "Remove"
+    "removeFolder": "Remove",
+    "scanNow": "Scan library now",
+    "scanning": "Scanning... $processed of $total"
+  },
+  "library": {
+    "tracksEmpty": "No tracks yet",
+    "tracksEmptyHint": "Add music or music folder in Settings"
   }
 }

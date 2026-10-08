@@ -43,6 +43,7 @@ class TranslationsRu extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$nav$ru nav = _Translations$nav$ru._(_root);
 	@override late final _Translations$common$ru common = _Translations$common$ru._(_root);
 	@override late final _Translations$settings$ru settings = _Translations$settings$ru._(_root);
+	@override late final _Translations$library$ru library = _Translations$library$ru._(_root);
 }
 
 // Path: app
@@ -107,6 +108,19 @@ class _Translations$settings$ru extends Translations$settings$en {
 	@override String get notScanned => 'Ещё не сканировалась';
 	@override String lastScanned({required Object date}) => 'Сканировано ${date}';
 	@override String get removeFolder => 'Убрать';
+	@override String get scanNow => 'Сканировать библиотеку';
+	@override String scanning({required Object processed, required Object total}) => 'Сканирование... ${processed} из ${total}';
+}
+
+// Path: library
+class _Translations$library$ru extends Translations$library$en {
+	_Translations$library$ru._(TranslationsRu root) : this._root = root, super.internal(root);
+
+	final TranslationsRu _root; // ignore: unused_field
+
+	// Translations
+	@override String get tracksEmpty => 'Нет треков';
+	@override String get tracksEmptyHint => 'Добавьте музыку или папку с музыкой в настройках';
 }
 
 /// The flat map containing all translations for locale <ru>.
@@ -145,6 +159,10 @@ extension on TranslationsRu {
 			'settings.notScanned' => 'Ещё не сканировалась',
 			'settings.lastScanned' => ({required Object date}) => 'Сканировано ${date}',
 			'settings.removeFolder' => 'Убрать',
+			'settings.scanNow' => 'Сканировать библиотеку',
+			'settings.scanning' => ({required Object processed, required Object total}) => 'Сканирование... ${processed} из ${total}',
+			'library.tracksEmpty' => 'Нет треков',
+			'library.tracksEmptyHint' => 'Добавьте музыку или папку с музыкой в настройках',
 			_ => null,
 		};
 	}

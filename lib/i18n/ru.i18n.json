@@ -33,6 +33,12 @@
     "addFolderDialog": "Выберите папку с музыкой",
     "notScanned": "Ещё не сканировалась",
     "lastScanned": "Сканировано $date",
-    "removeFolder": "Убрать"
+    "removeFolder": "Убрать",
+    "scanNow": "Сканировать библиотеку",
+    "scanning": "Сканирование... $processed из $total"
+  },
+  "library": {
+    "tracksEmpty": "Нет треков",
+    "tracksEmptyHint": "Добавьте музыку или папку с музыкой в настройках"
   }
 }
