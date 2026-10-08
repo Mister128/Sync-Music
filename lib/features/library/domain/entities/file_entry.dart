@@ -5,7 +5,7 @@ part 'file_entry.freezed.dart';
 /// Minimal info about a file on disk, enough for incremental diffing.
 @freezed
 abstract class FileEntry with _$FileEntry {
-  const factory ({
+  const factory({
     /// Absolute path as produced by Directory.list().
     required String path,
 

@@ -18,7 +18,12 @@ void main() {
   });
 
   test('full path with directories and mixed case', () {
-    expect(isAudioFile(r'C:\Music\Queen\A Night at the Opera\01 - Death on Two Legs.FLAC'), isTrue);
+    expect(
+      isAudioFile(
+        r'C:\Music\Queen\A Night at the Opera\01 - Death on Two Legs.FLAC',
+      ),
+      isTrue,
+    );
   });
 
   test('no extension / video are not audio', () {

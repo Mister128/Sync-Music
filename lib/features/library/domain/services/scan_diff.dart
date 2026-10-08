@@ -45,6 +45,6 @@ ScanDiff diffLibrary({
   for (final stale in dbByPath.values) {
     removedPaths.add(stale.path);
   }
-  
+
   return ScanDiff(added: added, changed: changed, removedPaths: removedPaths);
 }

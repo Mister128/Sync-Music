@@ -80,13 +80,21 @@ void main() {
     test('file missing on disk ends up in removedPaths, in db order', () {
       final diff = diffLibrary(
         onDisk: [f('b.flac', 200, 2)],
-        inDb: [f('gone1.ogg', 100, 1), f('b.flac', 200, 2), f('gone2.opus', 300, 3)],
+        inDb: [
+          f('gone1.ogg', 100, 1),
+          f('b.flac', 200, 2),
+          f('gone2.opus', 300, 3),
+        ],
         pathNormalizer: lower,
       );
 
       expect(
         diff,
-        const ScanDiff(added: [], changed: [], removedPaths: ['gone1.ogg', 'gone2.opus']),
+        const ScanDiff(
+          added: [],
+          changed: [],
+          removedPaths: ['gone1.ogg', 'gone2.opus'],
+        ),
       );
     });
 
@@ -113,52 +121,62 @@ void main() {
       expect(diff, const ScanDiff(added: [], changed: [], removedPaths: []));
     });
 
-    test('case-sensitive normalizer treats different case as different files', () {
-      final diff = diffLibrary(
-        onDisk: [f(r'/music/a.mp3', 100, 1)],
-        inDb: [f(r'/music/A.mp3', 100, 1)],
-        pathNormalizer: asIs, // Android/Linux/macOS behavior
-      );
+    test(
+      'case-sensitive normalizer treats different case as different files',
+      () {
+        final diff = diffLibrary(
+          onDisk: [f('/music/a.mp3', 100, 1)],
+          inDb: [f('/music/A.mp3', 100, 1)],
+          pathNormalizer: asIs, // Android/Linux/macOS behavior
+        );
 
-      expect(
-        diff,
-        ScanDiff(
-          added: [f(r'/music/a.mp3', 100, 1)],
-          changed: const [],
-          removedPaths: [r'/music/A.mp3'],
-        ),
-      );
-    });
+        expect(
+          diff,
+          ScanDiff(
+            added: [f('/music/a.mp3', 100, 1)],
+            changed: const [],
+            removedPaths: ['/music/A.mp3'],
+          ),
+        );
+      },
+    );
 
-    test('mixed scenario: order follows the inputs, untouched files ignored', () {
-      final onDisk = [
-        f('same.mp3', 100, 1),       // untouched
-        f('tagged.mp3', 300, 9),     // mtime bumped -> changed
-        f('zzz_new.flac', 400, 4),   // -> added
-        f('aaa_new.opus', 500, 5),   // -> added (AFTER zzz: disk order, not alphabetical!)
-        f('same2.wav', 200, 2),      // untouched
-      ];
-      final inDb = [
-        f('tagged.mp3', 300, 5),
-        f('same.mp3', 100, 1),
-        f('gone.ogg', 600, 6),       // -> removedPaths
-        f('same2.wav', 200, 2),
-      ];
+    test(
+      'mixed scenario: order follows the inputs, untouched files ignored',
+      () {
+        final onDisk = [
+          f('same.mp3', 100, 1), // untouched
+          f('tagged.mp3', 300, 9), // mtime bumped -> changed
+          f('zzz_new.flac', 400, 4), // -> added
+          f(
+            'aaa_new.opus',
+            500,
+            5,
+          ), // -> added (AFTER zzz: disk order, not alphabetical!)
+          f('same2.wav', 200, 2), // untouched
+        ];
+        final inDb = [
+          f('tagged.mp3', 300, 5),
+          f('same.mp3', 100, 1),
+          f('gone.ogg', 600, 6), // -> removedPaths
+          f('same2.wav', 200, 2),
+        ];
 
-      final diff = diffLibrary(
-        onDisk: onDisk,
-        inDb: inDb,
-        pathNormalizer: lower,
-      );
+        final diff = diffLibrary(
+          onDisk: onDisk,
+          inDb: inDb,
+          pathNormalizer: lower,
+        );
 
-      expect(
-        diff,
-        ScanDiff(
-          added: [f('zzz_new.flac', 400, 4), f('aaa_new.opus', 500, 5)],
-          changed: [f('tagged.mp3', 300, 9)],
-          removedPaths: ['gone.ogg'],
-        ),
-      );
-    });
+        expect(
+          diff,
+          ScanDiff(
+            added: [f('zzz_new.flac', 400, 4), f('aaa_new.opus', 500, 5)],
+            changed: [f('tagged.mp3', 300, 9)],
+            removedPaths: ['gone.ogg'],
+          ),
+        );
+      },
+    );
   });
 }
