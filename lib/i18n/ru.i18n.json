@@ -32,6 +32,7 @@
     "addFolder": "Добавить папку",
     "addFolderDialog": "Выберите папку с музыкой",
     "notScanned": "Ещё не сканировалась",
+    "lastScanned": "Сканировано $date",
     "removeFolder": "Убрать"
   }
 }

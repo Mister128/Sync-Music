@@ -32,6 +32,7 @@
     "addFolder": "Add folder",
     "addFolderDialog": "Choose a music folder",
     "notScanned": "Not scanned yet",
+    "lastScanned": "Scanned $date",
     "removeFolder": "Remove"
   }
 }

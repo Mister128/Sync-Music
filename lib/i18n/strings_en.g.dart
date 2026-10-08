@@ -160,6 +160,9 @@ class Translations$settings$en {
 	/// en: 'Not scanned yet'
 	String get notScanned => 'Not scanned yet';
 
+	/// en: 'Scanned $date'
+	String lastScanned({required Object date}) => 'Scanned ${date}';
+
 	/// en: 'Remove'
 	String get removeFolder => 'Remove';
 }
@@ -198,6 +201,7 @@ extension on Translations {
 			'settings.addFolder' => 'Add folder',
 			'settings.addFolderDialog' => 'Choose a music folder',
 			'settings.notScanned' => 'Not scanned yet',
+			'settings.lastScanned' => ({required Object date}) => 'Scanned ${date}',
 			'settings.removeFolder' => 'Remove',
 			_ => null,
 		};

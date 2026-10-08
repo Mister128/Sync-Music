@@ -105,6 +105,7 @@ class _Translations$settings$ru extends Translations$settings$en {
 	@override String get addFolder => 'Добавить папку';
 	@override String get addFolderDialog => 'Выберите папку с музыкой';
 	@override String get notScanned => 'Ещё не сканировалась';
+	@override String lastScanned({required Object date}) => 'Сканировано ${date}';
 	@override String get removeFolder => 'Убрать';
 }
 
@@ -142,6 +143,7 @@ extension on TranslationsRu {
 			'settings.addFolder' => 'Добавить папку',
 			'settings.addFolderDialog' => 'Выберите папку с музыкой',
 			'settings.notScanned' => 'Ещё не сканировалась',
+			'settings.lastScanned' => ({required Object date}) => 'Сканировано ${date}',
 			'settings.removeFolder' => 'Убрать',
 			_ => null,
 		};

@@ -1,6 +1,7 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:sync_music/core/design_system/theme/app_spacing.dart';
 import 'package:sync_music/features/library/data/library_providers.dart';
 import 'package:sync_music/i18n/strings.g.dart';
@@ -53,8 +54,13 @@ class LibrarySection extends ConsumerWidget {
             ListTile(
               leading: const Icon(Icons.folder_outlined),
               title: Text(root.path),
-              // TODO(3.4): real "last scanned" date via intl DateFormat.
-              subtitle: Text(t.settings.notScanned),
+              subtitle: Text(
+                root.lastScannedAtMs == null
+                    ? t.settings.notScanned
+                    : t.settings.lastScanned(
+                        date: _formatLastScanned(root.lastScannedAtMs!),
+                      ),
+              ),
               trailing: IconButton(
                 icon: const Icon(Icons.close),
                 tooltip: t.settings.removeFolder,
@@ -94,4 +100,11 @@ class _AddFolderButton extends StatelessWidget {
       label: Text(t.settings.addFolder),
     );
   }
+}
+
+String _formatLastScanned(int ms) {
+  final locale = LocaleSettings.currentLocale.languageCode;
+  return DateFormat.yMMMd(locale)
+      .add_Hm()
+      .format(DateTime.fromMillisecondsSinceEpoch(ms));
 }
