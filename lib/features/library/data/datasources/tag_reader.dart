@@ -2,24 +2,62 @@ import 'dart:io';
 
 import 'package:audio_metadata_reader/audio_metadata_reader.dart';
 import 'package:path/path.dart' as p;
+import 'package:sync_music/core/utils/hashing.dart';
 
 import 'package:sync_music/features/library/domain/entities/file_entry.dart';
 import 'package:sync_music/features/library/domain/entities/scanned_track.dart';
 
-/// Reads tags for ONE file. Contract: NEVER throws - a single corrupt file
-/// must not kill a batch of 50. On parse failure we still register the track
-/// with a filename-derived title
-ScannedTrack readTrack(FileEntry entry, String contentHash) {
+/// Reads tags for ONE file. Contract: never throws.
+/// Returns the track (fallback if tags are broken) + an optional warning
+/// that travels as DATA - the orchestrator logs it on the main isolate.
+({ScannedTrack track, String? warning}) readTrack(
+  FileEntry entry,
+  String contentHash,
+) {
   try {
     final meta = readMetadata(File(entry.path));
-    return mapMetadata(meta, entry, contentHash);
+    return (track: mapMetadata(meta, entry, contentHash), warning: null);
   } on Object catch (e) {
-    return fallbackTrack(entry, contentHash, e);
+    return (
+      track: fallbackTrack(entry, contentHash),
+      warning:
+          '${p.basename(entry.path)}: tags unreadable, title from filename ($e)',
+    );
   }
 }
 
+/// Result of parsing one batch inside a worker isolate.
+/// Same philosophy as WalkResult: warnings travel as data.
+typedef ParseBatchResult = ({
+  List<ScannedTrack> tracks,
+  List<String> warnings,
+  int skipped,
+});
+
+/// Runs INSIDE a worker isolate: hash + parse one batch. Top-level,
+/// no captured state, sendable args and results only.
+ParseBatchResult parseTrackBatch(List<FileEntry> batch) {
+  final tracks = <ScannedTrack>[];
+  final warnings = <String>[];
+  var skipped = 0;
+
+  for (final entry in batch) {
+    try {
+      final hash = fastHashFile(entry.path);
+      final result = readTrack(entry, hash);
+      tracks.add(result.track);
+      if (result.warning != null) warnings.add(result.warning!);
+    } on Object catch (e) {
+      skipped++;
+      warnings.add('${entry.path}: skipped ($e)');
+    }
+  }
+
+  return (tracks: tracks, warnings: warnings, skipped: skipped);
+}
+
 /// Minimal viable track when tags are unreadable.
-ScannedTrack fallbackTrack(FileEntry entry, String contentHash, Object error) {
+ScannedTrack fallbackTrack(FileEntry entry, String contentHash) {
   return ScannedTrack(
     path: entry.path,
     sizeBytes: entry.sizeBytes,
@@ -28,8 +66,6 @@ ScannedTrack fallbackTrack(FileEntry entry, String contentHash, Object error) {
     title: titleFromFilename(entry.path),
     artistName: 'Unknown artist',
   );
-  // TODO: the orchestrator may want to count/log these — warnings
-  // travel as data (no talker inside isolates), decide there.
 }
 
 /// Pure mapper: AudioMetadata + file facts -> ScannedTrack.

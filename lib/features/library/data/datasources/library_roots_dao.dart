@@ -27,4 +27,19 @@ class LibraryRootsDao extends DatabaseAccessor<AppDatabase>
     final query = delete(libraryRoots)..where((r) => r.path.equals(path));
     return query.go();
   }
+
+  /// One-shot snapshot of all music folders.
+  /// For a live UI list use [watchRoots]; this one is for logic that needs
+  /// the current state exactly once (e.g. the rescan orchestrator).
+  Future<List<LibraryRoot>> getAllOnce() => select(libraryRoots).get();
+
+  /// Stamps the folder with "scanned at" - settings UI shows it later.
+  Future<void> markScanned(String path) {
+    final query = update(libraryRoots)..where((r) => r.path.equals(path));
+    return query.write(
+      LibraryRootsCompanion(
+        lastScannedAtMs: Value(DateTime.now().millisecondsSinceEpoch),
+      ),
+    );
+  }
 }
