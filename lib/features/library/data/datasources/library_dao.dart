@@ -11,7 +11,9 @@ class LibraryDao extends DatabaseAccessor<AppDatabase> with _$LibraryDaoMixin {
   new(super.attachedDatabase);
 
   Stream<List<Track>> watchTracks() {
-    final query = select(tracks)..where((t) => t.deletedAtMs.isNull());
+    final query = select(tracks)
+      ..where((t) => t.deletedAtMs.isNull())
+      ..orderBy([(t) => OrderingTerm.asc(t.title)]);
     return query.watch();
   }
 
