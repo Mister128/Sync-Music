@@ -7,7 +7,7 @@ part 'track.freezed.dart';
 /// localPath == null means "remote-only" (file lives on another device - stage 10).
 @freezed
 abstract class Track with _$Track {
-  const factory Track({
+  const factory({
     required String id,
     required String contentHash,
     required String title,

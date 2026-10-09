@@ -17,9 +17,6 @@ class LibraryDao extends DatabaseAccessor<AppDatabase> with _$LibraryDaoMixin {
     return query.watch();
   }
 
-  /// One-shot snapshot of ALL tracks — tombstones included.
-  /// The rescan orchestrator builds DB fingerprints from it; the UI uses
-  /// [watchTracks] instead (live stream, deleted rows filtered out).
   Future<List<Track>> getAllOnce() => select(tracks).get();
 
   Future<void> insertAllAtomic(List<TracksCompanion> rows) =>
@@ -49,12 +46,13 @@ class LibraryDao extends DatabaseAccessor<AppDatabase> with _$LibraryDaoMixin {
     return affected;
   }
 
-  /// Re-tags an existing row matched by path (file content changed).
-  Future<void> updateScannedByPath(ScannedTrack t) {
-    final query = update(tracks)..where((r) => r.localPath.equals(t.path));
+  /// Re-tags an existing row by PRIMARY KEY.
+  Future<int> updateScannedById(String id, ScannedTrack t) {
+    final query = update(tracks)..where((r) => r.id.equals(id));
     return query.write(
       TracksCompanion(
         contentHash: Value(t.contentHash),
+        localPath: Value(t.path), // refresh to the current on-disk spelling
         title: Value(t.title),
         artistName: Value(t.artistName),
         albumTitle: Value(t.albumTitle),
@@ -121,5 +119,5 @@ TracksCompanion _reviveCompanion(ScannedTrack t, int now) => TracksCompanion(
   bitrate: Value(t.bitrate),
   sampleRate: Value(t.sampleRate),
   updatedAtMs: Value(now),
-  deletedAtMs: const Value(null), // <- THE resurrection
+  deletedAtMs: const Value(null),
 );

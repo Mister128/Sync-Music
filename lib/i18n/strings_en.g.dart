@@ -169,9 +169,6 @@ class Translations$settings$en {
 
 	/// en: 'Scan library now'
 	String get scanNow => 'Scan library now';
-
-	/// en: 'Scanning... $processed of $total'
-	String scanning({required Object processed, required Object total}) => 'Scanning... ${processed} of ${total}';
 }
 
 // Path: library
@@ -187,6 +184,9 @@ class Translations$library$en {
 
 	/// en: 'Add music or music folder in Settings'
 	String get tracksEmptyHint => 'Add music or music folder in Settings';
+
+	/// en: 'Scanning... $processed of $total'
+	String scanning({required Object processed, required Object total}) => 'Scanning... ${processed} of ${total}';
 }
 
 /// The flat map containing all translations for locale <en>.
@@ -226,9 +226,9 @@ extension on Translations {
 			'settings.lastScanned' => ({required Object date}) => 'Scanned ${date}',
 			'settings.removeFolder' => 'Remove',
 			'settings.scanNow' => 'Scan library now',
-			'settings.scanning' => ({required Object processed, required Object total}) => 'Scanning... ${processed} of ${total}',
 			'library.tracksEmpty' => 'No tracks yet',
 			'library.tracksEmptyHint' => 'Add music or music folder in Settings',
+			'library.scanning' => ({required Object processed, required Object total}) => 'Scanning... ${processed} of ${total}',
 			_ => null,
 		};
 	}

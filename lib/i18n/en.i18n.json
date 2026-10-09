@@ -34,11 +34,11 @@
     "notScanned": "Not scanned yet",
     "lastScanned": "Scanned $date",
     "removeFolder": "Remove",
-    "scanNow": "Scan library now",
-    "scanning": "Scanning... $processed of $total"
+    "scanNow": "Scan library now"
   },
   "library": {
     "tracksEmpty": "No tracks yet",
-    "tracksEmptyHint": "Add music or music folder in Settings"
+    "tracksEmptyHint": "Add music or music folder in Settings",
+    "scanning": "Scanning... $processed of $total"
   }
 }

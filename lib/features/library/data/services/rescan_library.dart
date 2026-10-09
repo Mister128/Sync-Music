@@ -6,7 +6,6 @@ import 'package:path/path.dart' as p;
 
 import 'package:sync_music/core/database/app_database.dart';
 import 'package:sync_music/core/logging/app_logger.dart';
-import 'package:sync_music/core/utils/hashing.dart';
 import 'package:sync_music/core/utils/path_normalizer.dart';
 import 'package:sync_music/features/library/data/datasources/filesystem_walker.dart';
 import 'package:sync_music/features/library/data/datasources/library_dao.dart';
@@ -16,10 +15,6 @@ import 'package:sync_music/features/library/domain/entities/file_entry.dart';
 import 'package:sync_music/features/library/domain/entities/scan_event.dart';
 import 'package:sync_music/features/library/domain/entities/scanned_track.dart';
 import 'package:sync_music/features/library/domain/services/scan_diff.dart';
-
-/// One parsed batch, traveling back from the worker isolate as DATA
-/// (talker is not available inside isolates — the orchestrator logs it).
-typedef ParsedBatch = ({List<ScannedTrack?> tracks, List<String> warnings});
 
 /// Orchestrates a full incremental library rescan.
 class RescanLibrary {
@@ -36,36 +31,44 @@ class RescanLibrary {
     final stopwatch = Stopwatch()..start();
 
     try {
-      // ---- 1. Roots: split into available / unavailable ----
+      // ---- 1. Roots: registered vs actually reachable ----
       final roots = await rootsDao.watchRoots().first;
+      final allRootPaths = <String>[];
       final availableRoots = <String>[];
-      final unavailableRoots = <String>[];
       for (final root in roots) {
+        allRootPaths.add(root.path);
         if (Directory(root.path).existsSync()) {
           availableRoots.add(root.path);
         } else {
-          unavailableRoots.add(root.path);
           log.warn('root unavailable, skipping: ${root.path}');
         }
       }
 
       // ---- 2. Walk available roots (worker isolate) ----
       final disk = <FileEntry>[];
+      final walkedRoots = <String>[];
       for (final rootPath in availableRoots) {
-        final walkResult = await _walkRootInIsolate(rootPath)..entries;
+        final walkResult = await _walkRootInIsolate(rootPath);
+        walkResult.warnings.forEach(log.warn); // warnings travel as data
+        if (!walkResult.rootAvailable) continue; // root stays "protected"
         disk.addAll(walkResult.entries);
+        walkedRoots.add(rootPath);
       }
 
       // ---- 3. Alive DB rows -> three-way classification ----
       final alive = await tracksDao.watchTracks().first;
-      final inDb = <FileEntry>[]; // under an available root -> join the diff
-      final orphanedPaths = <String>[]; // root was removed -> tombstone
-      var protectedCount = 0; // under an unavailable root -> untouched
+      final inDb = <FileEntry>[]; // under a fully walked root -> join the diff
+      final idByPath = <String, String>{}; // normalized path -> row id
+      final orphanedPaths = <String>[]; // no root claims them -> tombstone
+      var protectedCount = 0; // root unavailable or partially walked
 
       for (final row in alive) {
         final path = row.localPath;
         if (path == null) continue; // P2P/remote rows are not file-backed
-        if (_underAnyRoot(path, availableRoots)) {
+        if (_underAnyRoot(path, walkedRoots)) {
+          // Updates match rows BY ID: path casing may drift on Windows,
+          // the primary key never does.
+          idByPath[defaultPathNormalizer(path)] = row.id;
           inDb.add(
             FileEntry(
               path: path,
@@ -74,7 +77,7 @@ class RescanLibrary {
               mtimeMs: row.fileMtimeMs ?? 0,
             ),
           );
-        } else if (_underAnyRoot(path, unavailableRoots)) {
+        } else if (_underAnyRoot(path, allRootPaths)) {
           protectedCount++;
         } else {
           orphanedPaths.add(path);
@@ -106,18 +109,16 @@ class RescanLibrary {
         final chunk = work.sublist(i, min(i + _batchSize, work.length));
 
         // OFF the main isolate: hashing + tag parsing (the slow part).
+        // The single implementation lives in tag_reader.dart.
         final parsed = await _parseBatchInIsolate(chunk);
 
         // Warnings traveled as data — log them HERE, where talker lives.
         parsed.warnings.forEach(log.warn);
+        skipped += parsed.skipped;
 
         final fresh = <ScannedTrack>[];
         final refreshed = <ScannedTrack>[];
         for (final track in parsed.tracks) {
-          if (track == null) {
-            skipped++; // died between walk and parse, or unreadable
-            continue;
-          }
           (addedPaths.contains(track.path) ? fresh : refreshed).add(track);
         }
 
@@ -127,8 +128,12 @@ class RescanLibrary {
           added += await tracksDao.insertScanned(fresh); // honest count:
           // insert-or-revive by contentHash, alive duplicates skipped
           for (final track in refreshed) {
-            await tracksDao.updateScannedByPath(track);
-            changed++;
+            final id = idByPath[defaultPathNormalizer(track.path)];
+            if (id == null) {
+              skipped++; // row vanished between the snapshot and the write
+              continue;
+            }
+            changed += await tracksDao.updateScannedById(id, track);
           }
         });
 
@@ -136,8 +141,8 @@ class RescanLibrary {
         yield ScanProgress(processed: processed, total: work.length);
       }
 
-      // ---- 7. Stamp only the roots we actually walked ---------------------
-      for (final rootPath in availableRoots) {
+      // ---- 7. Stamp only the roots walked to completion ----
+      for (final rootPath in walkedRoots) {
         await rootsDao.markScanned(rootPath);
       }
 
@@ -145,7 +150,7 @@ class RescanLibrary {
       final seconds = (stopwatch.elapsedMilliseconds / 1000).toStringAsFixed(1);
       log.info(
         'done: $added added, $changed changed, ${toTombstone.length} removed '
-        'in ${seconds}s (skipped: $skipped, protected: $protectedCount)',
+            'in ${seconds}s (skipped: $skipped, protected: $protectedCount)',
       );
 
       yield ScanFinished(
@@ -161,48 +166,20 @@ class RescanLibrary {
     }
   }
 
-  // ---- Isolate-safe helpers: static scope, sendable captures only --------
+  // ---- Isolate-safe helpers: static scope, sendable captures only ----
 
   static Future<WalkResult> _walkRootInIsolate(String rootPath) =>
       Isolate.run(() => walkAudioFiles(rootPath));
 
-  static Future<ParsedBatch> _parseBatchInIsolate(List<FileEntry> chunk) =>
+  static Future<ParseBatchResult> _parseBatchInIsolate(List<FileEntry> chunk) =>
       Isolate.run(() => parseTrackBatch(chunk));
-
-  /// Runs INSIDE the worker isolate: hash + tags for one file.
-  /// A single broken file must not kill the batch — catch, count, warn.
-  static ParsedBatch parseTrackBatch(List<FileEntry> chunk) {
-    final tracks = <ScannedTrack?>[];
-    final warnings = <String>[];
-
-    void skip(FileEntry entry, Object e) {
-      tracks.add(null);
-      warnings.add('${entry.path}: skipped ($e)');
-    }
-
-    for (final entry in chunk) {
-      try {
-        final contentHash = fastHashFile(entry.path);
-        final read = readTrack(entry, contentHash);
-        if (read.warning != null) warnings.add(read.warning!);
-        tracks.add(read.track);
-      } on FileSystemException catch (e) {
-        skip(entry, e);
-      } on FormatException catch (e) {
-        skip(entry, e);
-      } catch (e) {
-        skip(entry, e);
-      }
-    }
-    return (tracks: tracks, warnings: warnings);
-  }
 
   /// True when [filePath] lies under any of [rootPaths].
   /// Both sides go through the same normalizer (Windows: case-insensitive).
   static bool _underAnyRoot(String filePath, List<String> rootPaths) {
     final normalized = defaultPathNormalizer(filePath);
     return rootPaths.any(
-      (root) => p.isWithin(defaultPathNormalizer(root), normalized),
+          (root) => p.isWithin(defaultPathNormalizer(root), normalized),
     );
   }
 }

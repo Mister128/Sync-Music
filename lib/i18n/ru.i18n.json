@@ -34,11 +34,11 @@
     "notScanned": "Ещё не сканировалась",
     "lastScanned": "Сканировано $date",
     "removeFolder": "Убрать",
-    "scanNow": "Сканировать библиотеку",
-    "scanning": "Сканирование... $processed из $total"
+    "scanNow": "Сканировать библиотеку"
   },
   "library": {
     "tracksEmpty": "Нет треков",
-    "tracksEmptyHint": "Добавьте музыку или папку с музыкой в настройках"
+    "tracksEmptyHint": "Добавьте музыку или папку с музыкой в настройках",
+    "scanning": "Сканирование... $processed из $total"
   }
 }

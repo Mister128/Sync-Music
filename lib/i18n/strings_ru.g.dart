@@ -109,7 +109,6 @@ class _Translations$settings$ru extends Translations$settings$en {
 	@override String lastScanned({required Object date}) => 'Сканировано ${date}';
 	@override String get removeFolder => 'Убрать';
 	@override String get scanNow => 'Сканировать библиотеку';
-	@override String scanning({required Object processed, required Object total}) => 'Сканирование... ${processed} из ${total}';
 }
 
 // Path: library
@@ -121,6 +120,7 @@ class _Translations$library$ru extends Translations$library$en {
 	// Translations
 	@override String get tracksEmpty => 'Нет треков';
 	@override String get tracksEmptyHint => 'Добавьте музыку или папку с музыкой в настройках';
+	@override String scanning({required Object processed, required Object total}) => 'Сканирование... ${processed} из ${total}';
 }
 
 /// The flat map containing all translations for locale <ru>.
@@ -160,9 +160,9 @@ extension on TranslationsRu {
 			'settings.lastScanned' => ({required Object date}) => 'Сканировано ${date}',
 			'settings.removeFolder' => 'Убрать',
 			'settings.scanNow' => 'Сканировать библиотеку',
-			'settings.scanning' => ({required Object processed, required Object total}) => 'Сканирование... ${processed} из ${total}',
 			'library.tracksEmpty' => 'Нет треков',
 			'library.tracksEmptyHint' => 'Добавьте музыку или папку с музыкой в настройках',
+			'library.scanning' => ({required Object processed, required Object total}) => 'Сканирование... ${processed} из ${total}',
 			_ => null,
 		};
 	}

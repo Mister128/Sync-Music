@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sync_music/core/design_system/widgets/sm_section_header.dart';
 import 'package:sync_music/core/logging/app_logger.dart';
-import 'package:sync_music/features/library/data/library_providers.dart';
 import 'package:sync_music/i18n/strings.g.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
