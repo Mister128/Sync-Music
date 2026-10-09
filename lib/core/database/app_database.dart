@@ -48,8 +48,10 @@ class AppDatabase extends _$AppDatabase {
         );
       }
 
-      if (from < 3 ){
-        await customStatement('ALTER TABLE tracks ADD COLUMN artwork_checked_at_ms INTEGER');
+      if (from < 3) {
+        await customStatement(
+          'ALTER TABLE tracks ADD COLUMN artwork_checked_at_ms INTEGER',
+        );
       }
     },
   );

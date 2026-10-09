@@ -46,11 +46,11 @@ void main() {
   tearDown(() async => await db.close());
 
   Future<void> insertTrack(
-      String title, {
-        String? localPath,
-        bool remote = false,
-        bool deleted = false,
-      }) async {
+    String title, {
+    String? localPath,
+    bool remote = false,
+    bool deleted = false,
+  }) async {
     final now = DateTime.now().millisecondsSinceEpoch;
     await dao.insertAllAtomic([
       TracksCompanion.insert(

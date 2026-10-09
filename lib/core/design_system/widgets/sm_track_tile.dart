@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:sync_music/core/design_system/theme/app_spacing.dart';
 import 'package:sync_music/core/extensions/duration_x.dart';
+import 'package:sync_music/core/storage/artwork_paths.dart';
 
 /// One row in ANY track list.
 class SmTrackTile extends StatelessWidget {
@@ -68,16 +69,45 @@ class _ArtWork extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    // TODO(Mister128): hash != null -> Image.file(artwork/<hash>.jpg) wrapped in
-    // ResizeImage + RepaintBoundary. For now — branded placeholder.
-    return Container(
-      width: SmTrackTile._artworkSize,
-      height: SmTrackTile._artworkSize,
-      decoration: BoxDecoration(
-        color: scheme.surfaceContainerHigh,
+    if (hash == null) {
+      return _ArtWorkPlaceholder(scheme: scheme);
+    }
+
+    return RepaintBoundary(
+      child: ClipRRect(
         borderRadius: BorderRadius.circular(8),
+        child: Image.file(
+          artWorkFileFor(hash!),
+          width: SmTrackTile._artworkSize,
+          height: SmTrackTile._artworkSize,
+          fit: BoxFit.cover,
+          cacheWidth:
+              (SmTrackTile._artworkSize *
+                      MediaQuery.devicePixelRatioOf(context))
+                  .ceil(),
+
+          gaplessPlayback: true,
+          errorBuilder: (context, error, stackTrace) =>
+              _ArtWorkPlaceholder(scheme: scheme),
+        ),
       ),
-      child: Icon(Icons.music_note, size: 24, color: scheme.onSurfaceVariant),
     );
   }
+}
+
+class _ArtWorkPlaceholder extends StatelessWidget {
+  const new({required this.scheme});
+
+  final ColorScheme scheme;
+
+  @override
+  Widget build(BuildContext context) => Container(
+    width: SmTrackTile._artworkSize,
+    height: SmTrackTile._artworkSize,
+    decoration: BoxDecoration(
+      color: scheme.surfaceContainerHigh,
+      borderRadius: BorderRadius.circular(8),
+    ),
+    child: Icon(Icons.music_note, size: 24, color: scheme.onSurfaceVariant),
+  );
 }

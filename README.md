@@ -28,7 +28,7 @@ playback position in sync between phone and PC directly over the local network.
 - [x] Material 3 light/dark themes with a custom brand palette
 - [x] Localization: English, Русский
 - [x] Local SQLite database (drift) with reactive streams
-- [ ] Library scanner: folders, tags, cover art, incremental rescan
+- [x] Library scanner: folders, tags, cover art, incremental rescan
 - [ ] Player: queue, mini-player, background playback, lock-screen controls
 - [ ] Playlists: drag-and-drop reorder, favorites, search
 - [ ] **P2P sync over LAN**: mDNS discovery, QR pairing, encrypted operation-log sync, file transfer with resume

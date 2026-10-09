@@ -29,8 +29,7 @@ class ExtractArtwork {
     _running = true;
 
     final log = AppLogger.scope('artwork');
-    final stopwatch = Stopwatch()
-      ..start();
+    final stopwatch = Stopwatch()..start();
 
     try {
       final queue = await tracksDao.tracksMissingArtwork();
@@ -65,7 +64,7 @@ class ExtractArtwork {
       final seconds = (stopwatch.elapsedMilliseconds / 1000).toStringAsFixed(1);
       log.info(
         'done: $extracted covers stored, $withoutCover without cover, '
-            '$failed failed in ${seconds}s',
+        '$failed failed in ${seconds}s',
       );
       return extracted;
     } on Object catch (e, st) {
