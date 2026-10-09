@@ -24,7 +24,7 @@ class AppDatabase extends _$AppDatabase {
   new forTesting(super.e);
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -46,6 +46,10 @@ class AppDatabase extends _$AppDatabase {
         await customStatement(
           'ALTER TABLE tracks ADD COLUMN sample_rate INTEGER',
         );
+      }
+
+      if (from < 3 ){
+        await customStatement('ALTER TABLE tracks ADD COLUMN artwork_checked_at_ms INTEGER');
       }
     },
   );

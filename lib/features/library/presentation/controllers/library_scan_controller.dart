@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -52,6 +54,8 @@ class LibraryScanController extends Notifier<ScanUiState> {
     if (_rerunRequested) {
       _rerunRequested = false;
       await startScan();
+    } else {
+      unawaited(ref.read(extractArtworkProvider)());
     }
   }
 }

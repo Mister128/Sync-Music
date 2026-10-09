@@ -117,6 +117,16 @@ class $TracksTable extends Tracks with TableInfo<$TracksTable, Track> {
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _artworkCheckedAtMsMeta =
+      const VerificationMeta('artworkCheckedAtMs');
+  @override
+  late final GeneratedColumn<int> artworkCheckedAtMs = GeneratedColumn<int>(
+    'artwork_checked_at_ms',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _addedAtMsMeta = const VerificationMeta(
     'addedAtMs',
   );
@@ -224,6 +234,7 @@ class $TracksTable extends Tracks with TableInfo<$TracksTable, Track> {
     sizeBytes,
     fileMtimeMs,
     artworkHash,
+    artworkCheckedAtMs,
     addedAtMs,
     updatedAtMs,
     deletedAtMs,
@@ -315,6 +326,15 @@ class $TracksTable extends Tracks with TableInfo<$TracksTable, Track> {
         artworkHash.isAcceptableOrUnknown(
           data['artwork_hash']!,
           _artworkHashMeta,
+        ),
+      );
+    }
+    if (data.containsKey('artwork_checked_at_ms')) {
+      context.handle(
+        _artworkCheckedAtMsMeta,
+        artworkCheckedAtMs.isAcceptableOrUnknown(
+          data['artwork_checked_at_ms']!,
+          _artworkCheckedAtMsMeta,
         ),
       );
     }
@@ -434,6 +454,10 @@ class $TracksTable extends Tracks with TableInfo<$TracksTable, Track> {
         DriftSqlType.string,
         data['${effectivePrefix}artwork_hash'],
       ),
+      artworkCheckedAtMs: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}artwork_checked_at_ms'],
+      ),
       addedAtMs: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}added_at_ms'],
@@ -490,6 +514,7 @@ class Track extends DataClass implements Insertable<Track> {
   final int sizeBytes;
   final int? fileMtimeMs;
   final String? artworkHash;
+  final int? artworkCheckedAtMs;
   final int addedAtMs;
   final int updatedAtMs;
   final int? deletedAtMs;
@@ -510,6 +535,7 @@ class Track extends DataClass implements Insertable<Track> {
     required this.sizeBytes,
     this.fileMtimeMs,
     this.artworkHash,
+    this.artworkCheckedAtMs,
     required this.addedAtMs,
     required this.updatedAtMs,
     this.deletedAtMs,
@@ -542,6 +568,9 @@ class Track extends DataClass implements Insertable<Track> {
     }
     if (!nullToAbsent || artworkHash != null) {
       map['artwork_hash'] = Variable<String>(artworkHash);
+    }
+    if (!nullToAbsent || artworkCheckedAtMs != null) {
+      map['artwork_checked_at_ms'] = Variable<int>(artworkCheckedAtMs);
     }
     map['added_at_ms'] = Variable<int>(addedAtMs);
     map['updated_at_ms'] = Variable<int>(updatedAtMs);
@@ -591,6 +620,9 @@ class Track extends DataClass implements Insertable<Track> {
       artworkHash: artworkHash == null && nullToAbsent
           ? const Value.absent()
           : Value(artworkHash),
+      artworkCheckedAtMs: artworkCheckedAtMs == null && nullToAbsent
+          ? const Value.absent()
+          : Value(artworkCheckedAtMs),
       addedAtMs: Value(addedAtMs),
       updatedAtMs: Value(updatedAtMs),
       deletedAtMs: deletedAtMs == null && nullToAbsent
@@ -631,6 +663,7 @@ class Track extends DataClass implements Insertable<Track> {
       sizeBytes: serializer.fromJson<int>(json['sizeBytes']),
       fileMtimeMs: serializer.fromJson<int?>(json['fileMtimeMs']),
       artworkHash: serializer.fromJson<String?>(json['artworkHash']),
+      artworkCheckedAtMs: serializer.fromJson<int?>(json['artworkCheckedAtMs']),
       addedAtMs: serializer.fromJson<int>(json['addedAtMs']),
       updatedAtMs: serializer.fromJson<int>(json['updatedAtMs']),
       deletedAtMs: serializer.fromJson<int?>(json['deletedAtMs']),
@@ -656,6 +689,7 @@ class Track extends DataClass implements Insertable<Track> {
       'sizeBytes': serializer.toJson<int>(sizeBytes),
       'fileMtimeMs': serializer.toJson<int?>(fileMtimeMs),
       'artworkHash': serializer.toJson<String?>(artworkHash),
+      'artworkCheckedAtMs': serializer.toJson<int?>(artworkCheckedAtMs),
       'addedAtMs': serializer.toJson<int>(addedAtMs),
       'updatedAtMs': serializer.toJson<int>(updatedAtMs),
       'deletedAtMs': serializer.toJson<int?>(deletedAtMs),
@@ -679,6 +713,7 @@ class Track extends DataClass implements Insertable<Track> {
     int? sizeBytes,
     Value<int?> fileMtimeMs = const Value.absent(),
     Value<String?> artworkHash = const Value.absent(),
+    Value<int?> artworkCheckedAtMs = const Value.absent(),
     int? addedAtMs,
     int? updatedAtMs,
     Value<int?> deletedAtMs = const Value.absent(),
@@ -699,6 +734,9 @@ class Track extends DataClass implements Insertable<Track> {
     sizeBytes: sizeBytes ?? this.sizeBytes,
     fileMtimeMs: fileMtimeMs.present ? fileMtimeMs.value : this.fileMtimeMs,
     artworkHash: artworkHash.present ? artworkHash.value : this.artworkHash,
+    artworkCheckedAtMs: artworkCheckedAtMs.present
+        ? artworkCheckedAtMs.value
+        : this.artworkCheckedAtMs,
     addedAtMs: addedAtMs ?? this.addedAtMs,
     updatedAtMs: updatedAtMs ?? this.updatedAtMs,
     deletedAtMs: deletedAtMs.present ? deletedAtMs.value : this.deletedAtMs,
@@ -733,6 +771,9 @@ class Track extends DataClass implements Insertable<Track> {
       artworkHash: data.artworkHash.present
           ? data.artworkHash.value
           : this.artworkHash,
+      artworkCheckedAtMs: data.artworkCheckedAtMs.present
+          ? data.artworkCheckedAtMs.value
+          : this.artworkCheckedAtMs,
       addedAtMs: data.addedAtMs.present ? data.addedAtMs.value : this.addedAtMs,
       updatedAtMs: data.updatedAtMs.present
           ? data.updatedAtMs.value
@@ -768,6 +809,7 @@ class Track extends DataClass implements Insertable<Track> {
           ..write('sizeBytes: $sizeBytes, ')
           ..write('fileMtimeMs: $fileMtimeMs, ')
           ..write('artworkHash: $artworkHash, ')
+          ..write('artworkCheckedAtMs: $artworkCheckedAtMs, ')
           ..write('addedAtMs: $addedAtMs, ')
           ..write('updatedAtMs: $updatedAtMs, ')
           ..write('deletedAtMs: $deletedAtMs, ')
@@ -793,6 +835,7 @@ class Track extends DataClass implements Insertable<Track> {
     sizeBytes,
     fileMtimeMs,
     artworkHash,
+    artworkCheckedAtMs,
     addedAtMs,
     updatedAtMs,
     deletedAtMs,
@@ -817,6 +860,7 @@ class Track extends DataClass implements Insertable<Track> {
           other.sizeBytes == this.sizeBytes &&
           other.fileMtimeMs == this.fileMtimeMs &&
           other.artworkHash == this.artworkHash &&
+          other.artworkCheckedAtMs == this.artworkCheckedAtMs &&
           other.addedAtMs == this.addedAtMs &&
           other.updatedAtMs == this.updatedAtMs &&
           other.deletedAtMs == this.deletedAtMs &&
@@ -839,6 +883,7 @@ class TracksCompanion extends UpdateCompanion<Track> {
   final Value<int> sizeBytes;
   final Value<int?> fileMtimeMs;
   final Value<String?> artworkHash;
+  final Value<int?> artworkCheckedAtMs;
   final Value<int> addedAtMs;
   final Value<int> updatedAtMs;
   final Value<int?> deletedAtMs;
@@ -860,6 +905,7 @@ class TracksCompanion extends UpdateCompanion<Track> {
     this.sizeBytes = const Value.absent(),
     this.fileMtimeMs = const Value.absent(),
     this.artworkHash = const Value.absent(),
+    this.artworkCheckedAtMs = const Value.absent(),
     this.addedAtMs = const Value.absent(),
     this.updatedAtMs = const Value.absent(),
     this.deletedAtMs = const Value.absent(),
@@ -882,6 +928,7 @@ class TracksCompanion extends UpdateCompanion<Track> {
     this.sizeBytes = const Value.absent(),
     this.fileMtimeMs = const Value.absent(),
     this.artworkHash = const Value.absent(),
+    this.artworkCheckedAtMs = const Value.absent(),
     required int addedAtMs,
     required int updatedAtMs,
     this.deletedAtMs = const Value.absent(),
@@ -908,6 +955,7 @@ class TracksCompanion extends UpdateCompanion<Track> {
     Expression<int>? sizeBytes,
     Expression<int>? fileMtimeMs,
     Expression<String>? artworkHash,
+    Expression<int>? artworkCheckedAtMs,
     Expression<int>? addedAtMs,
     Expression<int>? updatedAtMs,
     Expression<int>? deletedAtMs,
@@ -930,6 +978,8 @@ class TracksCompanion extends UpdateCompanion<Track> {
       if (sizeBytes != null) 'size_bytes': sizeBytes,
       if (fileMtimeMs != null) 'file_mtime_ms': fileMtimeMs,
       if (artworkHash != null) 'artwork_hash': artworkHash,
+      if (artworkCheckedAtMs != null)
+        'artwork_checked_at_ms': artworkCheckedAtMs,
       if (addedAtMs != null) 'added_at_ms': addedAtMs,
       if (updatedAtMs != null) 'updated_at_ms': updatedAtMs,
       if (deletedAtMs != null) 'deleted_at_ms': deletedAtMs,
@@ -954,6 +1004,7 @@ class TracksCompanion extends UpdateCompanion<Track> {
     Value<int>? sizeBytes,
     Value<int?>? fileMtimeMs,
     Value<String?>? artworkHash,
+    Value<int?>? artworkCheckedAtMs,
     Value<int>? addedAtMs,
     Value<int>? updatedAtMs,
     Value<int?>? deletedAtMs,
@@ -976,6 +1027,7 @@ class TracksCompanion extends UpdateCompanion<Track> {
       sizeBytes: sizeBytes ?? this.sizeBytes,
       fileMtimeMs: fileMtimeMs ?? this.fileMtimeMs,
       artworkHash: artworkHash ?? this.artworkHash,
+      artworkCheckedAtMs: artworkCheckedAtMs ?? this.artworkCheckedAtMs,
       addedAtMs: addedAtMs ?? this.addedAtMs,
       updatedAtMs: updatedAtMs ?? this.updatedAtMs,
       deletedAtMs: deletedAtMs ?? this.deletedAtMs,
@@ -1021,6 +1073,9 @@ class TracksCompanion extends UpdateCompanion<Track> {
     }
     if (artworkHash.present) {
       map['artwork_hash'] = Variable<String>(artworkHash.value);
+    }
+    if (artworkCheckedAtMs.present) {
+      map['artwork_checked_at_ms'] = Variable<int>(artworkCheckedAtMs.value);
     }
     if (addedAtMs.present) {
       map['added_at_ms'] = Variable<int>(addedAtMs.value);
@@ -1068,6 +1123,7 @@ class TracksCompanion extends UpdateCompanion<Track> {
           ..write('sizeBytes: $sizeBytes, ')
           ..write('fileMtimeMs: $fileMtimeMs, ')
           ..write('artworkHash: $artworkHash, ')
+          ..write('artworkCheckedAtMs: $artworkCheckedAtMs, ')
           ..write('addedAtMs: $addedAtMs, ')
           ..write('updatedAtMs: $updatedAtMs, ')
           ..write('deletedAtMs: $deletedAtMs, ')
@@ -1381,6 +1437,7 @@ typedef $$TracksTableCreateCompanionBuilder = TracksCompanion Function({
   Value<int> sizeBytes,
   Value<int?> fileMtimeMs,
   Value<String?> artworkHash,
+  Value<int?> artworkCheckedAtMs,
   required int addedAtMs,
   required int updatedAtMs,
   Value<int?> deletedAtMs,
@@ -1403,6 +1460,7 @@ typedef $$TracksTableUpdateCompanionBuilder = TracksCompanion Function({
   Value<int> sizeBytes,
   Value<int?> fileMtimeMs,
   Value<String?> artworkHash,
+  Value<int?> artworkCheckedAtMs,
   Value<int> addedAtMs,
   Value<int> updatedAtMs,
   Value<int?> deletedAtMs,
@@ -1471,6 +1529,11 @@ class $$TracksTableFilterComposer
 
   ColumnFilters<String> get artworkHash => $composableBuilder(
     column: $table.artworkHash,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get artworkCheckedAtMs => $composableBuilder(
+    column: $table.artworkCheckedAtMs,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -1579,6 +1642,11 @@ class $$TracksTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get artworkCheckedAtMs => $composableBuilder(
+    column: $table.artworkCheckedAtMs,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<int> get addedAtMs => $composableBuilder(
     column: $table.addedAtMs,
     builder: (column) => ColumnOrderings(column),
@@ -1676,6 +1744,11 @@ class $$TracksTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<int> get artworkCheckedAtMs => $composableBuilder(
+    column: $table.artworkCheckedAtMs,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<int> get addedAtMs =>
       $composableBuilder(column: $table.addedAtMs, builder: (column) => column);
 
@@ -1752,6 +1825,7 @@ class $$TracksTableTableManager
                 Value<int> sizeBytes = const Value.absent(),
                 Value<int?> fileMtimeMs = const Value.absent(),
                 Value<String?> artworkHash = const Value.absent(),
+                Value<int?> artworkCheckedAtMs = const Value.absent(),
                 Value<int> addedAtMs = const Value.absent(),
                 Value<int> updatedAtMs = const Value.absent(),
                 Value<int?> deletedAtMs = const Value.absent(),
@@ -1773,6 +1847,7 @@ class $$TracksTableTableManager
                 sizeBytes: sizeBytes,
                 fileMtimeMs: fileMtimeMs,
                 artworkHash: artworkHash,
+                artworkCheckedAtMs: artworkCheckedAtMs,
                 addedAtMs: addedAtMs,
                 updatedAtMs: updatedAtMs,
                 deletedAtMs: deletedAtMs,
@@ -1796,6 +1871,7 @@ class $$TracksTableTableManager
                 Value<int> sizeBytes = const Value.absent(),
                 Value<int?> fileMtimeMs = const Value.absent(),
                 Value<String?> artworkHash = const Value.absent(),
+                Value<int?> artworkCheckedAtMs = const Value.absent(),
                 required int addedAtMs,
                 required int updatedAtMs,
                 Value<int?> deletedAtMs = const Value.absent(),
@@ -1817,6 +1893,7 @@ class $$TracksTableTableManager
                 sizeBytes: sizeBytes,
                 fileMtimeMs: fileMtimeMs,
                 artworkHash: artworkHash,
+                artworkCheckedAtMs: artworkCheckedAtMs,
                 addedAtMs: addedAtMs,
                 updatedAtMs: updatedAtMs,
                 deletedAtMs: deletedAtMs,

@@ -52,7 +52,8 @@ class LibraryDao extends DatabaseAccessor<AppDatabase> with _$LibraryDaoMixin {
     return query.write(
       TracksCompanion(
         contentHash: Value(t.contentHash),
-        localPath: Value(t.path), // refresh to the current on-disk spelling
+        localPath: Value(t.path),
+        // refresh to the current on-disk spelling
         title: Value(t.title),
         artistName: Value(t.artistName),
         albumTitle: Value(t.albumTitle),
@@ -66,6 +67,7 @@ class LibraryDao extends DatabaseAccessor<AppDatabase> with _$LibraryDaoMixin {
         bitrate: Value(t.bitrate),
         sampleRate: Value(t.sampleRate),
         updatedAtMs: Value(DateTime.now().millisecondsSinceEpoch),
+        artworkCheckedAtMs: const Value(null),
       ),
     );
   }
@@ -78,6 +80,34 @@ class LibraryDao extends DatabaseAccessor<AppDatabase> with _$LibraryDaoMixin {
     return query.write(
       TracksCompanion(
         deletedAtMs: Value(DateTime.now().millisecondsSinceEpoch),
+      ),
+    );
+  }
+
+  /// Alive, file-backed tracks never checked by the artwork pass on this
+  /// device. Ordered like watchTracks() so covers light up top-to-bottom
+  /// in the list the user is looking at.
+  Future<List<Track>> tracksMissingArtwork() {
+    final query = select(tracks)
+      ..where(
+        (t) =>
+            t.artworkCheckedAtMs.isNull() &
+            t.localPath.isNotNull() &
+            t.deletedAtMs.isNull(),
+      )
+      ..orderBy([(t) => OrderingTerm.asc(t.title)]);
+    return query.get();
+  }
+
+  /// Records one extraction attempt: the cover hash (null = the file has
+  /// no usable cover) + the "checked" stamp, so cover-less files are never
+  /// re-read. Failures must NOT call this - they stay queued for a retry.
+  Future<void> updateArtworkHash(String id, String? artworkHash) {
+    final query = update(tracks)..where((t) => t.id.equals(id));
+    return query.write(
+      TracksCompanion(
+        artworkHash: Value(artworkHash),
+        artworkCheckedAtMs: Value(DateTime.now().millisecondsSinceEpoch),
       ),
     );
   }
@@ -120,4 +150,5 @@ TracksCompanion _reviveCompanion(ScannedTrack t, int now) => TracksCompanion(
   sampleRate: Value(t.sampleRate),
   updatedAtMs: Value(now),
   deletedAtMs: const Value(null),
+  artworkCheckedAtMs: const Value(null),
 );

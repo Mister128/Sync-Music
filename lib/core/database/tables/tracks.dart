@@ -12,6 +12,7 @@ class Tracks extends Table {
   IntColumn get sizeBytes => integer().withDefault(const Constant(0))();
   IntColumn get fileMtimeMs => integer().nullable()();
   TextColumn get artworkHash => text().nullable()();
+  IntColumn get artworkCheckedAtMs => integer().nullable()();
   IntColumn get addedAtMs => integer()();
   IntColumn get updatedAtMs => integer()();
   IntColumn get deletedAtMs => integer().nullable()();
