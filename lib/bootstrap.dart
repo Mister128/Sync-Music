@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sync_music/app/app.dart';
 import 'package:sync_music/core/logging/app_logger.dart';
+import 'package:sync_music/core/storage/artwork_paths.dart';
 import 'package:sync_music/features/library/presentation/controllers/library_scan_controller.dart';
 import 'package:sync_music/i18n/strings.g.dart';
 
@@ -20,6 +21,11 @@ Future<void> bootstrap() async {
     final dir = await getApplicationSupportDirectory();
     log.info('DB file: ${dir.path}${Platform.pathSeparator}sync_music.sqlite');
   }
+
+  // Resolve <support>/artwork once so tiles can map hash -> File synchronously
+  // in build(). Same support dir drift_flutter uses for the DB.
+  final artwork = await initArtWorkDir();
+  log.info('Artwork dir: ${artwork.path}');
 
   await LocaleSettings.useDeviceLocale();
   log.info('Device locale: ${LocaleSettings.currentLocale.languageCode}');

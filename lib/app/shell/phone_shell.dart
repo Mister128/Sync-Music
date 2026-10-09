@@ -49,8 +49,7 @@ class PhoneShell extends StatelessWidget {
             Expanded(
               child: TabBarView(
                 children: [
-                  for (final section in sections)
-                    buildSectionPage(section),
+                  for (final section in sections) buildSectionPage(section),
                 ],
               ),
             ),

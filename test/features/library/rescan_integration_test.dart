@@ -182,7 +182,7 @@ void main() {
     final events = await rescan().toList();
 
     expect(events.whereType<ScanFinished>().single.removed, 0); // <- protection
-    expect(await tracksDao.watchTracks().first, hasLength(1));  // track survives
+    expect(await tracksDao.watchTracks().first, hasLength(1)); // track survives
   });
 
   test('removing a root tombstones its tracks on the next scan', () async {

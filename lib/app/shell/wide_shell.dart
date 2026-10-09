@@ -61,8 +61,7 @@ class _WideShellState extends State<WideShell> {
                   child: IndexedStack(
                     index: _index,
                     children: [
-                      for (final section in sections)
-                        buildSectionPage(section),
+                      for (final section in sections) buildSectionPage(section),
                     ],
                   ),
                 ),
