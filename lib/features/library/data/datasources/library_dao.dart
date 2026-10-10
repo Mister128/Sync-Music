@@ -21,26 +21,28 @@ class LibraryDao extends DatabaseAccessor<AppDatabase> with _$LibraryDaoMixin {
 
   Future<List<Track>> getAllOnce() => select(tracks).get();
 
-  /// Albums = alive tracks grouped by (album title, artist); tracks without
-  /// an album tag never appear here.
+  /// Albums = alive tracks grouped by album TITLE ONLY: the same title from
+  /// different artists is ONE album (compilations like "Download" merge).
+  /// artistName is a deterministic representative - MIN() picks the
+  /// alphabetically first. MIN(artwork_hash) picks any non-null cover.
   Stream<List<Album>> watchAlbums() {
     final albumTitle = tracks.albumTitle;
-    final artistName = tracks.artistName;
+    final repArtist = tracks.artistName.min();
     final trackCount = countAll();
     final anyArtwork = tracks.artworkHash.min();
 
     final query = selectOnly(tracks)
-      ..addColumns([albumTitle, artistName, trackCount, anyArtwork])
+      ..addColumns([albumTitle, repArtist, trackCount, anyArtwork])
       ..where(tracks.deletedAtMs.isNull() & albumTitle.isNotNull())
-      ..groupBy([albumTitle, artistName])
+      ..groupBy([albumTitle])
       ..orderBy([OrderingTerm.asc(albumTitle)]);
 
     return query.watch().map(
-      (rows) => [
+          (rows) => [
         for (final row in rows)
           Album(
             albumTitle: row.read(albumTitle)!,
-            artistName: row.read(artistName)!,
+            artistName: row.read(repArtist)!,
             trackCount: row.read(trackCount) ?? 0,
             artworkHash: row.read(anyArtwork),
           ),
@@ -54,41 +56,36 @@ class LibraryDao extends DatabaseAccessor<AppDatabase> with _$LibraryDaoMixin {
     final artistName = tracks.artistName;
     final trackCount = countAll();
     final albumCount = tracks.albumTitle.count(distinct: true);
+    final anyArtwork = tracks.artworkHash.min();
 
     final query = selectOnly(tracks)
-      ..addColumns([artistName, trackCount, albumCount])
+      ..addColumns([artistName, trackCount, albumCount, anyArtwork])
       ..where(tracks.deletedAtMs.isNull())
       ..groupBy([artistName])
       ..orderBy([OrderingTerm.asc(artistName)]);
 
     return query.watch().map(
-      (rows) => [
+          (rows) => [
         for (final row in rows)
           Artist(
             artistName: row.read(artistName)!,
             trackCount: row.read(trackCount) ?? 0,
             albumCount: row.read(albumCount) ?? 0,
+            artworkHash: row.read(anyArtwork),
           ),
       ],
     );
   }
 
-  /// Tracks of ONE album in playing order: disc -> track number -> title.
-  Stream<List<Track>> watchAlbumTracks({
-    required String albumTitle,
-    required String artistName,
-  }) {
+  /// Tracks of ONE album (the title is the whole key now - compilations
+  /// include every artist), in playing order: disc -> track number -> title.
+  Stream<List<Track>> watchAlbumTracks(String albumTitle) {
     final query = select(tracks)
-      ..where(
-        (t) =>
-            t.deletedAtMs.isNull() &
-            t.albumTitle.equals(albumTitle) &
-            t.artistName.equals(artistName),
-      )
+      ..where((t) => t.deletedAtMs.isNull() & t.albumTitle.equals(albumTitle))
       ..orderBy([
-        (t) => OrderingTerm.asc(t.discNumber),
-        (t) => OrderingTerm.asc(t.trackNumber),
-        (t) => OrderingTerm.asc(t.title),
+            (t) => OrderingTerm.asc(t.discNumber),
+            (t) => OrderingTerm.asc(t.trackNumber),
+            (t) => OrderingTerm.asc(t.title),
       ]);
     return query.watch();
   }

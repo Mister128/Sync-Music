@@ -15,7 +15,9 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Artist {
 
- String get artistName; int get trackCount; int get albumCount;
+ String get artistName; int get trackCount; int get albumCount;/// Cover of ANY track by this artist - MIN() ignores NULLs, so one file
+/// with embedded art is enough for the round avatar.
+ String? get artworkHash;
 /// Create a copy of Artist
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -27,20 +29,20 @@ $ArtistCopyWith<Artist> get copyWith => _$ArtistCopyWithImpl<Artist>(this as Art
 @override
 bool operator ==(Object other) {
   final _this = this as Artist;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Artist&&(identical(other.artistName, _this.artistName) || other.artistName == _this.artistName)&&(identical(other.trackCount, _this.trackCount) || other.trackCount == _this.trackCount)&&(identical(other.albumCount, _this.albumCount) || other.albumCount == _this.albumCount));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Artist&&(identical(other.artistName, _this.artistName) || other.artistName == _this.artistName)&&(identical(other.trackCount, _this.trackCount) || other.trackCount == _this.trackCount)&&(identical(other.albumCount, _this.albumCount) || other.albumCount == _this.albumCount)&&(identical(other.artworkHash, _this.artworkHash) || other.artworkHash == _this.artworkHash));
 }
 
 
 @override
 int get hashCode {
   final _this = this as Artist;
-  return Object.hash(runtimeType,_this.artistName,_this.trackCount,_this.albumCount);
+  return Object.hash(runtimeType,_this.artistName,_this.trackCount,_this.albumCount,_this.artworkHash);
 }
 
 @override
 String toString() {
   final _this = this as Artist;
-  return 'Artist(artistName: ${_this.artistName}, trackCount: ${_this.trackCount}, albumCount: ${_this.albumCount})';
+  return 'Artist(artistName: ${_this.artistName}, trackCount: ${_this.trackCount}, albumCount: ${_this.albumCount}, artworkHash: ${_this.artworkHash})';
 }
 
 
@@ -51,7 +53,7 @@ abstract mixin class $ArtistCopyWith<$Res>  {
   factory $ArtistCopyWith(Artist value, $Res Function(Artist) _then) = _$ArtistCopyWithImpl;
 @useResult
 $Res call({
- String artistName, int trackCount, int albumCount
+ String artistName, int trackCount, int albumCount, String? artworkHash
 });
 
 
@@ -68,12 +70,13 @@ class _$ArtistCopyWithImpl<$Res>
 
 /// Create a copy of Artist
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? artistName = null,Object? trackCount = null,Object? albumCount = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? artistName = null,Object? trackCount = null,Object? albumCount = null,Object? artworkHash = freezed,}) {
   return _then(Artist(
 artistName: null == artistName ? _self.artistName : artistName // ignore: cast_nullable_to_non_nullable
 as String,trackCount: null == trackCount ? _self.trackCount : trackCount // ignore: cast_nullable_to_non_nullable
 as int,albumCount: null == albumCount ? _self.albumCount : albumCount // ignore: cast_nullable_to_non_nullable
-as int,
+as int,artworkHash: freezed == artworkHash ? _self.artworkHash : artworkHash // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -158,10 +161,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String artistName,  int trackCount,  int albumCount)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String artistName,  int trackCount,  int albumCount,  String? artworkHash)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Artist() when $default != null:
-return $default(_that.artistName,_that.trackCount,_that.albumCount);case _:
+return $default(_that.artistName,_that.trackCount,_that.albumCount,_that.artworkHash);case _:
   return orElse();
 
 }
@@ -179,10 +182,10 @@ return $default(_that.artistName,_that.trackCount,_that.albumCount);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String artistName,  int trackCount,  int albumCount)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String artistName,  int trackCount,  int albumCount,  String? artworkHash)  $default,) {final _that = this;
 switch (_that) {
 case _Artist():
-return $default(_that.artistName,_that.trackCount,_that.albumCount);case _:
+return $default(_that.artistName,_that.trackCount,_that.albumCount,_that.artworkHash);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -199,10 +202,10 @@ return $default(_that.artistName,_that.trackCount,_that.albumCount);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String artistName,  int trackCount,  int albumCount)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String artistName,  int trackCount,  int albumCount,  String? artworkHash)?  $default,) {final _that = this;
 switch (_that) {
 case _Artist() when $default != null:
-return $default(_that.artistName,_that.trackCount,_that.albumCount);case _:
+return $default(_that.artistName,_that.trackCount,_that.albumCount,_that.artworkHash);case _:
   return null;
 
 }
@@ -214,12 +217,15 @@ return $default(_that.artistName,_that.trackCount,_that.albumCount);case _:
 
 
 class _Artist implements Artist {
-  const _Artist({required this.artistName, required this.trackCount, required this.albumCount});
+  const _Artist({required this.artistName, required this.trackCount, required this.albumCount, this.artworkHash});
   
 
 @override final  String artistName;
 @override final  int trackCount;
 @override final  int albumCount;
+/// Cover of ANY track by this artist - MIN() ignores NULLs, so one file
+/// with embedded art is enough for the round avatar.
+@override final  String? artworkHash;
 
 /// Create a copy of Artist
 /// with the given fields replaced by the non-null parameter values.
@@ -231,18 +237,18 @@ _$ArtistCopyWith<_Artist> get copyWith => __$ArtistCopyWithImpl<_Artist>(this, _
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Artist&&(identical(other.artistName, artistName) || other.artistName == artistName)&&(identical(other.trackCount, trackCount) || other.trackCount == trackCount)&&(identical(other.albumCount, albumCount) || other.albumCount == albumCount));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Artist&&(identical(other.artistName, artistName) || other.artistName == artistName)&&(identical(other.trackCount, trackCount) || other.trackCount == trackCount)&&(identical(other.albumCount, albumCount) || other.albumCount == albumCount)&&(identical(other.artworkHash, artworkHash) || other.artworkHash == artworkHash));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,artistName,trackCount,albumCount);
+    return Object.hash(runtimeType,artistName,trackCount,albumCount,artworkHash);
 }
 
 @override
 String toString() {
-    return 'Artist(artistName: $artistName, trackCount: $trackCount, albumCount: $albumCount)';
+    return 'Artist(artistName: $artistName, trackCount: $trackCount, albumCount: $albumCount, artworkHash: $artworkHash)';
 }
 
 
@@ -253,7 +259,7 @@ abstract mixin class _$ArtistCopyWith<$Res> implements $ArtistCopyWith<$Res> {
   factory _$ArtistCopyWith(_Artist value, $Res Function(_Artist) _then) = __$ArtistCopyWithImpl;
 @override @useResult
 $Res call({
- String artistName, int trackCount, int albumCount
+ String artistName, int trackCount, int albumCount, String? artworkHash
 });
 
 
@@ -270,12 +276,13 @@ class __$ArtistCopyWithImpl<$Res>
 
 /// Create a copy of Artist
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? artistName = null,Object? trackCount = null,Object? albumCount = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? artistName = null,Object? trackCount = null,Object? albumCount = null,Object? artworkHash = freezed,}) {
   return _then(_Artist(
 artistName: null == artistName ? _self.artistName : artistName // ignore: cast_nullable_to_non_nullable
 as String,trackCount: null == trackCount ? _self.trackCount : trackCount // ignore: cast_nullable_to_non_nullable
 as int,albumCount: null == albumCount ? _self.albumCount : albumCount // ignore: cast_nullable_to_non_nullable
-as int,
+as int,artworkHash: freezed == artworkHash ? _self.artworkHash : artworkHash // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 

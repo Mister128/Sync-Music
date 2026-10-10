@@ -2,9 +2,9 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'album.freezed.dart';
 
-/// An album DERIVED from the tracks table (GROUP BY album + artist).
-/// There is no albums table by design: the grid can never go out of sync
-/// with the library, and the album disappears with its last track.
+/// An album DERIVED from the tracks table (GROUP BY album TITLE only).
+/// Same title by different artists = ONE album (compilations merge);
+/// [artistName] is a representative for display, not part of the key.
 @freezed
 abstract class Album with _$Album {
   const factory({

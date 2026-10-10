@@ -121,6 +121,20 @@ class _Translations$library$ru extends Translations$library$en {
 	@override String get tracksEmpty => 'Нет треков';
 	@override String get tracksEmptyHint => 'Добавьте музыку или папку с музыкой в настройках';
 	@override String scanning({required Object processed, required Object total}) => 'Сканирование... ${processed} из ${total}';
+	@override String get albumsEmpty => 'Пока нет альбомов';
+	@override String get artistsEmpty => 'Пока нет артистов';
+	@override String trackCount({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('ru'))(n,
+		one: '${count} трек',
+		few: '${count} трека',
+		many: '${count} треков',
+		other: '${count} треков',
+	);
+	@override String albumCount({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('ru'))(n,
+		one: '${count} альбом',
+		few: '${count} альбома',
+		many: '${count} альбомов',
+		other: '${count} альбомов',
+	);
 }
 
 /// The flat map containing all translations for locale <ru>.
@@ -163,6 +177,10 @@ extension on TranslationsRu {
 			'library.tracksEmpty' => 'Нет треков',
 			'library.tracksEmptyHint' => 'Добавьте музыку или папку с музыкой в настройках',
 			'library.scanning' => ({required Object processed, required Object total}) => 'Сканирование... ${processed} из ${total}',
+			'library.albumsEmpty' => 'Пока нет альбомов',
+			'library.artistsEmpty' => 'Пока нет артистов',
+			'library.trackCount' => ({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('ru'))(n, one: '${count} трек', few: '${count} трека', many: '${count} треков', other: '${count} треков', ), 
+			'library.albumCount' => ({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('ru'))(n, one: '${count} альбом', few: '${count} альбома', many: '${count} альбомов', other: '${count} альбомов', ), 
 			_ => null,
 		};
 	}

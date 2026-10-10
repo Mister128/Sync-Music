@@ -59,31 +59,20 @@ final extractArtworkProvider = Provider<ExtractArtwork>(
   ),
 );
 
-final albumProvider = StreamProvider<List<Album>>(
+final albumsProvider = StreamProvider<List<Album>>(
   (ref) => ref.watch(libraryRepositoryProvider).watchAlbums(),
 );
 
-final artistProvider = StreamProvider<List<Artist>>(
+final artistsProvider = StreamProvider<List<Artist>>(
   (ref) => ref.watch(libraryRepositoryProvider).watchArtists(),
 );
 
 /// Detail pages. The album family key is a RECORD - records have structural
 /// equality, so they work as cache keys out of the box.
-final StreamProviderFamily<
-  List<Track>,
-  ({String albumTitle, String artistName})
->
-albumTracksProvider =
-    StreamProvider.family<
-      List<Track>,
-      ({String albumTitle, String artistName})
-    >(
-      (ref, key) => ref
-          .watch(libraryRepositoryProvider)
-          .watchAlbumTracks(
-            albumTitle: key.albumTitle,
-            artistName: key.artistName,
-          ),
+final StreamProviderFamily<List<Track>, String> albumTracksProvider =
+    StreamProvider.family<List<Track>, String>(
+      (ref, albumTitle) =>
+          ref.watch(libraryRepositoryProvider).watchAlbumTracks(albumTitle),
     );
 
 final StreamProviderFamily<List<Track>, String> artistTracksProvider =

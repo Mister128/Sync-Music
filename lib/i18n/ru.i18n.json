@@ -39,6 +39,20 @@
   "library": {
     "tracksEmpty": "Нет треков",
     "tracksEmptyHint": "Добавьте музыку или папку с музыкой в настройках",
-    "scanning": "Сканирование... $processed из $total"
+    "scanning": "Сканирование... $processed из $total",
+    "albumsEmpty": "Пока нет альбомов",
+    "artistsEmpty": "Пока нет артистов",
+    "trackCount": {
+      "one": "$count трек",
+      "few": "$count трека",
+      "many": "$count треков",
+      "other": "$count треков"
+    },
+    "albumCount": {
+      "one": "$count альбом",
+      "few": "$count альбома",
+      "many": "$count альбомов",
+      "other": "$count альбомов"
+    }
   }
 }

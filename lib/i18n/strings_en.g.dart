@@ -187,6 +187,24 @@ class Translations$library$en {
 
 	/// en: 'Scanning... $processed of $total'
 	String scanning({required Object processed, required Object total}) => 'Scanning... ${processed} of ${total}';
+
+	/// en: 'No albums yet'
+	String get albumsEmpty => 'No albums yet';
+
+	/// en: 'No artists yet'
+	String get artistsEmpty => 'No artists yet';
+
+	/// en: '(one) {$count track} (other) {$count tracks}'
+	String trackCount({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
+		one: '${count} track',
+		other: '${count} tracks',
+	);
+
+	/// en: '(one) {$count album} (other) {$count albums}'
+	String albumCount({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
+		one: '${count} album',
+		other: '${count} albums',
+	);
 }
 
 /// The flat map containing all translations for locale <en>.
@@ -229,6 +247,10 @@ extension on Translations {
 			'library.tracksEmpty' => 'No tracks yet',
 			'library.tracksEmptyHint' => 'Add music or music folder in Settings',
 			'library.scanning' => ({required Object processed, required Object total}) => 'Scanning... ${processed} of ${total}',
+			'library.albumsEmpty' => 'No albums yet',
+			'library.artistsEmpty' => 'No artists yet',
+			'library.trackCount' => ({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '${count} track', other: '${count} tracks', ), 
+			'library.albumCount' => ({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '${count} album', other: '${count} albums', ), 
 			_ => null,
 		};
 	}

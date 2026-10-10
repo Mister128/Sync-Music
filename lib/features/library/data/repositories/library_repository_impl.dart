@@ -21,12 +21,8 @@ class LibraryRepositoryImpl implements LibraryRepository {
   Stream<List<Artist>> watchArtists() => _dao.watchArtists();
 
   @override
-  Stream<List<Track>> watchAlbumTracks({
-    required String albumTitle,
-    required String artistName,
-  }) => _dao
-      .watchAlbumTracks(albumTitle: albumTitle, artistName: artistName)
-      .map(_toEntities);
+  Stream<List<Track>> watchAlbumTracks(String albumTitle) =>
+      _dao.watchAlbumTracks(albumTitle).map(_toEntities);
 
   @override
   Stream<List<Track>> watchArtistTracks(String artistName) =>

@@ -9,5 +9,9 @@ abstract class Artist with _$Artist {
     required String artistName,
     required int trackCount,
     required int albumCount,
+
+    /// Cover of ANY track by this artist - MIN() ignores NULLs, so one file
+    /// with embedded art is enough for the round avatar.
+    String? artworkHash,
   }) = _Artist;
 }

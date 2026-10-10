@@ -39,6 +39,16 @@
   "library": {
     "tracksEmpty": "No tracks yet",
     "tracksEmptyHint": "Add music or music folder in Settings",
-    "scanning": "Scanning... $processed of $total"
+    "scanning": "Scanning... $processed of $total",
+    "albumsEmpty": "No albums yet",
+    "artistsEmpty": "No artists yet",
+    "trackCount": {
+      "one": "$count track",
+      "other": "$count tracks"
+    },
+    "albumCount": {
+      "one": "$count album",
+      "other": "$count albums"
+    }
   }
 }

@@ -15,11 +15,8 @@ abstract interface class LibraryRepository {
 
   Stream<List<Artist>> watchArtists();
 
-  /// Playing order within one album (disc -> track number -> title).
-  Stream<List<Track>> watchAlbumTracks({
-    required String albumTitle,
-    required String artistName,
-  });
+  /// Playing order within one album; the title is the whole key.
+  Stream<List<Track>> watchAlbumTracks(String albumTitle);
 
   /// All tracks of one artist, grouped by album.
   Stream<List<Track>> watchArtistTracks(String artistName);
