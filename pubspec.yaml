@@ -43,6 +43,14 @@ dependencies:
   crypto: ^3.0.7
   permission_handler: ^13.0.2
 
+  #  Audio playback
+  just_audio: ^0.10.6
+  just_audio_media_kit: ^2.1.0
+  media_kit_libs_windows_audio: ^1.0.9
+
+  # Utils
+  collection: ^1.19.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
