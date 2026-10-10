@@ -169,7 +169,7 @@ class JustAudioPlayback implements PlaybackService {
   }
 
   @override
-  Future<void> setShuffleEnabled(bool enabled) async {
+  Future<void> setShuffleEnabled({required bool enabled}) async {
     _shuffleEnabled = enabled;
     await _player.setShuffleModeEnabled(enabled);
     _publish();
