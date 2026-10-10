@@ -34,7 +34,11 @@
     "notScanned": "Ещё не сканировалась",
     "lastScanned": "Сканировано $date",
     "removeFolder": "Убрать",
-    "scanNow": "Сканировать библиотеку"
+    "scanNow": "Сканировать библиотеку",
+    "androidSourceTitle": "Системная медиатека",
+    "androidSourceSubtitle": "Сканируется всё, что знает MediaStore — выбирать папки не нужно",
+    "grantAudioAccess": "Разрешить доступ к аудио",
+    "audioAccessGranted": "Доступ к аудио разрешён"
   },
   "library": {
     "tracksEmpty": "Нет треков",

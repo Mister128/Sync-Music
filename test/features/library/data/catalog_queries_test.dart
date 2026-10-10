@@ -144,29 +144,47 @@ void main() {
   });
 
   group('detail streams', () {
-    test('album key = title only: all artists merged, disc -> track order',
-            () async {
-          await insert(
-            id: '1', title: 'B', artist: 'Queen', album: 'Opera',
-            discNumber: 1, trackNumber: 2,
-          );
-          await insert(
-            id: '2', title: 'A', artist: 'Queen', album: 'Opera',
-            discNumber: 1, trackNumber: 1,
-          );
-          await insert(
-            id: '3', title: 'C', artist: 'Queen', album: 'Opera',
-            discNumber: 2, trackNumber: 1,
-          );
-          await insert(
-            id: '4', title: 'Guest', artist: 'Someone', album: 'Opera',
-            discNumber: 1, trackNumber: 3,
-          );
+    test(
+      'album key = title only: all artists merged, disc -> track order',
+      () async {
+        await insert(
+          id: '1',
+          title: 'B',
+          artist: 'Queen',
+          album: 'Opera',
+          discNumber: 1,
+          trackNumber: 2,
+        );
+        await insert(
+          id: '2',
+          title: 'A',
+          artist: 'Queen',
+          album: 'Opera',
+          discNumber: 1,
+          trackNumber: 1,
+        );
+        await insert(
+          id: '3',
+          title: 'C',
+          artist: 'Queen',
+          album: 'Opera',
+          discNumber: 2,
+          trackNumber: 1,
+        );
+        await insert(
+          id: '4',
+          title: 'Guest',
+          artist: 'Someone',
+          album: 'Opera',
+          discNumber: 1,
+          trackNumber: 3,
+        );
 
-          final tracks = await dao.watchAlbumTracks('Opera').first;
+        final tracks = await dao.watchAlbumTracks('Opera').first;
 
-          expect(tracks.map((t) => t.title), ['A', 'B', 'Guest', 'C']);
-        });
+        expect(tracks.map((t) => t.title), ['A', 'B', 'Guest', 'C']);
+      },
+    );
 
     test('artist tracks are grouped by album', () async {
       await insert(
@@ -175,7 +193,7 @@ void main() {
         artist: 'Queen',
         album: 'Opera',
         trackNumber: 1,
-        artworkHash: 'art-a'
+        artworkHash: 'art-a',
       );
       await insert(
         id: '2',
@@ -183,7 +201,7 @@ void main() {
         artist: 'Queen',
         album: 'Aah',
         trackNumber: 5,
-        artworkHash: 'art-b'
+        artworkHash: 'art-b',
       );
 
       final tracks = await dao.watchArtistTracks('Queen').first;

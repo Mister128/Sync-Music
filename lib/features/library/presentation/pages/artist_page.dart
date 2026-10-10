@@ -44,11 +44,7 @@ class ArtistPage extends ConsumerWidget {
                 Center(
                   child: Column(
                     children: [
-                      SmArtwork(
-                        hash: artworkHash,
-                        size: 96,
-                        borderRadius: 48,
-                      ),
+                      SmArtwork(hash: artworkHash, size: 96, borderRadius: 48),
                       const SizedBox(height: AppSpacing.md),
                       Text(artistName, style: theme.textTheme.headlineSmall),
                       const SizedBox(height: AppSpacing.xs),

@@ -34,7 +34,11 @@
     "notScanned": "Not scanned yet",
     "lastScanned": "Scanned $date",
     "removeFolder": "Remove",
-    "scanNow": "Scan library now"
+    "scanNow": "Scan library now",
+    "androidSourceTitle": "System media library",
+    "androidSourceSubtitle": "Everything MediaStore knows is scanned - no folders to pick",
+    "grantAudioAccess": "Grant audio access",
+    "audioAccessGranted": "Audio access granted"
   },
   "library": {
     "tracksEmpty": "No tracks yet",

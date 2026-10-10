@@ -186,7 +186,7 @@ class RescanLibrary {
       final seconds = (stopwatch.elapsedMilliseconds / 1000).toStringAsFixed(1);
       log.info(
         'done: $added added, $changed changed, ${toTombstone.length} removed '
-            'in ${seconds}s (skipped: $skipped, protected: $protectedCount)',
+        'in ${seconds}s (skipped: $skipped, protected: $protectedCount)',
       );
 
       yield ScanFinished(
@@ -215,7 +215,7 @@ class RescanLibrary {
   static bool _underAnyRoot(String filePath, List<String> rootPaths) {
     final normalized = defaultPathNormalizer(filePath);
     return rootPaths.any(
-          (root) => p.isWithin(defaultPathNormalizer(root), normalized),
+      (root) => p.isWithin(defaultPathNormalizer(root), normalized),
     );
   }
 }

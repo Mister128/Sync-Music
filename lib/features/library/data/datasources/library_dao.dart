@@ -38,7 +38,7 @@ class LibraryDao extends DatabaseAccessor<AppDatabase> with _$LibraryDaoMixin {
       ..orderBy([OrderingTerm.asc(albumTitle)]);
 
     return query.watch().map(
-          (rows) => [
+      (rows) => [
         for (final row in rows)
           Album(
             albumTitle: row.read(albumTitle)!,
@@ -65,7 +65,7 @@ class LibraryDao extends DatabaseAccessor<AppDatabase> with _$LibraryDaoMixin {
       ..orderBy([OrderingTerm.asc(artistName)]);
 
     return query.watch().map(
-          (rows) => [
+      (rows) => [
         for (final row in rows)
           Artist(
             artistName: row.read(artistName)!,
@@ -83,9 +83,9 @@ class LibraryDao extends DatabaseAccessor<AppDatabase> with _$LibraryDaoMixin {
     final query = select(tracks)
       ..where((t) => t.deletedAtMs.isNull() & t.albumTitle.equals(albumTitle))
       ..orderBy([
-            (t) => OrderingTerm.asc(t.discNumber),
-            (t) => OrderingTerm.asc(t.trackNumber),
-            (t) => OrderingTerm.asc(t.title),
+        (t) => OrderingTerm.asc(t.discNumber),
+        (t) => OrderingTerm.asc(t.trackNumber),
+        (t) => OrderingTerm.asc(t.title),
       ]);
     return query.watch();
   }

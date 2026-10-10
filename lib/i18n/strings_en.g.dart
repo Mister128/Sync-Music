@@ -169,6 +169,18 @@ class Translations$settings$en {
 
 	/// en: 'Scan library now'
 	String get scanNow => 'Scan library now';
+
+	/// en: 'System media library'
+	String get androidSourceTitle => 'System media library';
+
+	/// en: 'Everything MediaStore knows is scanned - no folders to pick'
+	String get androidSourceSubtitle => 'Everything MediaStore knows is scanned - no folders to pick';
+
+	/// en: 'Grant audio access'
+	String get grantAudioAccess => 'Grant audio access';
+
+	/// en: 'Audio access granted'
+	String get audioAccessGranted => 'Audio access granted';
 }
 
 // Path: library
@@ -244,6 +256,10 @@ extension on Translations {
 			'settings.lastScanned' => ({required Object date}) => 'Scanned ${date}',
 			'settings.removeFolder' => 'Remove',
 			'settings.scanNow' => 'Scan library now',
+			'settings.androidSourceTitle' => 'System media library',
+			'settings.androidSourceSubtitle' => 'Everything MediaStore knows is scanned - no folders to pick',
+			'settings.grantAudioAccess' => 'Grant audio access',
+			'settings.audioAccessGranted' => 'Audio access granted',
 			'library.tracksEmpty' => 'No tracks yet',
 			'library.tracksEmptyHint' => 'Add music or music folder in Settings',
 			'library.scanning' => ({required Object processed, required Object total}) => 'Scanning... ${processed} of ${total}',

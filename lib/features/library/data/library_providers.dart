@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
 import 'package:sync_music/core/database/app_database.dart' as db;
 import 'package:sync_music/core/database/database_provider.dart';
+import 'package:sync_music/core/platform/platform_info.dart';
 import 'package:sync_music/features/library/data/datasources/artwork_store.dart';
 import 'package:sync_music/features/library/data/datasources/library_dao.dart';
 import 'package:sync_music/features/library/data/datasources/library_roots_dao.dart';
@@ -29,7 +30,7 @@ final libraryRootsProvider = StreamProvider<List<db.LibraryRoot>>(
 );
 
 final platformMediaScannerProvider = Provider<PlatformMediaScanner>(
-      (ref) => const MediaStoreScanner(),
+  (ref) => const MediaStoreScanner(),
 );
 
 final rescanLibraryProvider = Provider<RescanLibrary>(
@@ -37,7 +38,7 @@ final rescanLibraryProvider = Provider<RescanLibrary>(
     db: ref.watch(databaseProvider),
     tracksDao: ref.watch(libraryDaoProvider),
     rootsDao: ref.watch(libraryRootsDaoProvider),
-    platformScanner: ref.watch(platformMediaScannerProvider)
+    platformScanner: ref.watch(platformMediaScannerProvider),
   ),
 );
 
@@ -86,3 +87,10 @@ final StreamProviderFamily<List<Track>, String> artistTracksProvider =
       (ref, artistName) =>
           ref.watch(libraryRepositoryProvider).watchArtistTracks(artistName),
     );
+
+/// Android: is the audio permission granted (drives the settings UI).
+/// Always true elsewhere - desktop has no runtime audio permission.
+final audioPermissionProvider = FutureProvider<bool>((ref) async {
+  if (!PlatformInfo.usesSystemMediaLibrary) return true;
+  return await ref.watch(platformMediaScannerProvider).hasPermission();
+});

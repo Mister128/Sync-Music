@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -40,7 +39,7 @@ void main() {
       tracksDao: tracksDao,
       rootsDao: rootsDao,
       platformScanner: FakePlatformScanner(),
-      android: false
+      android: false,
     );
   });
 

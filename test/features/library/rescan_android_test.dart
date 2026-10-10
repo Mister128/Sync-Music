@@ -76,32 +76,36 @@ void main() {
     expect(await tracksDao.watchTracks().first, hasLength(1)); // untouched
   });
 
-  test('MediaStore entries flow through the SAME pipeline (no roots!)',
-          () async {
-        final a = writeWav('song_a.wav');
-        final b = writeWav('song_b.wav', fill: 0x90);
-        final scanner = FakePlatformScanner(entries: [
+  test(
+    'MediaStore entries flow through the SAME pipeline (no roots!)',
+    () async {
+      final a = writeWav('song_a.wav');
+      final b = writeWav('song_b.wav', fill: 0x90);
+      final scanner = FakePlatformScanner(
+        entries: [
           FileEntry(path: a.path, sizeBytes: a.lengthSync(), mtimeMs: 1000),
           FileEntry(path: b.path, sizeBytes: b.lengthSync(), mtimeMs: 1000),
-        ]);
+        ],
+      );
 
-        // NOTE: no rootsDao.addRoot() anywhere - Android ignores roots entirely.
-        var events = await rescanWith(scanner).call().toList();
-        var finished = events.whereType<ScanFinished>().single;
-        expect((finished.added, finished.changed, finished.removed), (2, 0, 0));
-        expect(await tracksDao.watchTracks().first, hasLength(2));
+      // NOTE: no rootsDao.addRoot() anywhere - Android ignores roots entirely.
+      var events = await rescanWith(scanner).call().toList();
+      var finished = events.whereType<ScanFinished>().single;
+      expect((finished.added, finished.changed, finished.removed), (2, 0, 0));
+      expect(await tracksDao.watchTracks().first, hasLength(2));
 
-        // --- nothing changed: MediaStore mtime is stable -> ZERO re-parses ---
-        events = await rescanWith(scanner).call().toList();
-        expect(events.whereType<ScanStarted>().single.toProcess, 0);
+      // --- nothing changed: MediaStore mtime is stable -> ZERO re-parses ---
+      events = await rescanWith(scanner).call().toList();
+      expect(events.whereType<ScanStarted>().single.toProcess, 0);
 
-        // --- a file disappears from MediaStore -> tombstoned next pass ---
-        scanner.entries = [
-          FileEntry(path: a.path, sizeBytes: a.lengthSync(), mtimeMs: 1000),
-        ];
-        events = await rescanWith(scanner).call().toList();
-        finished = events.whereType<ScanFinished>().single;
-        expect(finished.removed, 1);
-        expect(await tracksDao.watchTracks().first, hasLength(1));
-      });
+      // --- a file disappears from MediaStore -> tombstoned next pass ---
+      scanner.entries = [
+        FileEntry(path: a.path, sizeBytes: a.lengthSync(), mtimeMs: 1000),
+      ];
+      events = await rescanWith(scanner).call().toList();
+      finished = events.whereType<ScanFinished>().single;
+      expect(finished.removed, 1);
+      expect(await tracksDao.watchTracks().first, hasLength(1));
+    },
+  );
 }

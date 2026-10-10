@@ -42,10 +42,8 @@ class AlbumsPage extends ConsumerWidget {
           childAspectRatio: 0.74,
         ),
         itemCount: value.length,
-        itemBuilder: (context, index) => _AlbumCard(
-          album: value[index],
-          radius: _cardRadius,
-        ),
+        itemBuilder: (context, index) =>
+            _AlbumCard(album: value[index], radius: _cardRadius),
       ),
 
       AsyncError(:final error) => Center(child: Text('$error')),
@@ -68,11 +66,7 @@ class _AlbumCard extends StatelessWidget {
 
     return InkWell(
       borderRadius: BorderRadius.circular(radius),
-      onTap: () => context.push(
-        Routes.albumPath(
-          albumTitle: album.albumTitle,
-        ),
-      ),
+      onTap: () => context.push(Routes.albumPath(albumTitle: album.albumTitle)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -98,7 +92,7 @@ class _AlbumCard extends StatelessWidget {
           ),
           Text(
             '${album.artistName} | '
-                '${t.library.trackCount(count: album.trackCount, n: album.trackCount)}',
+            '${t.library.trackCount(count: album.trackCount, n: album.trackCount)}',
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: theme.textTheme.bodySmall?.copyWith(

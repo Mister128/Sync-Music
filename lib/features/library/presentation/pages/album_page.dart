@@ -25,15 +25,15 @@ class AlbumPage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: Text(albumTitle)),
       body: switch (tracks) {
-      // The album can legitimately vanish between the tap and the push
-      // (a rescan tombstoned its last track) - the stream answers with [].
-        AsyncData(:final value) when value.isEmpty =>
-        const Center(child: Icon(Icons.album_outlined, size: 48)),
-        AsyncData(:final value) =>
-            _AlbumBody(
-              albumTitle: albumTitle,
-              tracks: value,
-            ),
+        // The album can legitimately vanish between the tap and the push
+        // (a rescan tombstoned its last track) - the stream answers with [].
+        AsyncData(:final value) when value.isEmpty => const Center(
+          child: Icon(Icons.album_outlined, size: 48),
+        ),
+        AsyncData(:final value) => _AlbumBody(
+          albumTitle: albumTitle,
+          tracks: value,
+        ),
         AsyncError(:final error) => Center(child: Text('$error')),
         AsyncLoading() => const Center(child: CircularProgressIndicator()),
       },

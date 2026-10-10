@@ -16,9 +16,9 @@ void main() {
   setUp(() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, (call) async {
-      expect(call.method, 'queryAudioFiles');
-      return payload;
-    });
+          expect(call.method, 'queryAudioFiles');
+          return payload;
+        });
   });
 
   tearDown(() {
