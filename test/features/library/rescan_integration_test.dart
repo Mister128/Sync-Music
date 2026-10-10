@@ -14,40 +14,12 @@ import 'package:sync_music/features/library/data/services/rescan_library.dart';
 import 'package:sync_music/features/library/domain/entities/file_entry.dart';
 import 'package:sync_music/features/library/domain/entities/scan_event.dart';
 
+import 'fake_platform_scanner.dart';
+import 'wav_fixture.dart';
+
 /// Builds a minimal valid WAV: canonical 44-byte header + 100 silent samples
 /// (8-bit PCM, mono, 8kHz). No INFO tags inside - on purpose, so the scan
 /// exercises the filename-fallback path with a REAL file.
-Uint8List buildTinyWav({int fill = 0x80}) {
-  const sampleRate = 8000;
-  const dataSize = 100;
-  final bytes = Uint8List(44 + dataSize);
-  final bd = ByteData.sublistView(bytes);
-
-  void str(int offset, String s) {
-    for (var i = 0; i < s.length; i++) {
-      bd.setUint8(offset + i, s.codeUnitAt(i));
-    }
-  }
-
-  // NOTE: WAV is little-endian (contrast with our big-endian size in hashing -
-  // every format picks its own byte order, that's why it's always explicit).
-  str(0, 'RIFF');
-  bd.setUint32(4, 36 + dataSize, Endian.little);
-  str(8, 'WAVE');
-  str(12, 'fmt ');
-  bd
-    ..setUint32(16, 16, Endian.little) // fmt chunk size
-    ..setUint16(20, 1, Endian.little) // PCM
-    ..setUint16(22, 1, Endian.little) // mono
-    ..setUint32(24, sampleRate, Endian.little)
-    ..setUint32(28, sampleRate, Endian.little) // byte rate (8-bit mono)
-    ..setUint16(32, 1, Endian.little) // block align
-    ..setUint16(34, 8, Endian.little); // bits per sample
-  str(36, 'data');
-  bd.setUint32(40, dataSize, Endian.little);
-  bytes.fillRange(44, 44 + dataSize, fill);
-  return bytes;
-}
 
 void main() {
   setUpAll(AppLogger.init);
@@ -63,7 +35,13 @@ void main() {
     db = AppDatabase.forTesting(NativeDatabase.memory());
     tracksDao = LibraryDao(db);
     rootsDao = LibraryRootsDao(db);
-    rescan = RescanLibrary(db: db, tracksDao: tracksDao, rootsDao: rootsDao);
+    rescan = RescanLibrary(
+      db: db,
+      tracksDao: tracksDao,
+      rootsDao: rootsDao,
+      platformScanner: FakePlatformScanner(),
+      android: false
+    );
   });
 
   tearDown(() async {
