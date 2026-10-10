@@ -2,6 +2,8 @@ import 'package:drift/drift.dart';
 import 'package:sync_music/core/database/app_database.dart';
 import 'package:sync_music/core/database/tables/tracks.dart';
 import 'package:sync_music/core/utils/ids.dart';
+import 'package:sync_music/features/library/domain/entities/album.dart';
+import 'package:sync_music/features/library/domain/entities/artist.dart';
 import 'package:sync_music/features/library/domain/entities/scanned_track.dart';
 
 part 'library_dao.g.dart';
@@ -18,6 +20,91 @@ class LibraryDao extends DatabaseAccessor<AppDatabase> with _$LibraryDaoMixin {
   }
 
   Future<List<Track>> getAllOnce() => select(tracks).get();
+
+  /// Albums = alive tracks grouped by (album title, artist); tracks without
+  /// an album tag never appear here.
+  Stream<List<Album>> watchAlbums() {
+    final albumTitle = tracks.albumTitle;
+    final artistName = tracks.artistName;
+    final trackCount = countAll();
+    final anyArtwork = tracks.artworkHash.min();
+
+    final query = selectOnly(tracks)
+      ..addColumns([albumTitle, artistName, trackCount, anyArtwork])
+      ..where(tracks.deletedAtMs.isNull() & albumTitle.isNotNull())
+      ..groupBy([albumTitle, artistName])
+      ..orderBy([OrderingTerm.asc(albumTitle)]);
+
+    return query.watch().map(
+      (rows) => [
+        for (final row in rows)
+          Album(
+            albumTitle: row.read(albumTitle)!,
+            artistName: row.read(artistName)!,
+            trackCount: row.read(trackCount) ?? 0,
+            artworkHash: row.read(anyArtwork),
+          ),
+      ],
+    );
+  }
+
+  /// Artists = alive tracks grouped by name; albumCount counts DISTINCT
+  /// non-null album titles.
+  Stream<List<Artist>> watchArtists() {
+    final artistName = tracks.artistName;
+    final trackCount = countAll();
+    final albumCount = tracks.albumTitle.count(distinct: true);
+
+    final query = selectOnly(tracks)
+      ..addColumns([artistName, trackCount, albumCount])
+      ..where(tracks.deletedAtMs.isNull())
+      ..groupBy([artistName])
+      ..orderBy([OrderingTerm.asc(artistName)]);
+
+    return query.watch().map(
+      (rows) => [
+        for (final row in rows)
+          Artist(
+            artistName: row.read(artistName)!,
+            trackCount: row.read(trackCount) ?? 0,
+            albumCount: row.read(albumCount) ?? 0,
+          ),
+      ],
+    );
+  }
+
+  /// Tracks of ONE album in playing order: disc -> track number -> title.
+  Stream<List<Track>> watchAlbumTracks({
+    required String albumTitle,
+    required String artistName,
+  }) {
+    final query = select(tracks)
+      ..where(
+        (t) =>
+            t.deletedAtMs.isNull() &
+            t.albumTitle.equals(albumTitle) &
+            t.artistName.equals(artistName),
+      )
+      ..orderBy([
+        (t) => OrderingTerm.asc(t.discNumber),
+        (t) => OrderingTerm.asc(t.trackNumber),
+        (t) => OrderingTerm.asc(t.title),
+      ]);
+    return query.watch();
+  }
+
+  /// All tracks of ONE artist, grouped by album.
+  Stream<List<Track>> watchArtistTracks(String artistName) {
+    final query = select(tracks)
+      ..where((t) => t.deletedAtMs.isNull() & t.artistName.equals(artistName))
+      ..orderBy([
+        (t) => OrderingTerm.asc(t.albumTitle),
+        (t) => OrderingTerm.asc(t.discNumber),
+        (t) => OrderingTerm.asc(t.trackNumber),
+        (t) => OrderingTerm.asc(t.title),
+      ]);
+    return query.watch();
+  }
 
   Future<void> insertAllAtomic(List<TracksCompanion> rows) =>
       batch((b) => b.insertAll(tracks, rows));
