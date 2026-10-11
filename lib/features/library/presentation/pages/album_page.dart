@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -9,6 +11,7 @@ import 'package:sync_music/core/design_system/widgets/sm_track_tile.dart';
 import 'package:sync_music/core/extensions/duration_x.dart';
 import 'package:sync_music/features/library/data/library_providers.dart';
 import 'package:sync_music/features/library/domain/entities/track.dart';
+import 'package:sync_music/features/player/presentation/controllers/player_controller.dart';
 import 'package:sync_music/i18n/strings.g.dart';
 
 /// Album detail: header (cover + meta) and tracks in playing order.
@@ -25,14 +28,15 @@ class AlbumPage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: Text(albumTitle)),
       body: switch (tracks) {
-        // The album can legitimately vanish between the tap and the push
-        // (a rescan tombstoned its last track) - the stream answers with [].
         AsyncData(:final value) when value.isEmpty => const Center(
           child: Icon(Icons.album_outlined, size: 48),
         ),
         AsyncData(:final value) => _AlbumBody(
           albumTitle: albumTitle,
           tracks: value,
+          onPlayTrack: (index) => ref
+              .read(playerControllerProvider.notifier)
+              .playQueue(value, startIndex: index),
         ),
         AsyncError(:final error) => Center(child: Text('$error')),
         AsyncLoading() => const Center(child: CircularProgressIndicator()),
@@ -42,10 +46,15 @@ class AlbumPage extends ConsumerWidget {
 }
 
 class _AlbumBody extends StatelessWidget {
-  const new({required this.albumTitle, required this.tracks});
+  const new({
+    required this.albumTitle,
+    required this.tracks,
+    required this.onPlayTrack,
+  });
 
   final String albumTitle;
   final List<Track> tracks; // guaranteed non-empty by the caller
+  final void Function(int) onPlayTrack;
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +119,7 @@ class _AlbumBody extends StatelessWidget {
           ],
         ),
         const SizedBox(height: AppSpacing.lg),
-        for (final track in tracks)
+        for (final (i, track) in tracks.indexed)
           SmTrackTile(
             title: track.title,
             // Compilations: show whose track this is. On a single-artist
@@ -122,7 +131,7 @@ class _AlbumBody extends StatelessWidget {
                 : '#${track.trackNumber}',
             durationMs: track.durationMs,
             artworkHash: track.artworkHash,
-            onTap: () {}, // TODO(Mister128): play
+            onTap: () => onPlayTrack(i),
           ),
       ],
     );

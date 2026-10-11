@@ -46,6 +46,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$common$en common = Translations$common$en.internal(_root);
 	late final Translations$settings$en settings = Translations$settings$en.internal(_root);
 	late final Translations$library$en library = Translations$library$en.internal(_root);
+	late final Translations$player$en player = Translations$player$en.internal(_root);
 }
 
 // Path: app
@@ -219,6 +220,30 @@ class Translations$library$en {
 	);
 }
 
+// Path: player
+class Translations$player$en {
+	Translations$player$en.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Play'
+	String get play => 'Play';
+
+	/// en: 'Pause'
+	String get pause => 'Pause';
+
+	/// en: 'Next track'
+	String get next => 'Next track';
+
+	/// en: 'Previous track'
+	String get previous => 'Previous track';
+
+	/// en: 'Play something - it will show up here'
+	String get miniPlayerEmpty => 'Play something - it will show up here';
+}
+
 /// The flat map containing all translations for locale <en>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -267,6 +292,11 @@ extension on Translations {
 			'library.artistsEmpty' => 'No artists yet',
 			'library.trackCount' => ({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '${count} track', other: '${count} tracks', ), 
 			'library.albumCount' => ({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '${count} album', other: '${count} albums', ), 
+			'player.play' => 'Play',
+			'player.pause' => 'Pause',
+			'player.next' => 'Next track',
+			'player.previous' => 'Previous track',
+			'player.miniPlayerEmpty' => 'Play something - it will show up here',
 			_ => null,
 		};
 	}

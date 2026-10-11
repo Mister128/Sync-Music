@@ -54,5 +54,12 @@
       "one": "$count album",
       "other": "$count albums"
     }
+  },
+  "player": {
+    "play": "Play",
+    "pause": "Pause",
+    "next": "Next track",
+    "previous": "Previous track",
+    "miniPlayerEmpty": "Play something - it will show up here"
   }
 }

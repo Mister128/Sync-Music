@@ -56,6 +56,18 @@ add_subdirectory("runner")
 # Generated plugin build rules, which manage building the plugins and adding
 # them to the application.
 include(flutter/generated_plugins.cmake)
+# --- Workaround: permission_handler_windows vs Visual Studio 2026 ---
+# The plugin compiles itself with /await, which forces C++/WinRT into the
+# <experimental/coroutine> header - and MSVC 14.51+ made that a hard error
+# (STL1011). The upstream fix (drop /await, PR #1569) is not released yet.
+# Scoped to the plugin target only. REMOVE this block once a released
+# permission_handler_windows builds with VS 2026 on its own.
+# See: https://github.com/Baseflow/flutter-permission-handler/issues/1534
+if(TARGET permission_handler_windows_plugin)
+  target_compile_features(permission_handler_windows_plugin PRIVATE cxx_std_20)
+  target_compile_definitions(permission_handler_windows_plugin
+    PRIVATE _SILENCE_EXPERIMENTAL_COROUTINE_DEPRECATION_WARNINGS)
+endif()
 
 
 # === Installation ===

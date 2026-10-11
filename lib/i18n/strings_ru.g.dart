@@ -44,6 +44,7 @@ class TranslationsRu extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$common$ru common = _Translations$common$ru._(_root);
 	@override late final _Translations$settings$ru settings = _Translations$settings$ru._(_root);
 	@override late final _Translations$library$ru library = _Translations$library$ru._(_root);
+	@override late final _Translations$player$ru player = _Translations$player$ru._(_root);
 }
 
 // Path: app
@@ -141,6 +142,20 @@ class _Translations$library$ru extends Translations$library$en {
 	);
 }
 
+// Path: player
+class _Translations$player$ru extends Translations$player$en {
+	_Translations$player$ru._(TranslationsRu root) : this._root = root, super.internal(root);
+
+	final TranslationsRu _root; // ignore: unused_field
+
+	// Translations
+	@override String get play => 'Воспроизвести';
+	@override String get pause => 'Пауза';
+	@override String get next => 'Следующий трек';
+	@override String get previous => 'Предыдущий трек';
+	@override String get miniPlayerEmpty => 'Включите трек - он появится здесь';
+}
+
 /// The flat map containing all translations for locale <ru>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -189,6 +204,11 @@ extension on TranslationsRu {
 			'library.artistsEmpty' => 'Пока нет артистов',
 			'library.trackCount' => ({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('ru'))(n, one: '${count} трек', few: '${count} трека', many: '${count} треков', other: '${count} треков', ), 
 			'library.albumCount' => ({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('ru'))(n, one: '${count} альбом', few: '${count} альбома', many: '${count} альбомов', other: '${count} альбомов', ), 
+			'player.play' => 'Воспроизвести',
+			'player.pause' => 'Пауза',
+			'player.next' => 'Следующий трек',
+			'player.previous' => 'Предыдущий трек',
+			'player.miniPlayerEmpty' => 'Включите трек - он появится здесь',
 			_ => null,
 		};
 	}

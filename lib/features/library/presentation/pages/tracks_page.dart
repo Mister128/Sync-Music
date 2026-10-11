@@ -4,6 +4,7 @@ import 'package:sync_music/core/design_system/theme/app_spacing.dart';
 import 'package:sync_music/core/design_system/widgets/sm_track_tile.dart';
 import 'package:sync_music/features/library/data/library_providers.dart';
 import 'package:sync_music/features/library/presentation/controllers/library_scan_controller.dart';
+import 'package:sync_music/features/player/presentation/controllers/player_controller.dart';
 import 'package:sync_music/i18n/strings.g.dart';
 
 class TracksPage extends ConsumerWidget {
@@ -72,8 +73,9 @@ class TracksPage extends ConsumerWidget {
                     subtitle: track.artistName,
                     durationMs: track.durationMs,
                     artworkHash: track.artworkHash,
-                    onTap: () {},
-                    // TODO(Mister128): play
+                    onTap: () => ref
+                        .read(playerControllerProvider.notifier)
+                        .playQueue(value, startIndex: index),
                     onLongPress: () {}, // TODO(Mister128): action
                   );
                 },

@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
 import 'package:sync_music/core/design_system/theme/app_spacing.dart';
+import 'package:sync_music/i18n/strings.g.dart';
 
-/// Reserves the mini-player slot. Stage 4 replaces the body with the real
-/// MiniPlayer. It lives in the SHELL (outside branches) — that's exactly why
-/// playback controls won't flicker or restart on tab switches.
+/// The muted slot before anything has been played.
 class MiniPlayerPlaceholder extends StatelessWidget {
   const new({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final t = Translations.of(context);
     final scheme = Theme.of(context).colorScheme;
     return Container(
       height: AppSpacing.miniPlayerHeight,
@@ -19,7 +19,7 @@ class MiniPlayerPlaceholder extends StatelessWidget {
       ),
       child: Center(
         child: Text(
-          'mini player',
+          t.player.miniPlayerEmpty,
           style: Theme.of(context).textTheme.labelSmall
               ?.copyWith(color: scheme.onSurfaceVariant),
         ),
