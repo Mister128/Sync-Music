@@ -1,14 +1,14 @@
 package com.mistery.sync_music
 
 import android.provider.MediaStore
-import io.flutter.embedding.android.FlutterActivity
+import com.ryanheise.audioservice.AudioServiceActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 
 /// The single MethodChannel bridge: Dart asks for "every audio file the
 /// system knows" and gets (path, sizeBytes, mtimeMs) triples - the same
 /// shape the desktop filesystem walker produces.
-class MainActivity : FlutterActivity() {
+class MainActivity : AudioServiceActivity() {
     private val channelName = "sync_music/media_store"
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
