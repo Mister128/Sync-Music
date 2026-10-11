@@ -1,28 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sync_music/app/router/routes.dart';
 import 'package:sync_music/app/shell/section_page.dart';
 import 'package:sync_music/core/design_system/theme/app_spacing.dart';
 import 'package:sync_music/core/design_system/widgets/placeholder_page.dart';
+import 'package:sync_music/features/player/domain/entities/player_snapshot.dart';
+import 'package:sync_music/features/player/presentation/controllers/player_controller.dart';
 import 'package:sync_music/features/player/presentation/widgets/mini_player.dart';
 import 'package:sync_music/i18n/strings.g.dart';
 
-class WideShell extends StatefulWidget {
+class WideShell extends ConsumerStatefulWidget {
   const new({super.key});
 
   @override
-  State<WideShell> createState() => _WideShellState();
+  ConsumerState<WideShell> createState() => _WideShellState();
 }
 
-class _WideShellState extends State<WideShell> {
+class _WideShellState extends ConsumerState<WideShell> {
   int _index = 0;
-
   static const double _railWidth = 100;
 
   @override
   Widget build(BuildContext context) {
     final t = Translations.of(context);
     const sections = PlaceholderSection.values;
+    final currentTrack = ref.watch(
+      playerControllerProvider.select((state) => state.currentTrack),
+    );
 
     return Scaffold(
       body: Row(
@@ -65,7 +70,7 @@ class _WideShellState extends State<WideShell> {
                     ],
                   ),
                 ),
-                const MiniPlayer(),
+                if (currentTrack != null) const MiniPlayer(),
               ],
             ),
           ),

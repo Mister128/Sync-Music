@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sync_music/app/router/routes.dart';
 import 'package:sync_music/app/shell/section_page.dart';
 import 'package:sync_music/core/design_system/theme/app_spacing.dart';
 import 'package:sync_music/core/design_system/widgets/placeholder_page.dart';
+import 'package:sync_music/features/player/domain/entities/player_snapshot.dart';
+import 'package:sync_music/features/player/presentation/controllers/player_controller.dart';
 import 'package:sync_music/features/player/presentation/widgets/mini_player.dart';
 import 'package:sync_music/i18n/strings.g.dart';
 
-class PhoneShell extends StatelessWidget {
+class PhoneShell extends ConsumerWidget {
   const new({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final t = Translations.of(context);
     final scheme = Theme.of(context).colorScheme;
     const sections = PlaceholderSection.values;
@@ -53,7 +56,8 @@ class PhoneShell extends StatelessWidget {
                 ],
               ),
             ),
-            const MiniPlayer(),
+            if (ref.watch(playerControllerProvider).currentTrack != null)
+              const MiniPlayer(),
           ],
         ),
       ),

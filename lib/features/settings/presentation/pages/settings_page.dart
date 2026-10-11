@@ -20,7 +20,9 @@ class SettingsPage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: Text(t.settings.title)),
       body: ListView(
-        padding: const EdgeInsets.only(bottom: AppSpacing.xxl),
+        padding: EdgeInsets.only(
+          bottom: AppSpacing.xxl + MediaQuery.viewPaddingOf(context).bottom,
+        ),
         children: [
           const AppearanceSection(),
 
