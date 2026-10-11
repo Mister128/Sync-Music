@@ -117,7 +117,8 @@ class JustAudioPlayback implements PlaybackService {
   Future<void> skipPrevious() async {
     if (_player.sequence.isEmpty) return;
 
-    if (skipPreviousAction(_player.position) == SkipPreviousAction.restartCurrent) {
+    if (skipPreviousAction(_player.position) ==
+        SkipPreviousAction.restartCurrent) {
       await _player.seek(Duration.zero);
       return;
     }

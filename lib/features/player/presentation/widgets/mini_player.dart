@@ -22,12 +22,16 @@ class MiniPlayer extends ConsumerWidget {
     final controller = ref.read(playerControllerProvider.notifier);
 
     return Container(
-      height: AppSpacing.miniPlayerHeight + MediaQuery.viewPaddingOf(context).bottom,
+      height:
+          AppSpacing.miniPlayerHeight +
+          MediaQuery.viewPaddingOf(context).bottom,
       decoration: BoxDecoration(
         color: scheme.surfaceContainerHigh,
         border: Border(top: BorderSide(color: scheme.outlineVariant)),
       ),
-      padding: EdgeInsets.only(bottom: MediaQuery.viewPaddingOf(context).bottom),
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.viewPaddingOf(context).bottom,
+      ),
       child: SizedBox(
         height: AppSpacing.miniPlayerHeight,
         child: Row(

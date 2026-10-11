@@ -1,15 +1,19 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:audio_service/audio_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:just_audio_media_kit/just_audio_media_kit.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:sync_music/app/app.dart';
 import 'package:sync_music/core/logging/app_logger.dart';
 import 'package:sync_music/core/storage/artwork_paths.dart';
 import 'package:sync_music/features/library/presentation/controllers/library_scan_controller.dart';
+import 'package:sync_music/features/player/data/player_providers.dart';
+import 'package:sync_music/features/player/data/sync_music_audio_handler.dart';
 import 'package:sync_music/i18n/strings.g.dart';
 
 Future<void> bootstrap() async {
@@ -35,6 +39,20 @@ Future<void> bootstrap() async {
 
   if (Platform.isWindows) {
     JustAudioMediaKit.ensureInitialized();
+  }
+
+  if (Platform.isAndroid) {
+    final engine = container.read(playbackServiceProvider);
+    await AudioService.init(
+      builder: () => SyncMusicAudioHandler(engine),
+      config: const AudioServiceConfig(
+        androidNotificationChannelId: 'com.mistery.sync_music.channel.audio',
+        androidNotificationChannelName: 'Music playback',
+      ),
+    );
+    log.info('audio_service initialized');
+
+    unawaited(Permission.notification.request());
   }
 
   runApp(
