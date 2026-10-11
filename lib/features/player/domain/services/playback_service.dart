@@ -20,6 +20,11 @@ abstract interface class PlaybackService {
   Future<void> pause();
   Future<void> togglePlay();
   Future<void> seek(Duration position);
+
+  /// Queue navigation with PRODUCT rules (see skip_policy.dart):
+  /// skipPrevious restarts the current track once the position passes the
+  /// threshold, otherwise moves back; BOTH directions wrap around the
+  /// queue ends circularly.
   Future<void> skipNext();
   Future<void> skipPrevious();
 

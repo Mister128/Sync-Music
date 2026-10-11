@@ -7,6 +7,7 @@ import 'package:sync_music/features/library/domain/entities/track.dart';
 import 'package:sync_music/features/player/domain/entities/player_snapshot.dart';
 import 'package:sync_music/features/player/domain/entities/repeat_mode.dart';
 import 'package:sync_music/features/player/domain/services/playback_service.dart';
+import 'package:sync_music/features/player/domain/services/skip_policy.dart';
 
 /// Plain just_audio implementation: Windows (media_kit backend) and Android
 /// in the FOREGROUND. Notifications/lockscreen/ducking arrive in 4.2 with
@@ -103,10 +104,30 @@ class JustAudioPlayback implements PlaybackService {
   Future<void> seek(Duration position) => _player.seek(position);
 
   @override
-  Future<void> skipNext() => _player.seekToNext();
+  Future<void> skipNext() async {
+    if (_player.sequence.isEmpty) return;
+    if (_player.hasNext) {
+      await _player.seekToNext();
+    } else {
+      await _player.seek(Duration.zero, index: 0);
+    }
+  }
 
   @override
-  Future<void> skipPrevious() => _player.seekToPrevious();
+  Future<void> skipPrevious() async {
+    if (_player.sequence.isEmpty) return;
+
+    if (skipPreviousAction(_player.position) == SkipPreviousAction.restartCurrent) {
+      await _player.seek(Duration.zero);
+      return;
+    }
+
+    if (_player.hasPrevious) {
+      await _player.seekToPrevious();
+    } else {
+      await _player.seek(Duration.zero, index: _player.sequence.length - 1);
+    }
+  }
 
   @override
   Future<void> insertNext(Track track) async {
