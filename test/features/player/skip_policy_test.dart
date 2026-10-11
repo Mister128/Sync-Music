@@ -4,25 +4,25 @@ import 'package:sync_music/features/player/domain/services/skip_policy.dart';
 
 void main() {
   group('skipPreviousAction', () {
-    test('at the start of the track -> restart it', () {
+    test('at the start of the track -> go to the previous track', () {
       expect(
         skipPreviousAction(Duration.zero),
-        SkipPreviousAction.restartCurrent,
+        SkipPreviousAction.goToPrevious,
       );
       expect(
         skipPreviousAction(const Duration(seconds: 9, milliseconds: 999)),
-        SkipPreviousAction.restartCurrent,
+        SkipPreviousAction.goToPrevious,
       );
     });
 
-    test('past the window -> go to the previous track', () {
+    test('past the window -> restart it', () {
       expect(
         skipPreviousAction(const Duration(seconds: 11)),
-        SkipPreviousAction.goToPrevious,
+        SkipPreviousAction.restartCurrent,
       );
       expect(
         skipPreviousAction(const Duration(minutes: 3)),
-        SkipPreviousAction.goToPrevious,
+        SkipPreviousAction.restartCurrent,
       );
     });
 

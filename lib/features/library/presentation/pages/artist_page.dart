@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -5,6 +6,7 @@ import 'package:sync_music/core/design_system/theme/app_spacing.dart';
 import 'package:sync_music/core/design_system/widgets/sm_artwork.dart';
 import 'package:sync_music/core/design_system/widgets/sm_track_tile.dart';
 import 'package:sync_music/features/library/data/library_providers.dart';
+import 'package:sync_music/features/player/presentation/controllers/player_controller.dart';
 import 'package:sync_music/i18n/strings.g.dart';
 
 /// Artist detail: header + all tracks grouped by album.
@@ -59,13 +61,15 @@ class ArtistPage extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(height: AppSpacing.xl),
-                for (final track in value)
+                for (final (index, track) in value.indexed)
                   SmTrackTile(
                     title: track.title,
                     subtitle: track.albumTitle,
                     durationMs: track.durationMs,
                     artworkHash: track.artworkHash,
-                    onTap: () {}, // TODO(Mister128): play (stage 4)
+                    onTap: () => ref
+                        .watch(playerControllerProvider.notifier)
+                        .playQueue(value, startIndex: index),
                   ),
               ],
             );
