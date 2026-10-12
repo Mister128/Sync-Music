@@ -9,6 +9,7 @@ import 'package:sync_music/core/design_system/theme/app_spacing.dart';
 import 'package:sync_music/core/design_system/widgets/sm_artwork.dart';
 import 'package:sync_music/core/extensions/duration_x.dart';
 import 'package:sync_music/features/library/domain/entities/track.dart';
+import 'package:sync_music/features/player/data/artwork_palette.dart';
 import 'package:sync_music/features/player/domain/entities/player_snapshot.dart';
 import 'package:sync_music/features/player/domain/entities/repeat_mode.dart';
 import 'package:sync_music/features/player/presentation/controllers/player_controller.dart';
@@ -53,36 +54,57 @@ class FullPlayerPage extends ConsumerWidget {
       );
     }
 
+    final dominant = ref.watch(artworkColorProvider(track.artworkHash)).value;
+    final topColor = dominant == null
+        ? scheme.surface
+        : Color.alphaBlend(
+            dominant.withValues(
+              alpha: theme.brightness == Brightness.dark ? 0.45 : 0.30,
+            ),
+            scheme.surface,
+          );
+
     return Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: _maxContentWidth),
-            child: Column(
-              children: [
-                const _TopBar(),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.xl,
-                    ),
-                    child: LayoutBuilder(
-                      builder: (context, constraints) => Center(
-                        child: SmArtwork(
-                          hash: track.artworkHash,
-                          size: constraints.biggest.shortestSide,
-                          borderRadius: 16,
+      body: AnimatedContainer(
+        duration: const Duration(milliseconds: 450),
+        curve: Curves.easeOut,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [topColor, scheme.surface],
+          ),
+        ),
+        child: SafeArea(
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: _maxContentWidth),
+              child: Column(
+                children: [
+                  const _TopBar(),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.xl,
+                      ),
+                      child: LayoutBuilder(
+                        builder: (context, constraints) => Center(
+                          child: SmArtwork(
+                            hash: track.artworkHash,
+                            size: constraints.biggest.shortestSide,
+                            borderRadius: 16,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(height: AppSpacing.sm),
-                _TrackMeta(track: track),
-                _SeekBar(duration: snapshot.duration),
-                _TransportRow(snapshot: snapshot, controller: controller),
-                const SizedBox(height: AppSpacing.lg),
-              ],
+                  const SizedBox(height: AppSpacing.sm),
+                  _TrackMeta(track: track),
+                  _SeekBar(duration: snapshot.duration),
+                  _TransportRow(snapshot: snapshot, controller: controller),
+                  const SizedBox(height: AppSpacing.lg),
+                ],
+              ),
             ),
           ),
         ),

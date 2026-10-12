@@ -51,7 +51,9 @@ dependencies:
 
   # Utils
   collection: ^1.19.1
+  material_color_utilities: ^0.13.0
 
+  riverpod: any
 dev_dependencies:
   flutter_test:
     sdk: flutter
