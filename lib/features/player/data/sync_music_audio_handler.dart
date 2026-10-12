@@ -136,12 +136,8 @@ class SyncMusicAudioHandler extends BaseAudioHandler {
 
   /// off -> all -> one -> off (the cycle Spotify and Samsung Music use).
   Future<void> _cycleRepeatMode() async {
-    final next = switch (_lastSnapshot?.repeatMode ?? RepeatMode.off) {
-      RepeatMode.off => RepeatMode.all,
-      RepeatMode.all => RepeatMode.one,
-      RepeatMode.one => RepeatMode.off,
-    };
-    await _engine.setRepeatMode(next);
+    final current = _lastSnapshot?.repeatMode ?? RepeatMode.off;
+    await _engine.setRepeatMode(current.next);
   }
 
   // ---- engine -> system ----

@@ -13,6 +13,8 @@ import 'package:sync_music/i18n/strings.g.dart';
 class MiniPlayer extends ConsumerWidget {
   const new({super.key});
 
+  static const double _swipeUpVelocity = 300;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final snapshot = ref.watch(playerControllerProvider);
@@ -23,70 +25,79 @@ class MiniPlayer extends ConsumerWidget {
     final scheme = theme.colorScheme;
     final controller = ref.read(playerControllerProvider.notifier);
 
-    return Container(
-      height:
-          AppSpacing.miniPlayerHeight +
-          MediaQuery.viewPaddingOf(context).bottom,
-      decoration: BoxDecoration(
-        color: scheme.surfaceContainerHigh,
-        border: Border(top: BorderSide(color: scheme.outlineVariant)),
-      ),
-      padding: EdgeInsets.only(
-        bottom: MediaQuery.viewPaddingOf(context).bottom,
-      ),
-      child: SizedBox(
-        height: AppSpacing.miniPlayerHeight,
-        child: Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: AppSpacing.sm),
-              child: SmArtwork(hash: track.artworkHash, size: 48),
-            ),
-            const SizedBox(width: AppSpacing.md),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    track.title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: theme.textTheme.titleSmall,
-                  ),
-                  Text(
-                    track.artistName,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: scheme.onSurfaceVariant,
-                    ),
-                  ),
-                ],
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () => context.push(Routes.player),
+      onVerticalDragEnd: (details) async {
+        if ((details.primaryVelocity ?? 0) < -_swipeUpVelocity) {
+          await context.push(Routes.player);
+        }
+      },
+      child: Container(
+        height:
+            AppSpacing.miniPlayerHeight +
+            MediaQuery.viewPaddingOf(context).bottom,
+        decoration: BoxDecoration(
+          color: scheme.surfaceContainerHigh,
+          border: Border(top: BorderSide(color: scheme.outlineVariant)),
+        ),
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.viewPaddingOf(context).bottom,
+        ),
+        child: SizedBox(
+          height: AppSpacing.miniPlayerHeight,
+          child: Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: AppSpacing.sm),
+                child: SmArtwork(hash: track.artworkHash, size: 48),
               ),
-            ),
-            IconButton(
-              tooltip: t.player.previous,
-              icon: const Icon(Icons.skip_previous),
-              onPressed: controller.skipPrevious,
-            ),
-            IconButton(
-              tooltip: snapshot.isPlaying ? t.player.pause : t.player.play,
-              icon: Icon(snapshot.isPlaying ? Icons.pause : Icons.play_arrow),
-              onPressed: controller.togglePlay,
-            ),
-            IconButton(
-              tooltip: t.player.next,
-              icon: const Icon(Icons.skip_next),
-              onPressed: controller.skipNext,
-            ),
-            IconButton(
-              tooltip: t.player.queue,
-              icon: const Icon(Icons.playlist_play),
-              onPressed: () => context.push(Routes.queue),
-            ),
-            const SizedBox(width: AppSpacing.xs),
-          ],
+              const SizedBox(width: AppSpacing.md),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      track.title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.titleSmall,
+                    ),
+                    Text(
+                      track.artistName,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: scheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              IconButton(
+                tooltip: t.player.previous,
+                icon: const Icon(Icons.skip_previous),
+                onPressed: controller.skipPrevious,
+              ),
+              IconButton(
+                tooltip: snapshot.isPlaying ? t.player.pause : t.player.play,
+                icon: Icon(snapshot.isPlaying ? Icons.pause : Icons.play_arrow),
+                onPressed: controller.togglePlay,
+              ),
+              IconButton(
+                tooltip: t.player.next,
+                icon: const Icon(Icons.skip_next),
+                onPressed: controller.skipNext,
+              ),
+              IconButton(
+                tooltip: t.player.queue,
+                icon: const Icon(Icons.playlist_play),
+                onPressed: () => context.push(Routes.queue),
+              ),
+              const SizedBox(width: AppSpacing.xs),
+            ],
+          ),
         ),
       ),
     );

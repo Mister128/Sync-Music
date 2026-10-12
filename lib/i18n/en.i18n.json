@@ -65,6 +65,12 @@
     "addToQueue": "Add to queue",
     "queue": "Queue",
     "queueEmpty": "The queue is empty",
-    "removeFromQueue": "Remove from queue"
+    "removeFromQueue": "Remove from queue",
+    "nowPlaying": "Now playing",
+    "closePlayer": "Close player",
+    "shuffle": "Shuffle",
+    "repeatOff": "Repeat off",
+    "repeatAll": "Repeat all",
+    "repeatOne": "Repeat one"
   }
 }

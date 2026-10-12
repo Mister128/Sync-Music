@@ -5,6 +5,7 @@ abstract final class Routes {
   static const albumDetail = '/album';
   static const artistDetail = '/artist';
   static const queue = '/queue';
+  static const player = '/player';
 
   static String albumPath({required String albumTitle}) =>
       '/album?${Uri(queryParameters: {'title': albumTitle}).query}';

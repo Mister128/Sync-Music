@@ -257,6 +257,24 @@ class Translations$player$en {
 
 	/// en: 'Remove from queue'
 	String get removeFromQueue => 'Remove from queue';
+
+	/// en: 'Now playing'
+	String get nowPlaying => 'Now playing';
+
+	/// en: 'Close player'
+	String get closePlayer => 'Close player';
+
+	/// en: 'Shuffle'
+	String get shuffle => 'Shuffle';
+
+	/// en: 'Repeat off'
+	String get repeatOff => 'Repeat off';
+
+	/// en: 'Repeat all'
+	String get repeatAll => 'Repeat all';
+
+	/// en: 'Repeat one'
+	String get repeatOne => 'Repeat one';
 }
 
 /// The flat map containing all translations for locale <en>.
@@ -317,6 +335,12 @@ extension on Translations {
 			'player.queue' => 'Queue',
 			'player.queueEmpty' => 'The queue is empty',
 			'player.removeFromQueue' => 'Remove from queue',
+			'player.nowPlaying' => 'Now playing',
+			'player.closePlayer' => 'Close player',
+			'player.shuffle' => 'Shuffle',
+			'player.repeatOff' => 'Repeat off',
+			'player.repeatAll' => 'Repeat all',
+			'player.repeatOne' => 'Repeat one',
 			_ => null,
 		};
 	}

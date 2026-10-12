@@ -54,6 +54,13 @@ class PlayerController extends Notifier<PlayerSnapshot> {
 
   Future<void> removeQueueItem(int index) =>
       ref.read(playbackServiceProvider).removeQueueItem(index);
+
+  Future<void> toggleShuffle() => ref
+      .read(playbackServiceProvider)
+      .setShuffleEnabled(enabled: !state.shuffleEnabled);
+
+  Future<void> cycleRepeatMode() =>
+      ref.read(playbackServiceProvider).setRepeatMode(state.repeatMode.next);
 }
 
 final playerControllerProvider =

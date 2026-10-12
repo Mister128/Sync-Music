@@ -69,6 +69,12 @@
     "addToQueue": "Добавить в очередь",
     "queue": "Очередь",
     "queueEmpty": "Очередь пуста",
-    "removeFromQueue": "Убрать из очереди"
+    "removeFromQueue": "Убрать из очереди",
+    "nowPlaying": "Сейчас играет",
+    "closePlayer": "Закрыть плеер",
+    "shuffle": "Перемешать",
+    "repeatOff": "Повтор выключен",
+    "repeatAll": "Повторять все",
+    "repeatOne": "Повторять трек"
   }
 }

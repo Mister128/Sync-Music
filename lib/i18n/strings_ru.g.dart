@@ -159,6 +159,12 @@ class _Translations$player$ru extends Translations$player$en {
 	@override String get queue => 'Очередь';
 	@override String get queueEmpty => 'Очередь пуста';
 	@override String get removeFromQueue => 'Убрать из очереди';
+	@override String get nowPlaying => 'Сейчас играет';
+	@override String get closePlayer => 'Закрыть плеер';
+	@override String get shuffle => 'Перемешать';
+	@override String get repeatOff => 'Повтор выключен';
+	@override String get repeatAll => 'Повторять все';
+	@override String get repeatOne => 'Повторять трек';
 }
 
 /// The flat map containing all translations for locale <ru>.
@@ -219,6 +225,12 @@ extension on TranslationsRu {
 			'player.queue' => 'Очередь',
 			'player.queueEmpty' => 'Очередь пуста',
 			'player.removeFromQueue' => 'Убрать из очереди',
+			'player.nowPlaying' => 'Сейчас играет',
+			'player.closePlayer' => 'Закрыть плеер',
+			'player.shuffle' => 'Перемешать',
+			'player.repeatOff' => 'Повтор выключен',
+			'player.repeatAll' => 'Повторять все',
+			'player.repeatOne' => 'Повторять трек',
 			_ => null,
 		};
 	}

@@ -98,4 +98,35 @@ void main() {
 
     expect(playback.calls, ['playAtIndex:3', 'move:0->2', 'remove:1']);
   });
+
+  test('mode toggles derive targets from the current state', () async {
+    final controller = container.read(playerControllerProvider.notifier);
+
+    // Empty snapshot: shuffle off, repeat off.
+    await controller.toggleShuffle();
+    await controller.cycleRepeatMode();
+    expect(playback.calls, ['shuffle:true', 'repeat:RepeatMode.all']);
+
+    // Feed the state back, then flip both the other way.
+    playback.snapshots.add(
+      PlayerSnapshot(
+        queue: [track('a')],
+        currentIndex: 0,
+        isPlaying: true,
+        duration: null,
+        repeatMode: RepeatMode.all,
+        shuffleEnabled: true,
+      ),
+    );
+    await pumpEventQueue();
+
+    await controller.toggleShuffle();
+    await controller.cycleRepeatMode();
+    expect(playback.calls, [
+      'shuffle:true',
+      'repeat:RepeatMode.all',
+      'shuffle:false',
+      'repeat:RepeatMode.one',
+    ]);
+  });
 }
