@@ -12,6 +12,7 @@ import 'package:sync_music/core/extensions/duration_x.dart';
 import 'package:sync_music/features/library/data/library_providers.dart';
 import 'package:sync_music/features/library/domain/entities/track.dart';
 import 'package:sync_music/features/player/presentation/controllers/player_controller.dart';
+import 'package:sync_music/features/player/presentation/widgets/track_action_sheet.dart';
 import 'package:sync_music/i18n/strings.g.dart';
 
 /// Album detail: header (cover + meta) and tracks in playing order.
@@ -132,6 +133,7 @@ class _AlbumBody extends StatelessWidget {
             durationMs: track.durationMs,
             artworkHash: track.artworkHash,
             onTap: () => onPlayTrack(i),
+            onLongPress: () => showTrackActionSheet(context, track),
           ),
       ],
     );

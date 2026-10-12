@@ -36,6 +36,10 @@ class PlayerController extends Notifier<PlayerSnapshot> {
   Future<void> skipNext() => ref.read(playbackServiceProvider).skipNext();
   Future<void> skipPrevious() =>
       ref.read(playbackServiceProvider).skipPrevious();
+  Future<void> insertNext(Track track) =>
+      ref.read(playbackServiceProvider).insertNext(track);
+  Future<void> addToQueue(Track track) =>
+      ref.read(playbackServiceProvider).addToQueue(track);
 }
 
 final playerControllerProvider =

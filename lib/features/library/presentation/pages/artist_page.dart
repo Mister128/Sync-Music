@@ -8,6 +8,7 @@ import 'package:sync_music/core/design_system/widgets/sm_artwork.dart';
 import 'package:sync_music/core/design_system/widgets/sm_track_tile.dart';
 import 'package:sync_music/features/library/data/library_providers.dart';
 import 'package:sync_music/features/player/presentation/controllers/player_controller.dart';
+import 'package:sync_music/features/player/presentation/widgets/track_action_sheet.dart';
 import 'package:sync_music/i18n/strings.g.dart';
 
 /// Artist detail: header + all tracks grouped by album.
@@ -71,6 +72,7 @@ class ArtistPage extends ConsumerWidget {
                     onTap: () => ref
                         .watch(playerControllerProvider.notifier)
                         .playQueue(value, startIndex: index),
+                    onLongPress: () => showTrackActionSheet(context, track),
                   ),
               ],
             );

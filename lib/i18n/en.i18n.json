@@ -60,6 +60,8 @@
     "pause": "Pause",
     "next": "Next track",
     "previous": "Previous track",
-    "miniPlayerEmpty": "Play something - it will show up here"
+    "miniPlayerEmpty": "Play something - it will show up here",
+    "playNext": "Play next",
+    "addToQueue": "Add to queue"
   }
 }

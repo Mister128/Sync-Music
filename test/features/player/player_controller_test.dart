@@ -79,4 +79,13 @@ void main() {
 
     expect(stale.currentTrack, isNull);
   });
+
+  test('queue actions are relayed', () async {
+    final controller = container.read(playerControllerProvider.notifier);
+
+    await controller.insertNext(track('a'));
+    await controller.addToQueue(track('b'));
+
+    expect(playback.calls, ['insertNext:a', 'addToQueue:b']);
+  });
 }

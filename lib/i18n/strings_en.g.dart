@@ -242,6 +242,12 @@ class Translations$player$en {
 
 	/// en: 'Play something - it will show up here'
 	String get miniPlayerEmpty => 'Play something - it will show up here';
+
+	/// en: 'Play next'
+	String get playNext => 'Play next';
+
+	/// en: 'Add to queue'
+	String get addToQueue => 'Add to queue';
 }
 
 /// The flat map containing all translations for locale <en>.
@@ -297,6 +303,8 @@ extension on Translations {
 			'player.next' => 'Next track',
 			'player.previous' => 'Previous track',
 			'player.miniPlayerEmpty' => 'Play something - it will show up here',
+			'player.playNext' => 'Play next',
+			'player.addToQueue' => 'Add to queue',
 			_ => null,
 		};
 	}
