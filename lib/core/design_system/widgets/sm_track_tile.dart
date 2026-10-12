@@ -13,6 +13,8 @@ class SmTrackTile extends StatelessWidget {
     this.artworkHash,
     this.onTap,
     this.onLongPress,
+    this.selected = false,
+    this.trailing,
     super.key,
   });
 
@@ -22,6 +24,8 @@ class SmTrackTile extends StatelessWidget {
   final String? artworkHash; // null -> placeholder icon (covers land in 3.5)
   final VoidCallback? onTap;
   final VoidCallback? onLongPress;
+  final bool selected;
+  final Widget? trailing;
 
   static const double _artworkSize = 52;
 
@@ -39,7 +43,9 @@ class SmTrackTile extends StatelessWidget {
         title,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
-        style: theme.textTheme.titleMedium,
+        style: theme.textTheme.titleMedium?.copyWith(
+          color: selected ? scheme.primary : null,
+        ),
       ),
       subtitle: subtitle == null
           ? null
@@ -51,13 +57,20 @@ class SmTrackTile extends StatelessWidget {
                 color: scheme.onSurfaceVariant,
               ),
             ),
-      trailing: durationMs == null
+      trailing: trailing == null && durationMs == null
           ? null
-          : Text(
-              Duration(milliseconds: durationMs!).display,
-              style: theme.textTheme.labelSmall?.copyWith(
-                color: scheme.onSurfaceVariant,
-              ),
+          : Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (durationMs != null)
+                  Text(
+                    Duration(milliseconds: durationMs!).display,
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: scheme.onSurfaceVariant,
+                    ),
+                  ),
+                ?trailing,
+              ],
             ),
     );
   }

@@ -62,6 +62,9 @@
     "previous": "Previous track",
     "miniPlayerEmpty": "Play something - it will show up here",
     "playNext": "Play next",
-    "addToQueue": "Add to queue"
+    "addToQueue": "Add to queue",
+    "queue": "Queue",
+    "queueEmpty": "The queue is empty",
+    "removeFromQueue": "Remove from queue"
   }
 }

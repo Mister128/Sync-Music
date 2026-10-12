@@ -32,6 +32,8 @@ class FakePlayback implements PlaybackService {
   @override
   Future<void> skipPrevious() async => calls.add('skipPrevious');
   @override
+  Future<void> playAtIndex(int index) async => calls.add('playAtIndex:$index');
+  @override
   Future<void> insertNext(Track track) async =>
       calls.add('insertNext:${track.id}');
   @override

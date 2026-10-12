@@ -123,8 +123,6 @@ class _AlbumBody extends StatelessWidget {
         for (final (i, track) in tracks.indexed)
           SmTrackTile(
             title: track.title,
-            // Compilations: show whose track this is. On a single-artist
-            // album the artist is redundant - show the track number instead.
             subtitle: track.artistName != artistName
                 ? track.artistName
                 : track.trackNumber == null

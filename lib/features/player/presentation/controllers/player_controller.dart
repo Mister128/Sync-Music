@@ -31,15 +31,29 @@ class PlayerController extends Notifier<PlayerSnapshot> {
       .playQueue(tracks, startIndex: startIndex);
 
   Future<void> togglePlay() => ref.read(playbackServiceProvider).togglePlay();
+
   Future<void> seek(Duration position) =>
       ref.read(playbackServiceProvider).seek(position);
+
   Future<void> skipNext() => ref.read(playbackServiceProvider).skipNext();
+
   Future<void> skipPrevious() =>
       ref.read(playbackServiceProvider).skipPrevious();
+
   Future<void> insertNext(Track track) =>
       ref.read(playbackServiceProvider).insertNext(track);
+
   Future<void> addToQueue(Track track) =>
       ref.read(playbackServiceProvider).addToQueue(track);
+
+  Future<void> playAtIndex(int index) =>
+      ref.read(playbackServiceProvider).playAtIndex(index);
+
+  Future<void> moveQueueItem(int from, int to) =>
+      ref.read(playbackServiceProvider).moveQueueItem(from, to);
+
+  Future<void> removeQueueItem(int index) =>
+      ref.read(playbackServiceProvider).removeQueueItem(index);
 }
 
 final playerControllerProvider =

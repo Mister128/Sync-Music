@@ -131,6 +131,13 @@ class JustAudioPlayback implements PlaybackService {
   }
 
   @override
+  Future<void> playAtIndex(int index) async {
+    if (index < 0 || index >= _queue.length) return;
+    await _player.seek(Duration.zero, index: index);
+    unawaited(_player.play());
+  }
+
+  @override
   Future<void> insertNext(Track track) async {
     final path = track.localPath;
     if (path == null) return;

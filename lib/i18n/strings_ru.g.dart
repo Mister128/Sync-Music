@@ -156,6 +156,9 @@ class _Translations$player$ru extends Translations$player$en {
 	@override String get miniPlayerEmpty => 'Включите трек - он появится здесь';
 	@override String get playNext => 'Воспроизвести следующим';
 	@override String get addToQueue => 'Добавить в очередь';
+	@override String get queue => 'Очередь';
+	@override String get queueEmpty => 'Очередь пуста';
+	@override String get removeFromQueue => 'Убрать из очереди';
 }
 
 /// The flat map containing all translations for locale <ru>.
@@ -213,6 +216,9 @@ extension on TranslationsRu {
 			'player.miniPlayerEmpty' => 'Включите трек - он появится здесь',
 			'player.playNext' => 'Воспроизвести следующим',
 			'player.addToQueue' => 'Добавить в очередь',
+			'player.queue' => 'Очередь',
+			'player.queueEmpty' => 'Очередь пуста',
+			'player.removeFromQueue' => 'Убрать из очереди',
 			_ => null,
 		};
 	}

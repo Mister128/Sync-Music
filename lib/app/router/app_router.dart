@@ -5,6 +5,7 @@ import 'package:sync_music/app/router/routes.dart';
 import 'package:sync_music/app/shell/scaffold_shell.dart';
 import 'package:sync_music/features/library/presentation/pages/album_page.dart';
 import 'package:sync_music/features/library/presentation/pages/artist_page.dart';
+import 'package:sync_music/features/player/presentation/pages/queue_page.dart';
 import 'package:sync_music/features/settings/presentation/pages/settings_page.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -25,7 +26,11 @@ final routerProvider = Provider<GoRouter>((ref) {
         parentNavigatorKey: rootKey,
         builder: (context, state) => const SettingsPage(),
       ),
-
+      GoRoute(
+        path: Routes.queue,
+        parentNavigatorKey: rootKey,
+        builder: (context, state) => const QueuePage(),
+      ),
       GoRoute(
         path: Routes.albumDetail,
         parentNavigatorKey: rootKey,

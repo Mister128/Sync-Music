@@ -28,6 +28,12 @@ abstract interface class PlaybackService {
   Future<void> skipNext();
   Future<void> skipPrevious();
 
+  /// Jumps to the queue item at [index] and starts playing it - both a
+  /// queue-page tap and the system's skipToQueueItem expect auto-play.
+  /// Out-of-range indexes are ignored. Gapless: unlike playQueue, the
+  /// loaded sequence is NOT rebuilt.
+  Future<void> playAtIndex(int index);
+
   Future<void> insertNext(Track track);
   Future<void> addToQueue(Track track);
   Future<void> moveQueueItem(int from, int to);

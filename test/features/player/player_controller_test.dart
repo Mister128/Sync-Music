@@ -88,4 +88,14 @@ void main() {
 
     expect(playback.calls, ['insertNext:a', 'addToQueue:b']);
   });
+
+  test('queue management commands are relayed', () async {
+    final controller = container.read(playerControllerProvider.notifier);
+
+    await controller.playAtIndex(3);
+    await controller.moveQueueItem(0, 2);
+    await controller.removeQueueItem(1);
+
+    expect(playback.calls, ['playAtIndex:3', 'move:0->2', 'remove:1']);
+  });
 }

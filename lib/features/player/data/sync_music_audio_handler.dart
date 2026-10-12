@@ -67,13 +67,7 @@ class SyncMusicAudioHandler extends BaseAudioHandler {
   Future<void> skipToPrevious() => _engine.skipPrevious();
 
   @override
-  Future<void> skipToQueueItem(int index) async {
-    final snapshot = _lastSnapshot;
-    if (snapshot == null || index < 0 || index >= snapshot.queue.length) {
-      return;
-    }
-    await _engine.playQueue(snapshot.queue, startIndex: index);
-  }
+  Future<void> skipToQueueItem(int index) => _engine.playAtIndex(index);
 
   @override
   Future<void> setRepeatMode(AudioServiceRepeatMode repeatMode) =>

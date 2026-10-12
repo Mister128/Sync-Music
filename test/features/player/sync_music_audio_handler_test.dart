@@ -140,22 +140,10 @@ void main() {
     await sub.cancel();
   });
 
-  test('skipToQueueItem replays the queue from that index', () async {
-    engine.snapshots.add(
-      snapshot(
-        queue: [track('a'), track('b'), track('c')],
-        currentIndex: 0,
-        isPlaying: true,
-      ),
-    );
-    await pumpEventQueue();
-    engine.calls.clear();
-
+  test('skipToQueueItem is forwarded to the engine', () async {
     await handler.skipToQueueItem(2);
-    expect(engine.calls, ['playQueue:3:2']);
 
-    await handler.skipToQueueItem(7); // out of range -> ignored
-    expect(engine.calls, ['playQueue:3:2']);
+    expect(engine.calls, ['playAtIndex:2']);
   });
 
   test('repeat and shuffle modes are mirrored into playbackState', () async {

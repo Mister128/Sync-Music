@@ -248,6 +248,15 @@ class Translations$player$en {
 
 	/// en: 'Add to queue'
 	String get addToQueue => 'Add to queue';
+
+	/// en: 'Queue'
+	String get queue => 'Queue';
+
+	/// en: 'The queue is empty'
+	String get queueEmpty => 'The queue is empty';
+
+	/// en: 'Remove from queue'
+	String get removeFromQueue => 'Remove from queue';
 }
 
 /// The flat map containing all translations for locale <en>.
@@ -305,6 +314,9 @@ extension on Translations {
 			'player.miniPlayerEmpty' => 'Play something - it will show up here',
 			'player.playNext' => 'Play next',
 			'player.addToQueue' => 'Add to queue',
+			'player.queue' => 'Queue',
+			'player.queueEmpty' => 'The queue is empty',
+			'player.removeFromQueue' => 'Remove from queue',
 			_ => null,
 		};
 	}

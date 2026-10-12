@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:sync_music/app/router/routes.dart';
 
 import 'package:sync_music/core/design_system/theme/app_spacing.dart';
 import 'package:sync_music/core/design_system/widgets/sm_artwork.dart';
@@ -77,6 +79,11 @@ class MiniPlayer extends ConsumerWidget {
               tooltip: t.player.next,
               icon: const Icon(Icons.skip_next),
               onPressed: controller.skipNext,
+            ),
+            IconButton(
+              tooltip: t.player.queue,
+              icon: const Icon(Icons.playlist_play),
+              onPressed: () => context.push(Routes.queue),
             ),
             const SizedBox(width: AppSpacing.xs),
           ],
