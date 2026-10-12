@@ -12,6 +12,7 @@ import 'package:sync_music/app/app.dart';
 import 'package:sync_music/core/logging/app_logger.dart';
 import 'package:sync_music/core/storage/artwork_paths.dart';
 import 'package:sync_music/features/library/presentation/controllers/library_scan_controller.dart';
+import 'package:sync_music/features/player/data/playback_state_store.dart';
 import 'package:sync_music/features/player/data/player_providers.dart';
 import 'package:sync_music/features/player/data/sync_music_audio_handler.dart';
 import 'package:sync_music/i18n/strings.g.dart';
@@ -55,6 +56,14 @@ Future<void> bootstrap() async {
     unawaited(Permission.notification.request());
   }
 
+  final playbackState = container.read(playbackStateStoreProvider);
+  await playbackState.restore();
+  playbackState.startAutoSave();
+
+  // Android may kill the process after backgrounding (a recents swipe also
+  // stops the FGS): the lifecycle transition is the last guaranteed write.
+  WidgetsBinding.instance.addObserver(_PlaybackFlushObserver(playbackState));
+
   runApp(
     TranslationProvider(
       child: UncontrolledProviderScope(
@@ -67,4 +76,19 @@ Future<void> bootstrap() async {
   // Silent incremental scan right after launch. NOT awaited - the UI comes up
   // while the scan runs in the background; streams will refresh it live
   unawaited(container.read(libraryScanControllerProvider.notifier).startScan());
+}
+
+/// Flushes the saved session when the app leaves the foreground (4.5).
+class _PlaybackFlushObserver with WidgetsBindingObserver {
+  new(this._store);
+
+  final PlaybackStateStore _store;
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.inactive) {
+      unawaited(_store.flush());
+    }
+  }
 }

@@ -64,10 +64,7 @@ class JustAudioPlayback implements PlaybackService {
 
   @override
   Future<void> playQueue(List<Track> tracks, {int startIndex = 0}) async {
-    final playable = [
-      for (final track in tracks)
-        if (track.localPath != null) track,
-    ];
+    final playable = _playable(tracks);
     if (playable.isEmpty) {
       _log.warn('playQueue: nothing playable');
       return;
@@ -77,6 +74,38 @@ class JustAudioPlayback implements PlaybackService {
         ? 0
         : playable.indexOf(requested).clamp(0, playable.length - 1);
 
+    await _loadQueue(playable, initialIndex: initialIndex);
+    unawaited(_player.play());
+  }
+
+  @override
+  Future<void> restoreQueue(
+    List<Track> tracks, {
+    int startIndex = 0,
+    Duration position = Duration.zero,
+  }) async {
+    final playable = _playable(tracks);
+    if (playable.isEmpty) {
+      _log.debug('restoreQueue: nothing playable, session dropped');
+      return;
+    }
+    // Index-based on purpose: the resolver already dropped dead tracks,
+    // the clamp only guards a shrunken queue.
+    await _loadQueue(
+      playable,
+      initialIndex: startIndex.clamp(0, playable.length - 1),
+      initialPosition: position,
+    );
+    // NO play() here - a restored session is a PAUSED session.
+  }
+
+  /// Shared loader: rebuilds the just_audio sequence and republishes the
+  /// snapshot. Whether playback starts is the CALLER's decision.
+  Future<void> _loadQueue(
+    List<Track> playable, {
+    required int initialIndex,
+    Duration initialPosition = Duration.zero,
+  }) async {
     _queue = List.unmodifiable(playable);
     await _player.setAudioSources(
       [
@@ -84,12 +113,16 @@ class JustAudioPlayback implements PlaybackService {
           AudioSource.uri(Uri.file(track.localPath!), tag: track.id),
       ],
       initialIndex: initialIndex,
-      initialPosition: Duration.zero,
+      initialPosition: initialPosition,
     );
     _currentIndex = initialIndex;
-    unawaited(_player.play());
     _publish();
   }
+
+  static List<Track> _playable(List<Track> tracks) => [
+    for (final track in tracks)
+      if (track.localPath != null) track,
+  ];
 
   @override
   Future<void> play() async => unawaited(_player.play());

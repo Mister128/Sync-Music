@@ -16,9 +16,18 @@ abstract interface class PlaybackService {
   /// Tracks without a local file are skipped (future P2P phantoms).
   Future<void> playQueue(List<Track> tracks, {int startIndex = 0});
 
+  Future<void> restoreQueue(
+    List<Track> tracks, {
+    int startIndex = 0,
+    Duration position = Duration.zero,
+  });
+
   Future<void> play();
+
   Future<void> pause();
+
   Future<void> togglePlay();
+
   Future<void> seek(Duration position);
 
   /// Queue navigation with PRODUCT rules (see skip_policy.dart):
@@ -26,6 +35,7 @@ abstract interface class PlaybackService {
   /// threshold, otherwise moves back; BOTH directions wrap around the
   /// queue ends circularly.
   Future<void> skipNext();
+
   Future<void> skipPrevious();
 
   /// Jumps to the queue item at [index] and starts playing it - both a
@@ -35,11 +45,15 @@ abstract interface class PlaybackService {
   Future<void> playAtIndex(int index);
 
   Future<void> insertNext(Track track);
+
   Future<void> addToQueue(Track track);
+
   Future<void> moveQueueItem(int from, int to);
+
   Future<void> removeQueueItem(int index);
 
   Future<void> setRepeatMode(RepeatMode mode);
+
   Future<void> setShuffleEnabled({required bool enabled});
 
   Future<void> dispose();
