@@ -20,6 +20,12 @@ class FakePlayback implements PlaybackService {
   Future<void> playQueue(List<Track> tracks, {int startIndex = 0}) async =>
       calls.add('playQueue:${tracks.length}:$startIndex');
   @override
+  Future<void> restoreQueue(
+    List<Track> tracks, {
+    int startIndex = 0,
+    Duration position = Duration.zero,
+  }) async => calls.add('restoreQueue:${tracks.length}:$startIndex:$position');
+  @override
   Future<void> play() async => calls.add('play');
   @override
   Future<void> pause() async => calls.add('pause');

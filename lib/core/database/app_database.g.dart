@@ -1414,16 +1414,563 @@ class LibraryRootsCompanion extends UpdateCompanion<LibraryRoot> {
   }
 }
 
+class $PlaybackStatesTable extends PlaybackStates
+    with TableInfo<$PlaybackStatesTable, PlaybackStateRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $PlaybackStatesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _queueTrackIdsMeta = const VerificationMeta(
+    'queueTrackIds',
+  );
+  @override
+  late final GeneratedColumn<String> queueTrackIds = GeneratedColumn<String>(
+    'queue_track_ids',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _currentIndexMeta = const VerificationMeta(
+    'currentIndex',
+  );
+  @override
+  late final GeneratedColumn<int> currentIndex = GeneratedColumn<int>(
+    'current_index',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _currentTrackIdMeta = const VerificationMeta(
+    'currentTrackId',
+  );
+  @override
+  late final GeneratedColumn<String> currentTrackId = GeneratedColumn<String>(
+    'current_track_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _positionMsMeta = const VerificationMeta(
+    'positionMs',
+  );
+  @override
+  late final GeneratedColumn<int> positionMs = GeneratedColumn<int>(
+    'position_ms',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _repeatModeMeta = const VerificationMeta(
+    'repeatMode',
+  );
+  @override
+  late final GeneratedColumn<int> repeatMode = GeneratedColumn<int>(
+    'repeat_mode',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _shuffleEnabledMeta = const VerificationMeta(
+    'shuffleEnabled',
+  );
+  @override
+  late final GeneratedColumn<bool> shuffleEnabled = GeneratedColumn<bool>(
+    'shuffle_enabled',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("shuffle_enabled" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _updatedAtMsMeta = const VerificationMeta(
+    'updatedAtMs',
+  );
+  @override
+  late final GeneratedColumn<int> updatedAtMs = GeneratedColumn<int>(
+    'updated_at_ms',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    queueTrackIds,
+    currentIndex,
+    currentTrackId,
+    positionMs,
+    repeatMode,
+    shuffleEnabled,
+    updatedAtMs,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'playback_states';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<PlaybackStateRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('queue_track_ids')) {
+      context.handle(
+        _queueTrackIdsMeta,
+        queueTrackIds.isAcceptableOrUnknown(
+          data['queue_track_ids']!,
+          _queueTrackIdsMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_queueTrackIdsMeta);
+    }
+    if (data.containsKey('current_index')) {
+      context.handle(
+        _currentIndexMeta,
+        currentIndex.isAcceptableOrUnknown(
+          data['current_index']!,
+          _currentIndexMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_currentIndexMeta);
+    }
+    if (data.containsKey('current_track_id')) {
+      context.handle(
+        _currentTrackIdMeta,
+        currentTrackId.isAcceptableOrUnknown(
+          data['current_track_id']!,
+          _currentTrackIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('position_ms')) {
+      context.handle(
+        _positionMsMeta,
+        positionMs.isAcceptableOrUnknown(data['position_ms']!, _positionMsMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_positionMsMeta);
+    }
+    if (data.containsKey('repeat_mode')) {
+      context.handle(
+        _repeatModeMeta,
+        repeatMode.isAcceptableOrUnknown(data['repeat_mode']!, _repeatModeMeta),
+      );
+    }
+    if (data.containsKey('shuffle_enabled')) {
+      context.handle(
+        _shuffleEnabledMeta,
+        shuffleEnabled.isAcceptableOrUnknown(
+          data['shuffle_enabled']!,
+          _shuffleEnabledMeta,
+        ),
+      );
+    }
+    if (data.containsKey('updated_at_ms')) {
+      context.handle(
+        _updatedAtMsMeta,
+        updatedAtMs.isAcceptableOrUnknown(
+          data['updated_at_ms']!,
+          _updatedAtMsMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMsMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  PlaybackStateRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PlaybackStateRow(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      queueTrackIds: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}queue_track_ids'],
+      )!,
+      currentIndex: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}current_index'],
+      )!,
+      currentTrackId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}current_track_id'],
+      ),
+      positionMs: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}position_ms'],
+      )!,
+      repeatMode: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}repeat_mode'],
+      )!,
+      shuffleEnabled: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}shuffle_enabled'],
+      )!,
+      updatedAtMs: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}updated_at_ms'],
+      )!,
+    );
+  }
+
+  @override
+  $PlaybackStatesTable createAlias(String alias) {
+    return $PlaybackStatesTable(attachedDatabase, alias);
+  }
+}
+
+class PlaybackStateRow extends DataClass
+    implements Insertable<PlaybackStateRow> {
+  /// Always PlaybackStateDao.rowId - the table never grows past one row.
+  final int id;
+
+  /// JSON array of track ids in queue order. Duplicates allowed: the
+  /// queue page lets the same track be added twice.
+  final String queueTrackIds;
+
+  /// Saved together on purpose: the INDEX is exact even with duplicate
+  /// tracks; the ID survives dead-track filtering on restore. The rule
+  /// combining them lives in domain/services/restore_policy.dart.
+  final int currentIndex;
+  final String? currentTrackId;
+  final int positionMs;
+
+  /// RepeatMode.index - the enum ORDER is part of the persisted format:
+  /// never reorder it, only append.
+  final int repeatMode;
+  final bool shuffleEnabled;
+  final int updatedAtMs;
+  const PlaybackStateRow({
+    required this.id,
+    required this.queueTrackIds,
+    required this.currentIndex,
+    this.currentTrackId,
+    required this.positionMs,
+    required this.repeatMode,
+    required this.shuffleEnabled,
+    required this.updatedAtMs,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['queue_track_ids'] = Variable<String>(queueTrackIds);
+    map['current_index'] = Variable<int>(currentIndex);
+    if (!nullToAbsent || currentTrackId != null) {
+      map['current_track_id'] = Variable<String>(currentTrackId);
+    }
+    map['position_ms'] = Variable<int>(positionMs);
+    map['repeat_mode'] = Variable<int>(repeatMode);
+    map['shuffle_enabled'] = Variable<bool>(shuffleEnabled);
+    map['updated_at_ms'] = Variable<int>(updatedAtMs);
+    return map;
+  }
+
+  PlaybackStatesCompanion toCompanion(bool nullToAbsent) {
+    return PlaybackStatesCompanion(
+      id: Value(id),
+      queueTrackIds: Value(queueTrackIds),
+      currentIndex: Value(currentIndex),
+      currentTrackId: currentTrackId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(currentTrackId),
+      positionMs: Value(positionMs),
+      repeatMode: Value(repeatMode),
+      shuffleEnabled: Value(shuffleEnabled),
+      updatedAtMs: Value(updatedAtMs),
+    );
+  }
+
+  factory PlaybackStateRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return PlaybackStateRow(
+      id: serializer.fromJson<int>(json['id']),
+      queueTrackIds: serializer.fromJson<String>(json['queueTrackIds']),
+      currentIndex: serializer.fromJson<int>(json['currentIndex']),
+      currentTrackId: serializer.fromJson<String?>(json['currentTrackId']),
+      positionMs: serializer.fromJson<int>(json['positionMs']),
+      repeatMode: serializer.fromJson<int>(json['repeatMode']),
+      shuffleEnabled: serializer.fromJson<bool>(json['shuffleEnabled']),
+      updatedAtMs: serializer.fromJson<int>(json['updatedAtMs']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'queueTrackIds': serializer.toJson<String>(queueTrackIds),
+      'currentIndex': serializer.toJson<int>(currentIndex),
+      'currentTrackId': serializer.toJson<String?>(currentTrackId),
+      'positionMs': serializer.toJson<int>(positionMs),
+      'repeatMode': serializer.toJson<int>(repeatMode),
+      'shuffleEnabled': serializer.toJson<bool>(shuffleEnabled),
+      'updatedAtMs': serializer.toJson<int>(updatedAtMs),
+    };
+  }
+
+  PlaybackStateRow copyWith({
+    int? id,
+    String? queueTrackIds,
+    int? currentIndex,
+    Value<String?> currentTrackId = const Value.absent(),
+    int? positionMs,
+    int? repeatMode,
+    bool? shuffleEnabled,
+    int? updatedAtMs,
+  }) => PlaybackStateRow(
+    id: id ?? this.id,
+    queueTrackIds: queueTrackIds ?? this.queueTrackIds,
+    currentIndex: currentIndex ?? this.currentIndex,
+    currentTrackId: currentTrackId.present
+        ? currentTrackId.value
+        : this.currentTrackId,
+    positionMs: positionMs ?? this.positionMs,
+    repeatMode: repeatMode ?? this.repeatMode,
+    shuffleEnabled: shuffleEnabled ?? this.shuffleEnabled,
+    updatedAtMs: updatedAtMs ?? this.updatedAtMs,
+  );
+  PlaybackStateRow copyWithCompanion(PlaybackStatesCompanion data) {
+    return PlaybackStateRow(
+      id: data.id.present ? data.id.value : this.id,
+      queueTrackIds: data.queueTrackIds.present
+          ? data.queueTrackIds.value
+          : this.queueTrackIds,
+      currentIndex: data.currentIndex.present
+          ? data.currentIndex.value
+          : this.currentIndex,
+      currentTrackId: data.currentTrackId.present
+          ? data.currentTrackId.value
+          : this.currentTrackId,
+      positionMs: data.positionMs.present
+          ? data.positionMs.value
+          : this.positionMs,
+      repeatMode: data.repeatMode.present
+          ? data.repeatMode.value
+          : this.repeatMode,
+      shuffleEnabled: data.shuffleEnabled.present
+          ? data.shuffleEnabled.value
+          : this.shuffleEnabled,
+      updatedAtMs: data.updatedAtMs.present
+          ? data.updatedAtMs.value
+          : this.updatedAtMs,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PlaybackStateRow(')
+          ..write('id: $id, ')
+          ..write('queueTrackIds: $queueTrackIds, ')
+          ..write('currentIndex: $currentIndex, ')
+          ..write('currentTrackId: $currentTrackId, ')
+          ..write('positionMs: $positionMs, ')
+          ..write('repeatMode: $repeatMode, ')
+          ..write('shuffleEnabled: $shuffleEnabled, ')
+          ..write('updatedAtMs: $updatedAtMs')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    queueTrackIds,
+    currentIndex,
+    currentTrackId,
+    positionMs,
+    repeatMode,
+    shuffleEnabled,
+    updatedAtMs,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PlaybackStateRow &&
+          other.id == this.id &&
+          other.queueTrackIds == this.queueTrackIds &&
+          other.currentIndex == this.currentIndex &&
+          other.currentTrackId == this.currentTrackId &&
+          other.positionMs == this.positionMs &&
+          other.repeatMode == this.repeatMode &&
+          other.shuffleEnabled == this.shuffleEnabled &&
+          other.updatedAtMs == this.updatedAtMs);
+}
+
+class PlaybackStatesCompanion extends UpdateCompanion<PlaybackStateRow> {
+  final Value<int> id;
+  final Value<String> queueTrackIds;
+  final Value<int> currentIndex;
+  final Value<String?> currentTrackId;
+  final Value<int> positionMs;
+  final Value<int> repeatMode;
+  final Value<bool> shuffleEnabled;
+  final Value<int> updatedAtMs;
+  const PlaybackStatesCompanion({
+    this.id = const Value.absent(),
+    this.queueTrackIds = const Value.absent(),
+    this.currentIndex = const Value.absent(),
+    this.currentTrackId = const Value.absent(),
+    this.positionMs = const Value.absent(),
+    this.repeatMode = const Value.absent(),
+    this.shuffleEnabled = const Value.absent(),
+    this.updatedAtMs = const Value.absent(),
+  });
+  PlaybackStatesCompanion.insert({
+    this.id = const Value.absent(),
+    required String queueTrackIds,
+    required int currentIndex,
+    this.currentTrackId = const Value.absent(),
+    required int positionMs,
+    this.repeatMode = const Value.absent(),
+    this.shuffleEnabled = const Value.absent(),
+    required int updatedAtMs,
+  }) : queueTrackIds = Value(queueTrackIds),
+       currentIndex = Value(currentIndex),
+       positionMs = Value(positionMs),
+       updatedAtMs = Value(updatedAtMs);
+  static Insertable<PlaybackStateRow> custom({
+    Expression<int>? id,
+    Expression<String>? queueTrackIds,
+    Expression<int>? currentIndex,
+    Expression<String>? currentTrackId,
+    Expression<int>? positionMs,
+    Expression<int>? repeatMode,
+    Expression<bool>? shuffleEnabled,
+    Expression<int>? updatedAtMs,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (queueTrackIds != null) 'queue_track_ids': queueTrackIds,
+      if (currentIndex != null) 'current_index': currentIndex,
+      if (currentTrackId != null) 'current_track_id': currentTrackId,
+      if (positionMs != null) 'position_ms': positionMs,
+      if (repeatMode != null) 'repeat_mode': repeatMode,
+      if (shuffleEnabled != null) 'shuffle_enabled': shuffleEnabled,
+      if (updatedAtMs != null) 'updated_at_ms': updatedAtMs,
+    });
+  }
+
+  PlaybackStatesCompanion copyWith({
+    Value<int>? id,
+    Value<String>? queueTrackIds,
+    Value<int>? currentIndex,
+    Value<String?>? currentTrackId,
+    Value<int>? positionMs,
+    Value<int>? repeatMode,
+    Value<bool>? shuffleEnabled,
+    Value<int>? updatedAtMs,
+  }) {
+    return PlaybackStatesCompanion(
+      id: id ?? this.id,
+      queueTrackIds: queueTrackIds ?? this.queueTrackIds,
+      currentIndex: currentIndex ?? this.currentIndex,
+      currentTrackId: currentTrackId ?? this.currentTrackId,
+      positionMs: positionMs ?? this.positionMs,
+      repeatMode: repeatMode ?? this.repeatMode,
+      shuffleEnabled: shuffleEnabled ?? this.shuffleEnabled,
+      updatedAtMs: updatedAtMs ?? this.updatedAtMs,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (queueTrackIds.present) {
+      map['queue_track_ids'] = Variable<String>(queueTrackIds.value);
+    }
+    if (currentIndex.present) {
+      map['current_index'] = Variable<int>(currentIndex.value);
+    }
+    if (currentTrackId.present) {
+      map['current_track_id'] = Variable<String>(currentTrackId.value);
+    }
+    if (positionMs.present) {
+      map['position_ms'] = Variable<int>(positionMs.value);
+    }
+    if (repeatMode.present) {
+      map['repeat_mode'] = Variable<int>(repeatMode.value);
+    }
+    if (shuffleEnabled.present) {
+      map['shuffle_enabled'] = Variable<bool>(shuffleEnabled.value);
+    }
+    if (updatedAtMs.present) {
+      map['updated_at_ms'] = Variable<int>(updatedAtMs.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PlaybackStatesCompanion(')
+          ..write('id: $id, ')
+          ..write('queueTrackIds: $queueTrackIds, ')
+          ..write('currentIndex: $currentIndex, ')
+          ..write('currentTrackId: $currentTrackId, ')
+          ..write('positionMs: $positionMs, ')
+          ..write('repeatMode: $repeatMode, ')
+          ..write('shuffleEnabled: $shuffleEnabled, ')
+          ..write('updatedAtMs: $updatedAtMs')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $TracksTable tracks = $TracksTable(this);
   late final $LibraryRootsTable libraryRoots = $LibraryRootsTable(this);
+  late final $PlaybackStatesTable playbackStates = $PlaybackStatesTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities => [tracks, libraryRoots];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [
+    tracks,
+    libraryRoots,
+    playbackStates,
+  ];
 }
 
 typedef $$TracksTableCreateCompanionBuilder = TracksCompanion Function({
@@ -2109,6 +2656,286 @@ typedef $$LibraryRootsTableProcessedTableManager =
       LibraryRoot,
       PrefetchHooks Function()
     >;
+typedef $$PlaybackStatesTableCreateCompanionBuilder =
+    PlaybackStatesCompanion Function({
+      Value<int> id,
+      required String queueTrackIds,
+      required int currentIndex,
+      Value<String?> currentTrackId,
+      required int positionMs,
+      Value<int> repeatMode,
+      Value<bool> shuffleEnabled,
+      required int updatedAtMs,
+    });
+typedef $$PlaybackStatesTableUpdateCompanionBuilder =
+    PlaybackStatesCompanion Function({
+      Value<int> id,
+      Value<String> queueTrackIds,
+      Value<int> currentIndex,
+      Value<String?> currentTrackId,
+      Value<int> positionMs,
+      Value<int> repeatMode,
+      Value<bool> shuffleEnabled,
+      Value<int> updatedAtMs,
+    });
+
+class $$PlaybackStatesTableFilterComposer
+    extends Composer<_$AppDatabase, $PlaybackStatesTable> {
+  $$PlaybackStatesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get queueTrackIds => $composableBuilder(
+    column: $table.queueTrackIds,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get currentIndex => $composableBuilder(
+    column: $table.currentIndex,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get currentTrackId => $composableBuilder(
+    column: $table.currentTrackId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get positionMs => $composableBuilder(
+    column: $table.positionMs,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get repeatMode => $composableBuilder(
+    column: $table.repeatMode,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get shuffleEnabled => $composableBuilder(
+    column: $table.shuffleEnabled,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get updatedAtMs => $composableBuilder(
+    column: $table.updatedAtMs,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$PlaybackStatesTableOrderingComposer
+    extends Composer<_$AppDatabase, $PlaybackStatesTable> {
+  $$PlaybackStatesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get queueTrackIds => $composableBuilder(
+    column: $table.queueTrackIds,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get currentIndex => $composableBuilder(
+    column: $table.currentIndex,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get currentTrackId => $composableBuilder(
+    column: $table.currentTrackId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get positionMs => $composableBuilder(
+    column: $table.positionMs,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get repeatMode => $composableBuilder(
+    column: $table.repeatMode,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get shuffleEnabled => $composableBuilder(
+    column: $table.shuffleEnabled,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get updatedAtMs => $composableBuilder(
+    column: $table.updatedAtMs,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$PlaybackStatesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $PlaybackStatesTable> {
+  $$PlaybackStatesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get queueTrackIds => $composableBuilder(
+    column: $table.queueTrackIds,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get currentIndex => $composableBuilder(
+    column: $table.currentIndex,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get currentTrackId => $composableBuilder(
+    column: $table.currentTrackId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get positionMs => $composableBuilder(
+    column: $table.positionMs,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get repeatMode => $composableBuilder(
+    column: $table.repeatMode,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get shuffleEnabled => $composableBuilder(
+    column: $table.shuffleEnabled,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get updatedAtMs => $composableBuilder(
+    column: $table.updatedAtMs,
+    builder: (column) => column,
+  );
+}
+
+class $$PlaybackStatesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $PlaybackStatesTable,
+          PlaybackStateRow,
+          $$PlaybackStatesTableFilterComposer,
+          $$PlaybackStatesTableOrderingComposer,
+          $$PlaybackStatesTableAnnotationComposer,
+          $$PlaybackStatesTableCreateCompanionBuilder,
+          $$PlaybackStatesTableUpdateCompanionBuilder,
+          (
+            PlaybackStateRow,
+            BaseReferences<
+              _$AppDatabase,
+              $PlaybackStatesTable,
+              PlaybackStateRow
+            >,
+          ),
+          PlaybackStateRow,
+          PrefetchHooks Function()
+        > {
+  $$PlaybackStatesTableTableManager(
+    _$AppDatabase db,
+    $PlaybackStatesTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$PlaybackStatesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$PlaybackStatesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$PlaybackStatesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> queueTrackIds = const Value.absent(),
+                Value<int> currentIndex = const Value.absent(),
+                Value<String?> currentTrackId = const Value.absent(),
+                Value<int> positionMs = const Value.absent(),
+                Value<int> repeatMode = const Value.absent(),
+                Value<bool> shuffleEnabled = const Value.absent(),
+                Value<int> updatedAtMs = const Value.absent(),
+              }) => PlaybackStatesCompanion(
+                id: id,
+                queueTrackIds: queueTrackIds,
+                currentIndex: currentIndex,
+                currentTrackId: currentTrackId,
+                positionMs: positionMs,
+                repeatMode: repeatMode,
+                shuffleEnabled: shuffleEnabled,
+                updatedAtMs: updatedAtMs,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String queueTrackIds,
+                required int currentIndex,
+                Value<String?> currentTrackId = const Value.absent(),
+                required int positionMs,
+                Value<int> repeatMode = const Value.absent(),
+                Value<bool> shuffleEnabled = const Value.absent(),
+                required int updatedAtMs,
+              }) => PlaybackStatesCompanion.insert(
+                id: id,
+                queueTrackIds: queueTrackIds,
+                currentIndex: currentIndex,
+                currentTrackId: currentTrackId,
+                positionMs: positionMs,
+                repeatMode: repeatMode,
+                shuffleEnabled: shuffleEnabled,
+                updatedAtMs: updatedAtMs,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$PlaybackStatesTable, PlaybackStateRow>(table),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $PlaybackStatesTable,
+                    PlaybackStateRow
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$PlaybackStatesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $PlaybackStatesTable,
+      PlaybackStateRow,
+      $$PlaybackStatesTableFilterComposer,
+      $$PlaybackStatesTableOrderingComposer,
+      $$PlaybackStatesTableAnnotationComposer,
+      $$PlaybackStatesTableCreateCompanionBuilder,
+      $$PlaybackStatesTableUpdateCompanionBuilder,
+      (
+        PlaybackStateRow,
+        BaseReferences<_$AppDatabase, $PlaybackStatesTable, PlaybackStateRow>,
+      ),
+      PlaybackStateRow,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -2117,4 +2944,6 @@ class $AppDatabaseManager {
       $$TracksTableTableManager(_db, _db.tracks);
   $$LibraryRootsTableTableManager get libraryRoots =>
       $$LibraryRootsTableTableManager(_db, _db.libraryRoots);
+  $$PlaybackStatesTableTableManager get playbackStates =>
+      $$PlaybackStatesTableTableManager(_db, _db.playbackStates);
 }

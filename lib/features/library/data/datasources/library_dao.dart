@@ -195,6 +195,18 @@ class LibraryDao extends DatabaseAccessor<AppDatabase> with _$LibraryDaoMixin {
       ),
     );
   }
+
+  /// Alive tracks for the given ids, in the ORDER of [ids] (SQL's IN does
+  /// not preserve order - reindex in Dart). Dead ids are simply missing
+  /// from the result. Used by the player's session restore.
+  Future<List<Track>> tracksByIds(List<String> ids) async {
+    if (ids.isEmpty) return const [];
+    final query = select(tracks)
+      ..where((t) => t.id.isIn(ids) & t.deletedAtMs.isNull());
+    final rows = await query.get();
+    final byId = {for (final row in rows) row.id: row};
+    return [for (final id in ids) ?byId[id]];
+  }
 }
 
 TracksCompanion _insertCompanion(ScannedTrack t, int now) =>
