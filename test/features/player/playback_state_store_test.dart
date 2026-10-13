@@ -112,9 +112,7 @@ void main() {
       expect((await dao.read())!.positionMs, 42000);
 
       // Paused tick writes nothing on its own; flush() does (backgrounding).
-      engine.snapshots.add(
-        snapshot(queue: [track('a')], currentIndex: 0),
-      );
+      engine.snapshots.add(snapshot(queue: [track('a')], currentIndex: 0));
       await pumpEventQueue();
       engine.positions.add(const Duration(seconds: 42, milliseconds: 400));
       await pumpEventQueue();
