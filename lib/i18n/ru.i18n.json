@@ -11,7 +11,9 @@
   },
   "common": {
     "inDevelopment": "В разработке",
-    "error": "Что-то пошло не так"
+    "error": "Что-то пошло не так",
+    "cancel": "Отмена",
+    "save": "Сохранить"
   },
   "settings": {
     "title": "Настройки",
@@ -76,5 +78,23 @@
     "repeatOff": "Повтор выключен",
     "repeatAll": "Повторять все",
     "repeatOne": "Повторять трек"
+  },
+  "playlists": {
+    "create": "Новый плейлист",
+    "rename": "Переименовать плейлист",
+    "delete": "Удалить",
+    "deleteConfirmTitle": "Удалить плейлист?",
+    "deleteConfirmMessage": "«$name» будет удалён. Треки останутся в библиотеке.",
+    "deleteConfirmAction": "Удалить",
+    "nameLabel": "Название",
+    "nameEmpty": "Введите название",
+    "empty": "Пока нет плейлистов",
+    "emptyHint": "Создайте первый плейлист",
+    "trackCount": {
+      "one": "$count трек",
+      "few": "$count трека",
+      "many": "$count треков",
+      "other": "$count трека"
+    }
   }
 }

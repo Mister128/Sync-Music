@@ -11,7 +11,9 @@
   },
   "common": {
     "inDevelopment": "In Development",
-    "error": "Something went wrong"
+    "error": "Something went wrong",
+    "cancel": "Cancel",
+    "save": "Save"
   },
   "settings": {
     "title": "Settings",
@@ -72,5 +74,21 @@
     "repeatOff": "Repeat off",
     "repeatAll": "Repeat all",
     "repeatOne": "Repeat one"
+  },
+  "playlists": {
+    "create": "New playlist",
+    "rename": "Rename playlist",
+    "delete": "Delete",
+    "deleteConfirmTitle": "Delete playlist?",
+    "deleteConfirmMessage": "\"$name\" will be deleted. Its tracks stay in the library.",
+    "deleteConfirmAction": "Delete",
+    "nameLabel": "Name",
+    "nameEmpty": "Enter a name",
+    "empty": "No playlists yet",
+    "emptyHint": "Create your first playlist",
+    "trackCount": {
+      "one": "$count track",
+      "other": "$count tracks"
+    }
   }
 }

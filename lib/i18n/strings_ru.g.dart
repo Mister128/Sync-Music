@@ -45,6 +45,7 @@ class TranslationsRu extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$settings$ru settings = _Translations$settings$ru._(_root);
 	@override late final _Translations$library$ru library = _Translations$library$ru._(_root);
 	@override late final _Translations$player$ru player = _Translations$player$ru._(_root);
+	@override late final _Translations$playlists$ru playlists = _Translations$playlists$ru._(_root);
 }
 
 // Path: app
@@ -80,6 +81,8 @@ class _Translations$common$ru extends Translations$common$en {
 	// Translations
 	@override String get inDevelopment => 'В разработке';
 	@override String get error => 'Что-то пошло не так';
+	@override String get cancel => 'Отмена';
+	@override String get save => 'Сохранить';
 }
 
 // Path: settings
@@ -167,6 +170,31 @@ class _Translations$player$ru extends Translations$player$en {
 	@override String get repeatOne => 'Повторять трек';
 }
 
+// Path: playlists
+class _Translations$playlists$ru extends Translations$playlists$en {
+	_Translations$playlists$ru._(TranslationsRu root) : this._root = root, super.internal(root);
+
+	final TranslationsRu _root; // ignore: unused_field
+
+	// Translations
+	@override String get create => 'Новый плейлист';
+	@override String get rename => 'Переименовать плейлист';
+	@override String get delete => 'Удалить';
+	@override String get deleteConfirmTitle => 'Удалить плейлист?';
+	@override String deleteConfirmMessage({required Object name}) => '«${name}» будет удалён. Треки останутся в библиотеке.';
+	@override String get deleteConfirmAction => 'Удалить';
+	@override String get nameLabel => 'Название';
+	@override String get nameEmpty => 'Введите название';
+	@override String get empty => 'Пока нет плейлистов';
+	@override String get emptyHint => 'Создайте первый плейлист';
+	@override String trackCount({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('ru'))(n,
+		one: '${count} трек',
+		few: '${count} трека',
+		many: '${count} треков',
+		other: '${count} трека',
+	);
+}
+
 /// The flat map containing all translations for locale <ru>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -183,6 +211,8 @@ extension on TranslationsRu {
 			'nav.artists' => 'Артисты',
 			'common.inDevelopment' => 'В разработке',
 			'common.error' => 'Что-то пошло не так',
+			'common.cancel' => 'Отмена',
+			'common.save' => 'Сохранить',
 			'settings.title' => 'Настройки',
 			'settings.appearance' => 'Оформление',
 			'settings.theme' => 'Тема',
@@ -231,6 +261,17 @@ extension on TranslationsRu {
 			'player.repeatOff' => 'Повтор выключен',
 			'player.repeatAll' => 'Повторять все',
 			'player.repeatOne' => 'Повторять трек',
+			'playlists.create' => 'Новый плейлист',
+			'playlists.rename' => 'Переименовать плейлист',
+			'playlists.delete' => 'Удалить',
+			'playlists.deleteConfirmTitle' => 'Удалить плейлист?',
+			'playlists.deleteConfirmMessage' => ({required Object name}) => '«${name}» будет удалён. Треки останутся в библиотеке.',
+			'playlists.deleteConfirmAction' => 'Удалить',
+			'playlists.nameLabel' => 'Название',
+			'playlists.nameEmpty' => 'Введите название',
+			'playlists.empty' => 'Пока нет плейлистов',
+			'playlists.emptyHint' => 'Создайте первый плейлист',
+			'playlists.trackCount' => ({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('ru'))(n, one: '${count} трек', few: '${count} трека', many: '${count} треков', other: '${count} трека', ), 
 			_ => null,
 		};
 	}

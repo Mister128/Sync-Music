@@ -47,6 +47,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$settings$en settings = Translations$settings$en.internal(_root);
 	late final Translations$library$en library = Translations$library$en.internal(_root);
 	late final Translations$player$en player = Translations$player$en.internal(_root);
+	late final Translations$playlists$en playlists = Translations$playlists$en.internal(_root);
 }
 
 // Path: app
@@ -98,6 +99,12 @@ class Translations$common$en {
 
 	/// en: 'Something went wrong'
 	String get error => 'Something went wrong';
+
+	/// en: 'Cancel'
+	String get cancel => 'Cancel';
+
+	/// en: 'Save'
+	String get save => 'Save';
 }
 
 // Path: settings
@@ -277,6 +284,51 @@ class Translations$player$en {
 	String get repeatOne => 'Repeat one';
 }
 
+// Path: playlists
+class Translations$playlists$en {
+	Translations$playlists$en.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'New playlist'
+	String get create => 'New playlist';
+
+	/// en: 'Rename playlist'
+	String get rename => 'Rename playlist';
+
+	/// en: 'Delete'
+	String get delete => 'Delete';
+
+	/// en: 'Delete playlist?'
+	String get deleteConfirmTitle => 'Delete playlist?';
+
+	/// en: '"$name" will be deleted. Its tracks stay in the library.'
+	String deleteConfirmMessage({required Object name}) => '"${name}" will be deleted. Its tracks stay in the library.';
+
+	/// en: 'Delete'
+	String get deleteConfirmAction => 'Delete';
+
+	/// en: 'Name'
+	String get nameLabel => 'Name';
+
+	/// en: 'Enter a name'
+	String get nameEmpty => 'Enter a name';
+
+	/// en: 'No playlists yet'
+	String get empty => 'No playlists yet';
+
+	/// en: 'Create your first playlist'
+	String get emptyHint => 'Create your first playlist';
+
+	/// en: '(one) {$count track} (other) {$count tracks}'
+	String trackCount({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
+		one: '${count} track',
+		other: '${count} tracks',
+	);
+}
+
 /// The flat map containing all translations for locale <en>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -293,6 +345,8 @@ extension on Translations {
 			'nav.artists' => 'Artists',
 			'common.inDevelopment' => 'In Development',
 			'common.error' => 'Something went wrong',
+			'common.cancel' => 'Cancel',
+			'common.save' => 'Save',
 			'settings.title' => 'Settings',
 			'settings.appearance' => 'Appearance',
 			'settings.theme' => 'Theme',
@@ -341,6 +395,17 @@ extension on Translations {
 			'player.repeatOff' => 'Repeat off',
 			'player.repeatAll' => 'Repeat all',
 			'player.repeatOne' => 'Repeat one',
+			'playlists.create' => 'New playlist',
+			'playlists.rename' => 'Rename playlist',
+			'playlists.delete' => 'Delete',
+			'playlists.deleteConfirmTitle' => 'Delete playlist?',
+			'playlists.deleteConfirmMessage' => ({required Object name}) => '"${name}" will be deleted. Its tracks stay in the library.',
+			'playlists.deleteConfirmAction' => 'Delete',
+			'playlists.nameLabel' => 'Name',
+			'playlists.nameEmpty' => 'Enter a name',
+			'playlists.empty' => 'No playlists yet',
+			'playlists.emptyHint' => 'Create your first playlist',
+			'playlists.trackCount' => ({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '${count} track', other: '${count} tracks', ), 
 			_ => null,
 		};
 	}

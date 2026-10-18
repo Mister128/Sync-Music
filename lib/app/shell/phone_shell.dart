@@ -8,6 +8,7 @@ import 'package:sync_music/core/design_system/widgets/placeholder_page.dart';
 import 'package:sync_music/features/player/domain/entities/player_snapshot.dart';
 import 'package:sync_music/features/player/presentation/controllers/player_controller.dart';
 import 'package:sync_music/features/player/presentation/widgets/mini_player.dart';
+import 'package:sync_music/features/playlists/presentation/widgets/playlist_form_dialog.dart';
 import 'package:sync_music/i18n/strings.g.dart';
 
 class PhoneShell extends ConsumerWidget {
@@ -26,6 +27,25 @@ class PhoneShell extends ConsumerWidget {
           title: Text(t.app.title),
           actionsPadding: const EdgeInsets.only(right: AppSpacing.sm),
           actions: [
+            Builder(
+                builder: (context) {
+                  final tabController = DefaultTabController.of(context);
+                  return AnimatedBuilder(
+                      animation: tabController,
+                      builder: (context, _) {
+                        if (tabController.index != PlaceholderSection.playlists.index) {
+                          return const SizedBox.shrink();
+                        }
+                        final t = Translations.of(context);
+                        return IconButton(
+                            tooltip: t.playlists.create,
+                            icon: const Icon(Icons.add),
+                            onPressed: () => showPlaylistFormDialog(context),
+                        );
+                      }
+                  );
+                }
+            ),
             IconButton(
               icon: const Icon(Icons.settings),
               onPressed: () => context.push(Routes.settings),
