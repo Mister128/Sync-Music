@@ -12,6 +12,7 @@ import 'package:sync_music/core/extensions/duration_x.dart';
 import 'package:sync_music/features/library/data/library_providers.dart';
 import 'package:sync_music/features/library/domain/entities/track.dart';
 import 'package:sync_music/features/player/presentation/controllers/player_controller.dart';
+import 'package:sync_music/features/player/presentation/widgets/mini_player_slot.dart';
 import 'package:sync_music/features/player/presentation/widgets/track_action_sheet.dart';
 import 'package:sync_music/i18n/strings.g.dart';
 
@@ -28,20 +29,29 @@ class AlbumPage extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(title: Text(albumTitle)),
-      body: switch (tracks) {
-        AsyncData(:final value) when value.isEmpty => const Center(
-          child: Icon(Icons.album_outlined, size: 48),
-        ),
-        AsyncData(:final value) => _AlbumBody(
-          albumTitle: albumTitle,
-          tracks: value,
-          onPlayTrack: (index) => ref
-              .read(playerControllerProvider.notifier)
-              .playQueue(value, startIndex: index),
-        ),
-        AsyncError(:final error) => Center(child: Text('$error')),
-        AsyncLoading() => const Center(child: CircularProgressIndicator()),
-      },
+      body: Column(
+        children: [
+          Expanded(
+            child: switch (tracks) {
+              AsyncData(:final value) when value.isEmpty => const Center(
+                child: Icon(Icons.album_outlined, size: 48),
+              ),
+              AsyncData(:final value) => _AlbumBody(
+                albumTitle: albumTitle,
+                tracks: value,
+                onPlayTrack: (index) => ref
+                    .read(playerControllerProvider.notifier)
+                    .playQueue(value, startIndex: index),
+              ),
+              AsyncError(:final error) => Center(child: Text('$error')),
+              AsyncLoading() => const Center(
+                child: CircularProgressIndicator(),
+              ),
+            },
+          ),
+          const MiniPlayerSlot(),
+        ],
+      ),
     );
   }
 }

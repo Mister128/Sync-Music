@@ -1,21 +1,27 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:sync_music/core/design_system/theme/app_spacing.dart';
+import 'package:sync_music/core/design_system/widgets/sm_artwork.dart';
 import 'package:sync_music/core/design_system/widgets/sm_track_tile.dart';
 import 'package:sync_music/features/player/presentation/controllers/player_controller.dart';
+import 'package:sync_music/features/player/presentation/widgets/mini_player_slot.dart';
 import 'package:sync_music/features/playlists/data/playlist_providers.dart';
+import 'package:sync_music/features/playlists/domain/entities/playlist.dart';
+import 'package:sync_music/features/playlists/presentation/widgets/playlist_form_dialog.dart';
 import 'package:sync_music/i18n/strings.g.dart';
 
-/// Playlist detail. Tap = play the playlist as the queue; drag =
-/// reorder (persisted as a new fractional key between the future
-/// neighbors); X = tombstone the membership.
+/// Playlist detail.
 class PlaylistPage extends ConsumerWidget {
   const new({required this.playlistId, required this.name, super.key});
 
   final String playlistId;
+
+  /// Initial name from the route; the live entity wins once loaded, so a
+  /// rename updates the title in place.
   final String name;
 
   @override
@@ -25,74 +31,165 @@ class PlaylistPage extends ConsumerWidget {
     final scheme = theme.colorScheme;
     final dao = ref.read(playlistDaoProvider);
 
+    final playlist = (ref.watch(playlistsProvider).value ?? const <Playlist>[])
+        .firstWhereOrNull((p) => p.id == playlistId);
+    final tracksAsync = ref.watch(playlistTracksProvider(playlistId));
+    final trackCount = tracksAsync.value?.length ?? playlist?.trackCount ?? 0;
+
     return Scaffold(
-      appBar: AppBar(title: Text(name)),
-      body: switch (ref.watch(playlistTracksProvider(playlistId))) {
-        AsyncData(:final value) when value.isEmpty => Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.playlist_play,
-                size: 48,
-                color: scheme.onSurfaceVariant,
-              ),
-              const SizedBox(height: AppSpacing.lg),
-              Text(
-                t.playlists.emptyPlaylist,
-                style: theme.textTheme.titleMedium,
-              ),
-              Text(
-                t.playlists.emptyPlaylistHint,
-                style: theme.textTheme.labelMedium?.copyWith(
-                  color: scheme.onSurfaceVariant,
+      appBar: AppBar(
+        title: Text(playlist?.name ?? name),
+        actions: [
+          // No playlist (deleted while open) -> nothing to rename.
+          if (playlist != null)
+            PopupMenuButton<_PlaylistMenu>(
+              itemBuilder: (context) => [
+                PopupMenuItem(
+                  value: _PlaylistMenu.rename,
+                  child: Text(t.playlists.rename),
                 ),
-              ),
-            ],
+              ],
+              onSelected: (menu) {
+                switch (menu) {
+                  case _PlaylistMenu.rename:
+                    unawaited(
+                      showPlaylistFormDialog(context, existing: playlist),
+                    );
+                }
+              },
+            ),
+          const SizedBox(width: AppSpacing.xs),
+        ],
+      ),
+      body: Column(
+        children: [
+          _PlaylistHeader(
+            artworkHash: playlist?.artworkHash,
+            name: playlist?.name ?? name,
+            trackCount: trackCount,
           ),
-        ),
-
-        AsyncData(:final value) => ReorderableListView.builder(
-          padding: const EdgeInsets.only(bottom: AppSpacing.xxl),
-          itemCount: value.length,
-          onReorderItem: (oldIndex, newIndex) {
-            unawaited(
-              dao.moveTrackToIndex(
-                playlistId: playlistId,
-                trackId: value[oldIndex].id,
-                newIndex: newIndex,
-              ),
-            );
-          },
-          itemBuilder: (context, index) {
-            final track = value[index];
-            return SmTrackTile(
-              key: ValueKey(track.id),
-              title: track.title,
-              subtitle: track.artistName,
-              durationMs: track.durationMs,
-              artworkHash: track.artworkHash,
-              onTap: () => ref
-                  .read(playerControllerProvider.notifier)
-                  .playQueue(value, startIndex: index),
-              trailing: Padding(
-                padding: const EdgeInsets.only(right: AppSpacing.lg),
-                child: IconButton(
-                  tooltip: t.playlists.removeFromPlaylist,
-                  visualDensity: VisualDensity.compact,
-                  icon: const Icon(Icons.close, size: 20),
-                  onPressed: () => unawaited(
-                    dao.removeTrack(playlistId: playlistId, trackId: track.id),
-                  ),
+          Expanded(
+            child: switch (tracksAsync) {
+              AsyncData(:final value) when value.isEmpty => Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.playlist_play,
+                      size: 48,
+                      color: scheme.onSurfaceVariant,
+                    ),
+                    const SizedBox(height: AppSpacing.lg),
+                    Text(
+                      t.playlists.emptyPlaylist,
+                      style: theme.textTheme.titleMedium,
+                    ),
+                    Text(
+                      t.playlists.emptyPlaylistHint,
+                      style: theme.textTheme.labelMedium?.copyWith(
+                        color: scheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            );
-          },
-        ),
 
-        AsyncError(:final error) => Center(child: Text('$error')),
-        AsyncLoading() => const Center(child: CircularProgressIndicator()),
-      },
+              AsyncData(:final value) => ReorderableListView.builder(
+                padding: const EdgeInsets.only(bottom: AppSpacing.xxl),
+                itemCount: value.length,
+                onReorderItem: (oldIndex, newIndex) {
+                  unawaited(
+                    dao.moveTrackToIndex(
+                      playlistId: playlistId,
+                      trackId: value[oldIndex].id,
+                      newIndex: newIndex,
+                    ),
+                  );
+                },
+                itemBuilder: (context, index) {
+                  final track = value[index];
+                  return SmTrackTile(
+                    // PK (playlistId, trackId): duplicates are impossible,
+                    // the plain id IS a unique key here.
+                    key: ValueKey(track.id),
+                    title: track.title,
+                    subtitle: track.artistName,
+                    durationMs: track.durationMs,
+                    artworkHash: track.artworkHash,
+                    onTap: () => ref
+                        .read(playerControllerProvider.notifier)
+                        .playQueue(value, startIndex: index),
+                    // Temporary.
+                    trailing: IconButton(
+                      tooltip: t.playlists.removeFromPlaylist,
+                      visualDensity: VisualDensity.compact,
+                      icon: const Icon(Icons.close, size: 20),
+                      onPressed: () => unawaited(
+                        dao.removeTrack(
+                          playlistId: playlistId,
+                          trackId: track.id,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+
+              AsyncError(:final error) => Center(child: Text('$error')),
+              AsyncLoading() => const Center(
+                child: CircularProgressIndicator(),
+              ),
+            },
+          ),
+          const MiniPlayerSlot(),
+        ],
+      ),
+    );
+  }
+}
+
+enum _PlaylistMenu { rename }
+
+class _PlaylistHeader extends StatelessWidget {
+  const new({required this.name, required this.trackCount, this.artworkHash});
+
+  final String? artworkHash;
+  final String name;
+  final int trackCount;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = Translations.of(context);
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.xl,
+        AppSpacing.md,
+        AppSpacing.xl,
+        AppSpacing.lg,
+      ),
+      child: Column(
+        children: [
+          SmArtwork(hash: artworkHash, size: 160, borderRadius: 12),
+          const SizedBox(height: AppSpacing.lg),
+          Text(
+            name,
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: theme.textTheme.headlineSmall,
+          ),
+          const SizedBox(height: AppSpacing.xs),
+          Text(
+            t.playlists.trackCount(count: trackCount, n: trackCount),
+            style: theme.textTheme.labelMedium?.copyWith(
+              color: scheme.onSurfaceVariant,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
