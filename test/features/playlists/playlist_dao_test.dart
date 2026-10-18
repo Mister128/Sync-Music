@@ -100,4 +100,103 @@ void main() {
         .toList();
     expect(names, ['Alpha', 'Beta']);
   });
+
+  group('playlist tracks', () {
+    test('tracks come back in sort_key order', () async {
+      final id = await dao.createPlaylist('Mix');
+      for (final t in ['t1', 't2', 't3']) {
+        await seedTrack(t);
+      }
+      // Deliberately out of id order - sort_key decides, not insertion ids.
+      await dao.addTrack(playlistId: id, trackId: 't2');
+      await dao.addTrack(playlistId: id, trackId: 't1');
+      await dao.addTrack(playlistId: id, trackId: 't3');
+
+      final ids = (await dao.watchPlaylistTracks(id).first)
+          .map((t) => t.id)
+          .toList();
+      expect(ids, ['t2', 't1', 't3']);
+    });
+
+    test('re-adding moves the track to the end', () async {
+      final id = await dao.createPlaylist('Mix');
+      await seedTrack('t1');
+      await seedTrack('t2');
+      await dao.addTrack(playlistId: id, trackId: 't1');
+      await dao.addTrack(playlistId: id, trackId: 't2');
+
+      await dao.addTrack(playlistId: id, trackId: 't1');
+
+      final ids = (await dao.watchPlaylistTracks(id).first)
+          .map((t) => t.id)
+          .toList();
+      expect(ids, ['t2', 't1']);
+    });
+
+    test('removeTrack tombstones the membership', () async {
+      final id = await dao.createPlaylist('Mix');
+      await seedTrack('t1');
+      await seedTrack('t2');
+      await dao.addTrack(playlistId: id, trackId: 't1');
+      await dao.addTrack(playlistId: id, trackId: 't2');
+
+      await dao.removeTrack(playlistId: id, trackId: 't1');
+
+      final ids = (await dao.watchPlaylistTracks(id).first)
+          .map((t) => t.id)
+          .toList();
+      expect(ids, ['t2']);
+      // Tombstone, not delete: the row survives for sync (stage 8).
+      expect(await db.select(db.playlistTracks).get(), hasLength(2));
+    });
+
+    test('moveTrackToIndex reorders via neighbor keys only', () async {
+      final id = await dao.createPlaylist('Mix');
+      for (final t in ['t1', 't2', 't3']) {
+        await seedTrack(t);
+        await dao.addTrack(playlistId: id, trackId: t);
+      }
+
+      Future<List<String>> order() async =>
+          (await dao.watchPlaylistTracks(id).first).map((t) => t.id).toList();
+
+      await dao.moveTrackToIndex(
+        playlistId: id,
+        trackId: 't1',
+        newIndex: 2,
+      ); // -> end
+      expect(await order(), ['t2', 't3', 't1']);
+
+      await dao.moveTrackToIndex(
+        playlistId: id,
+        trackId: 't1',
+        newIndex: 0,
+      ); // -> top
+      expect(await order(), ['t1', 't2', 't3']);
+
+      await dao.moveTrackToIndex(
+        playlistId: id,
+        trackId: 't3',
+        newIndex: 1,
+      ); // -> middle
+      expect(await order(), ['t1', 't3', 't2']);
+    });
+
+    test(
+      'a tombstoned library track disappears but its membership lives',
+      () async {
+        final id = await dao.createPlaylist('Mix');
+        await seedTrack('t1');
+        await seedTrack('t2', deletedAtMs: 1); // file deleted, rescan hit it
+        await dao.addTrack(playlistId: id, trackId: 't1');
+        await dao.addTrack(playlistId: id, trackId: 't2');
+
+        final ids = (await dao.watchPlaylistTracks(id).first)
+            .map((t) => t.id)
+            .toList();
+        expect(ids, ['t1']);
+        expect(await db.select(db.playlistTracks).get(), hasLength(2));
+      },
+    );
+  });
 }

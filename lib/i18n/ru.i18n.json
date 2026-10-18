@@ -95,6 +95,10 @@
       "few": "$count трека",
       "many": "$count треков",
       "other": "$count трека"
-    }
+    },
+    "addToPlaylist": "Добавить в плейлист",
+    "emptyPlaylist": "В плейлисте пока пусто",
+    "emptyPlaylistHint": "Добавляйте треки долгим нажатием в библиотеке",
+    "removeFromPlaylist": "Убрать из плейлиста"
   }
 }

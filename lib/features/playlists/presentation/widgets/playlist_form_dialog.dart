@@ -8,10 +8,12 @@ import 'package:sync_music/features/playlists/domain/entities/playlist.dart';
 import 'package:sync_music/i18n/strings.g.dart';
 
 /// Create/rename dialog: [existing] == null means "create".
-Future<void> showPlaylistFormDialog(
+/// Resolves with the playlist id (created or renamed) - the picker chains
+/// create-then-add with it; callers that don't care ignore the result.
+Future<String?> showPlaylistFormDialog(
   BuildContext context, {
   Playlist? existing,
-}) => showDialog<void>(
+}) => showDialog<String>(
   context: context,
   builder: (dialogContext) => _PlaylistFormDialog(existing: existing),
 );
@@ -46,12 +48,14 @@ class _PlaylistFormDialogState extends ConsumerState<_PlaylistFormDialog> {
     }
     final dao = ref.read(playlistDaoProvider);
     final existing = widget.existing;
+    final String id;
     if (existing == null) {
-      await dao.createPlaylist(name);
+      id = await dao.createPlaylist(name);
     } else {
       await dao.renamePlaylist(existing.id, name);
+      id = existing.id;
     }
-    if (mounted) Navigator.pop(context);
+    if (mounted) Navigator.pop(context, id);
   }
 
   @override

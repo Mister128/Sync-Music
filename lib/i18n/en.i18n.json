@@ -89,6 +89,10 @@
     "trackCount": {
       "one": "$count track",
       "other": "$count tracks"
-    }
+    },
+    "addToPlaylist": "Add to playlist",
+    "emptyPlaylist": "No tracks yet",
+    "emptyPlaylistHint": "Add tracks via long-press in the library",
+    "removeFromPlaylist": "Remove from playlist"
   }
 }

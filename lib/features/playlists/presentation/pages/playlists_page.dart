@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:sync_music/app/router/routes.dart';
 
 import 'package:sync_music/core/design_system/theme/app_spacing.dart';
 import 'package:sync_music/core/design_system/widgets/sm_artwork.dart';
@@ -94,6 +96,9 @@ class _PlaylistTile extends ConsumerWidget {
           count: playlist.trackCount,
           n: playlist.trackCount,
         ),
+      ),
+      onTap: () => context.push(
+        Routes.playlistPath(id: playlist.id, name: playlist.name),
       ),
       trailing: PopupMenuButton<_PlaylistAction>(
         icon: const Icon(Icons.more_vert),

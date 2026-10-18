@@ -28,23 +28,24 @@ class PhoneShell extends ConsumerWidget {
           actionsPadding: const EdgeInsets.only(right: AppSpacing.sm),
           actions: [
             Builder(
-                builder: (context) {
-                  final tabController = DefaultTabController.of(context);
-                  return AnimatedBuilder(
-                      animation: tabController,
-                      builder: (context, _) {
-                        if (tabController.index != PlaceholderSection.playlists.index) {
-                          return const SizedBox.shrink();
-                        }
-                        final t = Translations.of(context);
-                        return IconButton(
-                            tooltip: t.playlists.create,
-                            icon: const Icon(Icons.add),
-                            onPressed: () => showPlaylistFormDialog(context),
-                        );
-                      }
-                  );
-                }
+              builder: (context) {
+                final tabController = DefaultTabController.of(context);
+                return AnimatedBuilder(
+                  animation: tabController,
+                  builder: (context, _) {
+                    if (tabController.index !=
+                        PlaceholderSection.playlists.index) {
+                      return const SizedBox.shrink();
+                    }
+                    final t = Translations.of(context);
+                    return IconButton(
+                      tooltip: t.playlists.create,
+                      icon: const Icon(Icons.add),
+                      onPressed: () => showPlaylistFormDialog(context),
+                    );
+                  },
+                );
+              },
             ),
             IconButton(
               icon: const Icon(Icons.settings),

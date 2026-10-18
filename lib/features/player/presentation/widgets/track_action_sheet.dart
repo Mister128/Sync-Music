@@ -8,6 +8,7 @@ import 'package:sync_music/core/design_system/widgets/sm_artwork.dart';
 import 'package:sync_music/features/library/domain/entities/track.dart';
 import 'package:sync_music/features/player/domain/services/enqueue_policy.dart';
 import 'package:sync_music/features/player/presentation/controllers/player_controller.dart';
+import 'package:sync_music/features/playlists/presentation/widgets/playlist_picker_sheet.dart';
 import 'package:sync_music/i18n/strings.g.dart';
 
 /// Long-press menu for a track in ANY list
@@ -83,6 +84,11 @@ class TrackActionSheet extends ConsumerWidget {
             label: t.player.addToQueue,
             next: false,
           ),
+          ListTile(
+            leading: const Icon(Icons.playlist_add),
+            title: Text(t.playlists.addToPlaylist),
+            onTap: () => unawaited(_openPlaylistPicker(context)),
+          ),
           const SizedBox(height: AppSpacing.sm),
         ],
       ),
@@ -115,4 +121,12 @@ class TrackActionSheet extends ConsumerWidget {
         EnqueueAction.insertNext => controller.insertNext(track),
         EnqueueAction.appendToQueue => controller.addToQueue(track),
       };
+
+  /// The picker opens OVER this sheet and this sheet closes AFTER it
+  /// returns: popping first would kill the context needed to open the
+  /// picker (use_build_context_synchronously is right about that).
+  Future<void> _openPlaylistPicker(BuildContext context) async {
+    await showPlaylistPickerSheet(context, track);
+    if (context.mounted) Navigator.pop(context);
+  }
 }

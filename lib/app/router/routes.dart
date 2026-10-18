@@ -4,6 +4,7 @@ abstract final class Routes {
 
   static const albumDetail = '/album';
   static const artistDetail = '/artist';
+  static const playlistDetail = '/playlist';
   static const queue = '/queue';
   static const player = '/player';
 
@@ -12,6 +13,9 @@ abstract final class Routes {
 
   static String artistPath(String artistName) =>
       '/artist?${Uri(queryParameters: {'name': artistName}).query}';
+
+  static String playlistPath({required String id, required String name}) =>
+      '/playlists?${Uri(queryParameters: {"id": id, "name": name}).query}';
 
   // Section paths are NOT routes
   static const favorites = '/favorites';

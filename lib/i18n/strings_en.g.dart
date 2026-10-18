@@ -327,6 +327,18 @@ class Translations$playlists$en {
 		one: '${count} track',
 		other: '${count} tracks',
 	);
+
+	/// en: 'Add to playlist'
+	String get addToPlaylist => 'Add to playlist';
+
+	/// en: 'No tracks yet'
+	String get emptyPlaylist => 'No tracks yet';
+
+	/// en: 'Add tracks via long-press in the library'
+	String get emptyPlaylistHint => 'Add tracks via long-press in the library';
+
+	/// en: 'Remove from playlist'
+	String get removeFromPlaylist => 'Remove from playlist';
 }
 
 /// The flat map containing all translations for locale <en>.
@@ -406,6 +418,10 @@ extension on Translations {
 			'playlists.empty' => 'No playlists yet',
 			'playlists.emptyHint' => 'Create your first playlist',
 			'playlists.trackCount' => ({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '${count} track', other: '${count} tracks', ), 
+			'playlists.addToPlaylist' => 'Add to playlist',
+			'playlists.emptyPlaylist' => 'No tracks yet',
+			'playlists.emptyPlaylistHint' => 'Add tracks via long-press in the library',
+			'playlists.removeFromPlaylist' => 'Remove from playlist',
 			_ => null,
 		};
 	}

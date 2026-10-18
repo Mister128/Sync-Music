@@ -7,6 +7,7 @@ import 'package:sync_music/features/library/presentation/pages/album_page.dart';
 import 'package:sync_music/features/library/presentation/pages/artist_page.dart';
 import 'package:sync_music/features/player/presentation/pages/full_player_page.dart';
 import 'package:sync_music/features/player/presentation/pages/queue_page.dart';
+import 'package:sync_music/features/playlists/presentation/pages/playlist_page.dart';
 import 'package:sync_music/features/settings/presentation/pages/settings_page.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -54,6 +55,14 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: Routes.queue,
         parentNavigatorKey: rootKey,
         builder: (context, state) => const QueuePage(),
+      ),
+      GoRoute(
+        path: Routes.playlists,
+        parentNavigatorKey: rootKey,
+        builder: (context, state) => PlaylistPage(
+          playlistId: state.uri.queryParameters['id'] ?? '',
+          name: state.uri.queryParameters['name'] ?? '',
+        ),
       ),
       GoRoute(
         path: Routes.albumDetail,

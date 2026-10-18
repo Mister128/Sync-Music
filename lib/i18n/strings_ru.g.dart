@@ -193,6 +193,10 @@ class _Translations$playlists$ru extends Translations$playlists$en {
 		many: '${count} треков',
 		other: '${count} трека',
 	);
+	@override String get addToPlaylist => 'Добавить в плейлист';
+	@override String get emptyPlaylist => 'В плейлисте пока пусто';
+	@override String get emptyPlaylistHint => 'Добавляйте треки долгим нажатием в библиотеке';
+	@override String get removeFromPlaylist => 'Убрать из плейлиста';
 }
 
 /// The flat map containing all translations for locale <ru>.
@@ -272,6 +276,10 @@ extension on TranslationsRu {
 			'playlists.empty' => 'Пока нет плейлистов',
 			'playlists.emptyHint' => 'Создайте первый плейлист',
 			'playlists.trackCount' => ({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('ru'))(n, one: '${count} трек', few: '${count} трека', many: '${count} треков', other: '${count} трека', ), 
+			'playlists.addToPlaylist' => 'Добавить в плейлист',
+			'playlists.emptyPlaylist' => 'В плейлисте пока пусто',
+			'playlists.emptyPlaylistHint' => 'Добавляйте треки долгим нажатием в библиотеке',
+			'playlists.removeFromPlaylist' => 'Убрать из плейлиста',
 			_ => null,
 		};
 	}
