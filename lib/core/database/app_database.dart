@@ -4,10 +4,14 @@ import 'package:path_provider/path_provider.dart';
 
 import 'package:sync_music/core/database/tables/library_roots.dart';
 import 'package:sync_music/core/database/tables/playback_states.dart';
+import 'package:sync_music/core/database/tables/playlist_tracks.dart';
+import 'package:sync_music/core/database/tables/playlists.dart';
 import 'package:sync_music/core/database/tables/tracks.dart';
 part 'app_database.g.dart';
 
-@DriftDatabase(tables: [Tracks, LibraryRoots, PlaybackStates])
+@DriftDatabase(
+  tables: [Tracks, LibraryRoots, PlaybackStates, Playlists, PlaylistTracks],
+)
 class AppDatabase extends _$AppDatabase {
   /// Production: file-backed DB, drift_flutter handles paths per platform.
   new()
@@ -24,7 +28,7 @@ class AppDatabase extends _$AppDatabase {
   new forTesting(super.e);
 
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -55,6 +59,10 @@ class AppDatabase extends _$AppDatabase {
       }
       if (from < 4) {
         await m.createTable(playbackStates);
+      }
+      if (from < 5) {
+        await m.createTable(playlists);
+        await m.createTable(playlistTracks);
       }
     },
   );
