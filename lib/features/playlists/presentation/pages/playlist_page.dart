@@ -3,12 +3,12 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'package:sync_music/core/design_system/theme/app_spacing.dart';
 import 'package:sync_music/core/design_system/widgets/sm_artwork.dart';
 import 'package:sync_music/core/design_system/widgets/sm_track_tile.dart';
 import 'package:sync_music/features/player/presentation/controllers/player_controller.dart';
 import 'package:sync_music/features/player/presentation/widgets/mini_player_slot.dart';
+import 'package:sync_music/features/player/presentation/widgets/track_action_menu.dart';
 import 'package:sync_music/features/playlists/data/playlist_providers.dart';
 import 'package:sync_music/features/playlists/domain/entities/playlist.dart';
 import 'package:sync_music/features/playlists/presentation/widgets/playlist_form_dialog.dart';
@@ -120,16 +120,9 @@ class PlaylistPage extends ConsumerWidget {
                         .read(playerControllerProvider.notifier)
                         .playQueue(value, startIndex: index),
                     // Temporary.
-                    trailing: IconButton(
-                      tooltip: t.playlists.removeFromPlaylist,
-                      visualDensity: VisualDensity.compact,
-                      icon: const Icon(Icons.close, size: 20),
-                      onPressed: () => unawaited(
-                        dao.removeTrack(
-                          playlistId: playlistId,
-                          trackId: track.id,
-                        ),
-                      ),
+                    trailing: TrackActionMenu(
+                      track: track,
+                      playlistId: playlistId,
                     ),
                   );
                 },
