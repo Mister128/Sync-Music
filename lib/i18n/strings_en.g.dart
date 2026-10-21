@@ -105,6 +105,9 @@ class Translations$common$en {
 
 	/// en: 'Save'
 	String get save => 'Save';
+
+	/// en: 'Delete'
+	String get delete => 'Delete';
 }
 
 // Path: settings
@@ -225,6 +228,21 @@ class Translations$library$en {
 		one: '${count} album',
 		other: '${count} albums',
 	);
+
+	/// en: 'Delete track?'
+	String get deleteConfirmTitle => 'Delete track?';
+
+	/// en: '"$title" will be permanently deleted from disk. This cannot be undone.'
+	String deleteConfirmMessage({required Object title}) => '"${title}" will be permanently deleted from disk. This cannot be undone.';
+
+	/// en: 'Delete'
+	String get deleteConfirmAction => 'Delete';
+
+	/// en: 'Track deleted'
+	String get deleted => 'Track deleted';
+
+	/// en: 'Couldn't delete the track'
+	String get deleteFailed => 'Couldn\'t delete the track';
 }
 
 // Path: player
@@ -359,6 +377,7 @@ extension on Translations {
 			'common.error' => 'Something went wrong',
 			'common.cancel' => 'Cancel',
 			'common.save' => 'Save',
+			'common.delete' => 'Delete',
 			'settings.title' => 'Settings',
 			'settings.appearance' => 'Appearance',
 			'settings.theme' => 'Theme',
@@ -391,6 +410,11 @@ extension on Translations {
 			'library.artistsEmpty' => 'No artists yet',
 			'library.trackCount' => ({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '${count} track', other: '${count} tracks', ), 
 			'library.albumCount' => ({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '${count} album', other: '${count} albums', ), 
+			'library.deleteConfirmTitle' => 'Delete track?',
+			'library.deleteConfirmMessage' => ({required Object title}) => '"${title}" will be permanently deleted from disk. This cannot be undone.',
+			'library.deleteConfirmAction' => 'Delete',
+			'library.deleted' => 'Track deleted',
+			'library.deleteFailed' => 'Couldn\'t delete the track',
 			'player.play' => 'Play',
 			'player.pause' => 'Pause',
 			'player.next' => 'Next track',

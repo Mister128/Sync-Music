@@ -83,6 +83,7 @@ class _Translations$common$ru extends Translations$common$en {
 	@override String get error => 'Что-то пошло не так';
 	@override String get cancel => 'Отмена';
 	@override String get save => 'Сохранить';
+	@override String get delete => 'Удалить';
 }
 
 // Path: settings
@@ -143,6 +144,11 @@ class _Translations$library$ru extends Translations$library$en {
 		many: '${count} альбомов',
 		other: '${count} альбомов',
 	);
+	@override String get deleteConfirmTitle => 'Удалить трек?';
+	@override String deleteConfirmMessage({required Object title}) => '«${title}» будет навсегда удалён с диска. Это действие необратимо.';
+	@override String get deleteConfirmAction => 'Удалить';
+	@override String get deleted => 'Трек удалён';
+	@override String get deleteFailed => 'Не удалось удалить трек';
 }
 
 // Path: player
@@ -217,6 +223,7 @@ extension on TranslationsRu {
 			'common.error' => 'Что-то пошло не так',
 			'common.cancel' => 'Отмена',
 			'common.save' => 'Сохранить',
+			'common.delete' => 'Удалить',
 			'settings.title' => 'Настройки',
 			'settings.appearance' => 'Оформление',
 			'settings.theme' => 'Тема',
@@ -249,6 +256,11 @@ extension on TranslationsRu {
 			'library.artistsEmpty' => 'Пока нет артистов',
 			'library.trackCount' => ({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('ru'))(n, one: '${count} трек', few: '${count} трека', many: '${count} треков', other: '${count} треков', ), 
 			'library.albumCount' => ({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('ru'))(n, one: '${count} альбом', few: '${count} альбома', many: '${count} альбомов', other: '${count} альбомов', ), 
+			'library.deleteConfirmTitle' => 'Удалить трек?',
+			'library.deleteConfirmMessage' => ({required Object title}) => '«${title}» будет навсегда удалён с диска. Это действие необратимо.',
+			'library.deleteConfirmAction' => 'Удалить',
+			'library.deleted' => 'Трек удалён',
+			'library.deleteFailed' => 'Не удалось удалить трек',
 			'player.play' => 'Воспроизвести',
 			'player.pause' => 'Пауза',
 			'player.next' => 'Следующий трек',

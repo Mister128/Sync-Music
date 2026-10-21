@@ -4,11 +4,13 @@ import 'package:sync_music/core/database/app_database.dart' as db;
 import 'package:sync_music/core/database/database_provider.dart';
 import 'package:sync_music/core/platform/platform_info.dart';
 import 'package:sync_music/features/library/data/datasources/artwork_store.dart';
+import 'package:sync_music/features/library/data/datasources/file_deleter.dart';
 import 'package:sync_music/features/library/data/datasources/library_dao.dart';
 import 'package:sync_music/features/library/data/datasources/library_roots_dao.dart';
 import 'package:sync_music/features/library/data/datasources/platform_media_scanner.dart';
 import 'package:sync_music/features/library/data/repositories/library_repository.dart';
 import 'package:sync_music/features/library/data/repositories/library_repository_impl.dart';
+import 'package:sync_music/features/library/data/services/delete_tracks.dart';
 import 'package:sync_music/features/library/data/services/extract_artwork.dart';
 import 'package:sync_music/features/library/data/services/rescan_library.dart';
 import 'package:sync_music/features/library/domain/entities/album.dart';
@@ -94,3 +96,18 @@ final audioPermissionProvider = FutureProvider<bool>((ref) async {
   if (!PlatformInfo.usesSystemMediaLibrary) return true;
   return await ref.watch(platformMediaScannerProvider).hasPermission();
 });
+
+/// File deletion is platform-split exactly like scanning: MediaStore on
+/// Android (system delete request), plain File API on desktop.
+final fileDeleterProvider = Provider<FileDeleter>(
+  (ref) => PlatformInfo.usesSystemMediaLibrary
+      ? const AndroidMediaStoreDeleter()
+      : const DesktopFileDeleter(),
+);
+
+final deleteTracksProvider = Provider<DeleteTracks>(
+  (ref) => DeleteTracks(
+    deleter: ref.watch(fileDeleterProvider),
+    tracksDao: ref.watch(libraryDaoProvider),
+  ),
+);

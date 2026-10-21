@@ -13,7 +13,8 @@
     "inDevelopment": "In Development",
     "error": "Something went wrong",
     "cancel": "Cancel",
-    "save": "Save"
+    "save": "Save",
+    "delete": "Delete"
   },
   "settings": {
     "title": "Settings",
@@ -55,7 +56,12 @@
     "albumCount": {
       "one": "$count album",
       "other": "$count albums"
-    }
+    },
+    "deleteConfirmTitle": "Delete track?",
+    "deleteConfirmMessage": "\"$title\" will be permanently deleted from disk. This cannot be undone.",
+    "deleteConfirmAction": "Delete",
+    "deleted": "Track deleted",
+    "deleteFailed": "Couldn't delete the track"
   },
   "player": {
     "play": "Play",

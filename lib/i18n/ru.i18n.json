@@ -13,7 +13,8 @@
     "inDevelopment": "В разработке",
     "error": "Что-то пошло не так",
     "cancel": "Отмена",
-    "save": "Сохранить"
+    "save": "Сохранить",
+    "delete": "Удалить"
   },
   "settings": {
     "title": "Настройки",
@@ -59,7 +60,12 @@
       "few": "$count альбома",
       "many": "$count альбомов",
       "other": "$count альбомов"
-    }
+    },
+    "deleteConfirmTitle": "Удалить трек?",
+    "deleteConfirmMessage": "«$title» будет навсегда удалён с диска. Это действие необратимо.",
+    "deleteConfirmAction": "Удалить",
+    "deleted": "Трек удалён",
+    "deleteFailed": "Не удалось удалить трек"
   },
   "player": {
     "play": "Воспроизвести",
