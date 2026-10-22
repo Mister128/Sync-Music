@@ -46,6 +46,7 @@ class TranslationsRu extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$library$ru library = _Translations$library$ru._(_root);
 	@override late final _Translations$player$ru player = _Translations$player$ru._(_root);
 	@override late final _Translations$playlists$ru playlists = _Translations$playlists$ru._(_root);
+	@override late final _Translations$selection$ru selection = _Translations$selection$ru._(_root);
 }
 
 // Path: app
@@ -149,6 +150,25 @@ class _Translations$library$ru extends Translations$library$en {
 	@override String get deleteConfirmAction => 'Удалить';
 	@override String get deleted => 'Трек удалён';
 	@override String get deleteFailed => 'Не удалось удалить трек';
+	@override String deleteConfirmTitleBatch({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('ru'))(n,
+		one: 'Удалить ${count} трек?',
+		few: 'Удалить ${count} трека?',
+		many: 'Удалить ${count} треков?',
+		other: 'Удалить ${count} треков?',
+	);
+	@override String get deleteConfirmMessageBatch => 'Выбранные треки будут навсегда удалены с диска. Это действие необратимо.';
+	@override String deletedBatch({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('ru'))(n,
+		one: 'Удалён ${count} трек',
+		few: 'Удалено ${count} трека',
+		many: 'Удалено ${count} треков',
+		other: 'Удалено ${count} треков',
+	);
+	@override String deleteFailedBatch({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('ru'))(n,
+		one: 'Не удалось удалить ${count} трек',
+		few: 'Не удалось удалить ${count} трека',
+		many: 'Не удалось удалить ${count} треков',
+		other: 'Не удалось удалить ${count} треков',
+	);
 }
 
 // Path: player
@@ -203,6 +223,16 @@ class _Translations$playlists$ru extends Translations$playlists$en {
 	@override String get emptyPlaylist => 'В плейлисте пока пусто';
 	@override String get emptyPlaylistHint => 'Добавляйте треки долгим нажатием в библиотеке';
 	@override String get removeFromPlaylist => 'Убрать из плейлиста';
+}
+
+// Path: selection
+class _Translations$selection$ru extends Translations$selection$en {
+	_Translations$selection$ru._(TranslationsRu root) : this._root = root, super.internal(root);
+
+	final TranslationsRu _root; // ignore: unused_field
+
+	// Translations
+	@override String selectedCount({required Object count}) => 'Выбрано: ${count}';
 }
 
 /// The flat map containing all translations for locale <ru>.
@@ -261,6 +291,10 @@ extension on TranslationsRu {
 			'library.deleteConfirmAction' => 'Удалить',
 			'library.deleted' => 'Трек удалён',
 			'library.deleteFailed' => 'Не удалось удалить трек',
+			'library.deleteConfirmTitleBatch' => ({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('ru'))(n, one: 'Удалить ${count} трек?', few: 'Удалить ${count} трека?', many: 'Удалить ${count} треков?', other: 'Удалить ${count} треков?', ), 
+			'library.deleteConfirmMessageBatch' => 'Выбранные треки будут навсегда удалены с диска. Это действие необратимо.',
+			'library.deletedBatch' => ({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('ru'))(n, one: 'Удалён ${count} трек', few: 'Удалено ${count} трека', many: 'Удалено ${count} треков', other: 'Удалено ${count} треков', ), 
+			'library.deleteFailedBatch' => ({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('ru'))(n, one: 'Не удалось удалить ${count} трек', few: 'Не удалось удалить ${count} трека', many: 'Не удалось удалить ${count} треков', other: 'Не удалось удалить ${count} треков', ), 
 			'player.play' => 'Воспроизвести',
 			'player.pause' => 'Пауза',
 			'player.next' => 'Следующий трек',
@@ -292,6 +326,7 @@ extension on TranslationsRu {
 			'playlists.emptyPlaylist' => 'В плейлисте пока пусто',
 			'playlists.emptyPlaylistHint' => 'Добавляйте треки долгим нажатием в библиотеке',
 			'playlists.removeFromPlaylist' => 'Убрать из плейлиста',
+			'selection.selectedCount' => ({required Object count}) => 'Выбрано: ${count}',
 			_ => null,
 		};
 	}

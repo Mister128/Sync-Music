@@ -61,7 +61,20 @@
     "deleteConfirmMessage": "\"$title\" will be permanently deleted from disk. This cannot be undone.",
     "deleteConfirmAction": "Delete",
     "deleted": "Track deleted",
-    "deleteFailed": "Couldn't delete the track"
+    "deleteFailed": "Couldn't delete the track",
+    "deleteConfirmTitleBatch": {
+      "one": "Delete $count track?",
+      "other": "Delete $count tracks?"
+    },
+    "deleteConfirmMessageBatch": "The selected tracks will be permanently deleted from disk. This cannot be undone.",
+    "deletedBatch": {
+      "one": "$count track deleted",
+      "other": "$count tracks deleted"
+    },
+    "deleteFailedBatch": {
+      "one": "Couldn't delete $count track",
+      "other": "Couldn't delete $count tracks"
+    }
   },
   "player": {
     "play": "Play",
@@ -100,5 +113,8 @@
     "emptyPlaylist": "No tracks yet",
     "emptyPlaylistHint": "Add tracks via long-press in the library",
     "removeFromPlaylist": "Remove from playlist"
+  },
+  "selection": {
+    "selectedCount": "$count selected"
   }
 }

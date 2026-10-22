@@ -65,7 +65,26 @@
     "deleteConfirmMessage": "«$title» будет навсегда удалён с диска. Это действие необратимо.",
     "deleteConfirmAction": "Удалить",
     "deleted": "Трек удалён",
-    "deleteFailed": "Не удалось удалить трек"
+    "deleteFailed": "Не удалось удалить трек",
+    "deleteConfirmTitleBatch": {
+      "one": "Удалить $count трек?",
+      "few": "Удалить $count трека?",
+      "many": "Удалить $count треков?",
+      "other": "Удалить $count треков?"
+    },
+    "deleteConfirmMessageBatch": "Выбранные треки будут навсегда удалены с диска. Это действие необратимо.",
+    "deletedBatch": {
+      "one": "Удалён $count трек",
+      "few": "Удалено $count трека",
+      "many": "Удалено $count треков",
+      "other": "Удалено $count треков"
+    },
+    "deleteFailedBatch": {
+      "one": "Не удалось удалить $count трек",
+      "few": "Не удалось удалить $count трека",
+      "many": "Не удалось удалить $count треков",
+      "other": "Не удалось удалить $count треков"
+    }
   },
   "player": {
     "play": "Воспроизвести",
@@ -106,5 +125,8 @@
     "emptyPlaylist": "В плейлисте пока пусто",
     "emptyPlaylistHint": "Добавляйте треки долгим нажатием в библиотеке",
     "removeFromPlaylist": "Убрать из плейлиста"
+  },
+  "selection": {
+    "selectedCount": "Выбрано: $count"
   }
 }

@@ -3,9 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:sync_music/core/platform/platform_info.dart';
-import 'package:sync_music/features/library/data/library_providers.dart';
 import 'package:sync_music/features/library/domain/entities/track.dart';
+import 'package:sync_music/features/library/presentation/actions/delete_tracks_flow.dart';
 import 'package:sync_music/features/player/domain/services/enqueue_policy.dart';
 import 'package:sync_music/features/player/presentation/controllers/player_controller.dart';
 import 'package:sync_music/features/playlists/data/playlist_providers.dart';
@@ -68,7 +67,7 @@ class TrackActionMenu extends ConsumerWidget {
         unawaited(_run(controller, resolved));
 
       case _TrackAction.addToPlaylist:
-        unawaited(showPlaylistPickerSheet(context, track));
+        unawaited(showPlaylistPickerSheet(context, [track]));
 
       case _TrackAction.removeFromPlaylist:
         unawaited(
@@ -77,7 +76,7 @@ class TrackActionMenu extends ConsumerWidget {
               .removeTrack(playlistId: playlistId!, trackId: track.id),
         );
       case _TrackAction.deleteForever:
-        unawaited(_deleteForever(context, ref));
+        unawaited(confirmAndDeleteTracks(context, ref, [track]));
     }
   }
 
@@ -87,42 +86,6 @@ class TrackActionMenu extends ConsumerWidget {
         EnqueueAction.insertNext => controller.insertNext(track),
         EnqueueAction.appendToQueue => controller.addToQueue(track),
       };
-
-  Future<void> _deleteForever(BuildContext context, WidgetRef ref) async {
-    final t = Translations.of(context);
-    final deleteTracks = ref.read(deleteTracksProvider);
-    final messenger = ScaffoldMessenger.of(context);
-
-    if (!PlatformInfo.usesSystemMediaLibrary) {
-      final confirmed = await showDialog<bool>(
-        context: context,
-        builder: (dialogContext) => AlertDialog(
-          title: Text(t.library.deleteConfirmTitle),
-          content: Text(t.library.deleteConfirmMessage(title: track.title)),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(dialogContext, false),
-              child: Text(t.common.cancel),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(dialogContext, true),
-              child: Text(t.library.deleteConfirmAction),
-            ),
-          ],
-        ),
-      );
-      if (confirmed != true) return;
-    }
-
-    final result = await deleteTracks([track]);
-    messenger.showSnackBar(
-      SnackBar(
-        content: Text(
-          result.failed == 0 ? t.library.deleted : t.library.deleteFailed,
-        ),
-      ),
-    );
-  }
 }
 
 enum _TrackAction {

@@ -48,6 +48,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$library$en library = Translations$library$en.internal(_root);
 	late final Translations$player$en player = Translations$player$en.internal(_root);
 	late final Translations$playlists$en playlists = Translations$playlists$en.internal(_root);
+	late final Translations$selection$en selection = Translations$selection$en.internal(_root);
 }
 
 // Path: app
@@ -243,6 +244,27 @@ class Translations$library$en {
 
 	/// en: 'Couldn't delete the track'
 	String get deleteFailed => 'Couldn\'t delete the track';
+
+	/// en: '(one) {Delete $count track?} (other) {Delete $count tracks?}'
+	String deleteConfirmTitleBatch({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
+		one: 'Delete ${count} track?',
+		other: 'Delete ${count} tracks?',
+	);
+
+	/// en: 'The selected tracks will be permanently deleted from disk. This cannot be undone.'
+	String get deleteConfirmMessageBatch => 'The selected tracks will be permanently deleted from disk. This cannot be undone.';
+
+	/// en: '(one) {$count track deleted} (other) {$count tracks deleted}'
+	String deletedBatch({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
+		one: '${count} track deleted',
+		other: '${count} tracks deleted',
+	);
+
+	/// en: '(one) {Couldn't delete $count track} (other) {Couldn't delete $count tracks}'
+	String deleteFailedBatch({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
+		one: 'Couldn\'t delete ${count} track',
+		other: 'Couldn\'t delete ${count} tracks',
+	);
 }
 
 // Path: player
@@ -359,6 +381,18 @@ class Translations$playlists$en {
 	String get removeFromPlaylist => 'Remove from playlist';
 }
 
+// Path: selection
+class Translations$selection$en {
+	Translations$selection$en.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: '$count selected'
+	String selectedCount({required Object count}) => '${count} selected';
+}
+
 /// The flat map containing all translations for locale <en>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -415,6 +449,10 @@ extension on Translations {
 			'library.deleteConfirmAction' => 'Delete',
 			'library.deleted' => 'Track deleted',
 			'library.deleteFailed' => 'Couldn\'t delete the track',
+			'library.deleteConfirmTitleBatch' => ({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: 'Delete ${count} track?', other: 'Delete ${count} tracks?', ), 
+			'library.deleteConfirmMessageBatch' => 'The selected tracks will be permanently deleted from disk. This cannot be undone.',
+			'library.deletedBatch' => ({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '${count} track deleted', other: '${count} tracks deleted', ), 
+			'library.deleteFailedBatch' => ({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: 'Couldn\'t delete ${count} track', other: 'Couldn\'t delete ${count} tracks', ), 
 			'player.play' => 'Play',
 			'player.pause' => 'Pause',
 			'player.next' => 'Next track',
@@ -446,6 +484,7 @@ extension on Translations {
 			'playlists.emptyPlaylist' => 'No tracks yet',
 			'playlists.emptyPlaylistHint' => 'Add tracks via long-press in the library',
 			'playlists.removeFromPlaylist' => 'Remove from playlist',
+			'selection.selectedCount' => ({required Object count}) => '${count} selected',
 			_ => null,
 		};
 	}

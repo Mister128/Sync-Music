@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -9,8 +7,10 @@ import 'package:sync_music/core/design_system/theme/app_spacing.dart';
 import 'package:sync_music/core/design_system/widgets/sm_artwork.dart';
 import 'package:sync_music/core/design_system/widgets/sm_track_tile.dart';
 import 'package:sync_music/core/extensions/duration_x.dart';
+import 'package:sync_music/core/selection/selection_controller.dart';
 import 'package:sync_music/features/library/data/library_providers.dart';
 import 'package:sync_music/features/library/domain/entities/track.dart';
+import 'package:sync_music/features/library/presentation/actions/delete_tracks_flow.dart';
 import 'package:sync_music/features/player/presentation/controllers/player_controller.dart';
 import 'package:sync_music/features/player/presentation/widgets/mini_player_slot.dart';
 import 'package:sync_music/features/player/presentation/widgets/track_action_menu.dart';
@@ -26,37 +26,50 @@ class AlbumPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final tracks = ref.watch(albumTracksProvider(albumTitle));
+    final inSelectionMode = ref.watch(
+      selectionControllerProvider.select((selection) => selection.isNotEmpty),
+    );
 
-    return Scaffold(
-      appBar: AppBar(title: Text(albumTitle)),
-      body: Column(
-        children: [
-          Expanded(
-            child: switch (tracks) {
-              AsyncData(:final value) when value.isEmpty => const Center(
-                child: Icon(Icons.album_outlined, size: 48),
-              ),
-              AsyncData(:final value) => _AlbumBody(
-                albumTitle: albumTitle,
-                tracks: value,
-                onPlayTrack: (index) => ref
-                    .read(playerControllerProvider.notifier)
-                    .playQueue(value, startIndex: index),
-              ),
-              AsyncError(:final error) => Center(child: Text('$error')),
-              AsyncLoading() => const Center(
-                child: CircularProgressIndicator(),
-              ),
-            },
-          ),
-          const MiniPlayerSlot(),
-        ],
+    return PopScope(
+      // Back cancels the selection instead of leaving the page.
+      canPop: !inSelectionMode,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) ref.read(selectionControllerProvider.notifier).clear();
+      },
+      child: Scaffold(
+        appBar: AppBar(title: Text(albumTitle)),
+        body: Column(
+          children: [
+            Expanded(
+              child: switch (tracks) {
+                AsyncData(:final value) when value.isEmpty => const Center(
+                  child: Icon(Icons.album_outlined, size: 48),
+                ),
+                AsyncData(:final value) => _AlbumBody(
+                  albumTitle: albumTitle,
+                  tracks: value,
+                  onPlayTrack: (index) => ref
+                      .read(playerControllerProvider.notifier)
+                      .playQueue(value, startIndex: index),
+                ),
+                AsyncError(:final error) => Center(child: Text('$error')),
+                AsyncLoading() => const Center(
+                  child: CircularProgressIndicator(),
+                ),
+              },
+            ),
+            MiniPlayerSlot(
+              onDeleteSelected: (selected) =>
+                  confirmAndDeleteTracks(context, ref, selected),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
-class _AlbumBody extends StatelessWidget {
+class _AlbumBody extends ConsumerWidget {
   const new({
     required this.albumTitle,
     required this.tracks,
@@ -68,10 +81,12 @@ class _AlbumBody extends StatelessWidget {
   final void Function(int) onPlayTrack;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
     final t = Translations.of(context);
+    final selection = ref.watch(selectionControllerProvider);
+    final inSelectionMode = selection.isNotEmpty;
 
     String? artworkHash;
     var artistName = tracks.first.artistName;
@@ -109,7 +124,10 @@ class _AlbumBody extends StatelessWidget {
                   const SizedBox(height: AppSpacing.xs),
                   // Representative artist - a link to the artist page.
                   InkWell(
-                    onTap: () => context.push(Routes.artistPath(artistName)),
+                    // No page switches while a selection is pending.
+                    onTap: inSelectionMode
+                        ? null
+                        : () => context.push(Routes.artistPath(artistName)),
                     child: Text(
                       artistName,
                       style: theme.textTheme.titleSmall?.copyWith(
@@ -140,9 +158,20 @@ class _AlbumBody extends StatelessWidget {
                 : '#${track.trackNumber}',
             durationMs: track.durationMs,
             artworkHash: track.artworkHash,
-            onTap: () => onPlayTrack(i),
-            // Long-press is reserved for multi-select
-            trailing: TrackActionMenu(track: track),
+            selected: selection.contains(track.id),
+            onToggleSelect: inSelectionMode
+                ? () => ref
+                      .read(selectionControllerProvider.notifier)
+                      .toggle(track.id)
+                : null,
+            onTap: inSelectionMode
+                ? () => ref
+                      .read(selectionControllerProvider.notifier)
+                      .toggle(track.id)
+                : () => onPlayTrack(i),
+            onLongPress: () =>
+                ref.read(selectionControllerProvider.notifier).toggle(track.id),
+            trailing: inSelectionMode ? null : TrackActionMenu(track: track),
           ),
       ],
     );

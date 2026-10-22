@@ -11,18 +11,24 @@ import 'package:sync_music/features/playlists/presentation/widgets/playlist_form
 import 'package:sync_music/i18n/strings.g.dart';
 
 /// "Add to playlist" picker. Opens OVER the track action sheet;
-/// that sheet closes itself after we return (see _openPlaylistPicker).
-Future<void> showPlaylistPickerSheet(BuildContext context, Track track) =>
-    showModalBottomSheet<void>(
+/// that sheet closes itself after we return.
+/// Takes a BATCH - single-track callers pass a one-element list.
+/// Resolves true when the add ran, false when the sheet was dismissed.
+Future<bool> showPlaylistPickerSheet(
+  BuildContext context,
+  List<Track> tracks,
+) async =>
+    await showModalBottomSheet<bool>(
       context: context,
       showDragHandle: true,
-      builder: (sheetContext) => _PlaylistPickerSheet(track: track),
-    );
+      builder: (sheetContext) => _PlaylistPickerSheet(tracks: tracks),
+    ) ??
+    false;
 
 class _PlaylistPickerSheet extends ConsumerWidget {
-  const new({required this.track});
+  const new({required this.tracks});
 
-  final Track track;
+  final List<Track> tracks;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -86,10 +92,11 @@ class _PlaylistPickerSheet extends ConsumerWidget {
     WidgetRef ref,
     String playlistId,
   ) async {
-    await ref
-        .read(playlistDaoProvider)
-        .addTrack(playlistId: playlistId, trackId: track.id);
-    if (context.mounted) Navigator.pop(context);
+    final dao = ref.read(playlistDaoProvider);
+    for (final track in tracks) {
+      await dao.addTrack(playlistId: playlistId, trackId: track.id);
+    }
+    if (context.mounted) Navigator.pop(context, true);
   }
 
   /// Create-then-add: the form dialog resolves with the fresh id.
