@@ -2,11 +2,15 @@ abstract final class Routes {
   static const home = '/';
   static const settings = '/settings';
 
+  static const addTracks = '/add-tracks';
   static const albumDetail = '/album';
   static const artistDetail = '/artist';
   static const playlistDetail = '/playlist';
   static const queue = '/queue';
   static const player = '/player';
+
+  static String addTracksPath(String playlistId) =>
+      '/add-tracks?${Uri(queryParameters: {'id': playlistId}).query}';
 
   static String albumPath({required String albumTitle}) =>
       '/album?${Uri(queryParameters: {'title': albumTitle}).query}';

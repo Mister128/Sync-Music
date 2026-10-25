@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:sync_music/app/router/routes.dart';
 import 'package:sync_music/core/design_system/theme/app_spacing.dart';
 import 'package:sync_music/core/design_system/widgets/sm_artwork.dart';
 import 'package:sync_music/core/design_system/widgets/sm_track_tile.dart';
@@ -49,8 +51,14 @@ class PlaylistPage extends ConsumerWidget {
         appBar: AppBar(
           title: Text(playlist?.name ?? name),
           actions: [
-            // No playlist (deleted while open) -> nothing to rename.
-            // Hidden in selection mode: no dialogs over a pending batch.
+            // No playlist (deleted while open) -> nothing to add to/rename.
+            // Both hidden in selection mode: pushing a route IS navigation.
+            if (playlist != null && !inSelectionMode)
+              IconButton(
+                tooltip: t.playlists.addTracks,
+                icon: const Icon(Icons.playlist_add),
+                onPressed: () => unawaited(_openAddTracks(context)),
+              ),
             if (playlist != null && !inSelectionMode)
               PopupMenuButton<_PlaylistMenu>(
                 itemBuilder: (context) => [
@@ -195,6 +203,19 @@ class PlaylistPage extends ConsumerWidget {
             )
           // ⋮ menu: queue actions + detach from this playlist.
           : TrackActionMenu(track: track, playlistId: playlistId),
+    );
+  }
+
+  /// Pushes the library picker; on return reports how many
+  /// tracks were added (null = backed out without adding).
+  Future<void> _openAddTracks(BuildContext context) async {
+    final added = await context.push<int>(Routes.addTracksPath(playlistId));
+    if (added == null || added == 0 || !context.mounted) return;
+    final t = Translations.of(context);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(t.playlists.addedCount(n: added, count: added)),
+      ),
     );
   }
 }

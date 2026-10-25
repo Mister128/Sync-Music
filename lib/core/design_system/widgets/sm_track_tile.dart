@@ -20,6 +20,7 @@ class SmTrackTile extends StatelessWidget {
     this.onLongPress,
     this.selected = false,
     this.onToggleSelect,
+    this.selectionEnabled = true,
     this.trailing,
     super.key,
   });
@@ -35,6 +36,11 @@ class SmTrackTile extends StatelessWidget {
   /// Non-null = selection mode ON: checkbox appears left of the artwork.
   /// The checkbox toggles itself; pages wire [onTap] to the same closure.
   final VoidCallback? onToggleSelect;
+
+  /// False = the checkbox renders DISABLED (the row looks picked but is
+  /// not toggleable - the add-tracks page uses it for tracks that are
+  /// already in the playlist).
+  final bool selectionEnabled;
 
   /// Extra control (⋮ menu, drag handle). Pages hide it in selection mode.
   final Widget? trailing;
@@ -58,7 +64,7 @@ class SmTrackTile extends StatelessWidget {
               children: [
                 Checkbox(
                   value: selected,
-                  onChanged: (_) => toggle(),
+                  onChanged: selectionEnabled ? (_) => toggle() : null,
                   visualDensity: VisualDensity.compact,
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 ),

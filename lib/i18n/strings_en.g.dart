@@ -379,6 +379,21 @@ class Translations$playlists$en {
 
 	/// en: 'Remove from playlist'
 	String get removeFromPlaylist => 'Remove from playlist';
+
+	/// en: 'Add tracks'
+	String get addTracks => 'Add tracks';
+
+	/// en: '(one) {Add $count track} (other) {Add $count tracks}'
+	String addTracksCount({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
+		one: 'Add ${count} track',
+		other: 'Add ${count} tracks',
+	);
+
+	/// en: '(one) {$count track added} (other) {$count tracks added}'
+	String addedCount({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
+		one: '${count} track added',
+		other: '${count} tracks added',
+	);
 }
 
 // Path: selection
@@ -484,6 +499,9 @@ extension on Translations {
 			'playlists.emptyPlaylist' => 'No tracks yet',
 			'playlists.emptyPlaylistHint' => 'Add tracks via long-press in the library',
 			'playlists.removeFromPlaylist' => 'Remove from playlist',
+			'playlists.addTracks' => 'Add tracks',
+			'playlists.addTracksCount' => ({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: 'Add ${count} track', other: 'Add ${count} tracks', ), 
+			'playlists.addedCount' => ({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '${count} track added', other: '${count} tracks added', ), 
 			'selection.selectedCount' => ({required Object count}) => '${count} selected',
 			_ => null,
 		};

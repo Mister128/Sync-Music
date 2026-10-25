@@ -223,6 +223,19 @@ class _Translations$playlists$ru extends Translations$playlists$en {
 	@override String get emptyPlaylist => 'В плейлисте пока пусто';
 	@override String get emptyPlaylistHint => 'Добавляйте треки долгим нажатием в библиотеке';
 	@override String get removeFromPlaylist => 'Убрать из плейлиста';
+	@override String get addTracks => 'Добавить треки';
+	@override String addTracksCount({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('ru'))(n,
+		one: 'Добавить ${count} трек',
+		few: 'Добавить ${count} трека',
+		many: 'Добавить ${count} треков',
+		other: 'Добавить ${count} трека',
+	);
+	@override String addedCount({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('ru'))(n,
+		one: 'Добавлен ${count} трек',
+		few: 'Добавлено ${count} трека',
+		many: 'Добавлено ${count} треков',
+		other: 'Добавлено ${count} трека',
+	);
 }
 
 // Path: selection
@@ -326,6 +339,9 @@ extension on TranslationsRu {
 			'playlists.emptyPlaylist' => 'В плейлисте пока пусто',
 			'playlists.emptyPlaylistHint' => 'Добавляйте треки долгим нажатием в библиотеке',
 			'playlists.removeFromPlaylist' => 'Убрать из плейлиста',
+			'playlists.addTracks' => 'Добавить треки',
+			'playlists.addTracksCount' => ({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('ru'))(n, one: 'Добавить ${count} трек', few: 'Добавить ${count} трека', many: 'Добавить ${count} треков', other: 'Добавить ${count} трека', ), 
+			'playlists.addedCount' => ({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('ru'))(n, one: 'Добавлен ${count} трек', few: 'Добавлено ${count} трека', many: 'Добавлено ${count} треков', other: 'Добавлено ${count} трека', ), 
 			'selection.selectedCount' => ({required Object count}) => 'Выбрано: ${count}',
 			_ => null,
 		};

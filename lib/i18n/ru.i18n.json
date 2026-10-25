@@ -124,7 +124,20 @@
     "addToPlaylist": "Добавить в плейлист",
     "emptyPlaylist": "В плейлисте пока пусто",
     "emptyPlaylistHint": "Добавляйте треки долгим нажатием в библиотеке",
-    "removeFromPlaylist": "Убрать из плейлиста"
+    "removeFromPlaylist": "Убрать из плейлиста",
+    "addTracks": "Добавить треки",
+    "addTracksCount": {
+      "one": "Добавить $count трек",
+      "few": "Добавить $count трека",
+      "many": "Добавить $count треков",
+      "other": "Добавить $count трека"
+    },
+    "addedCount": {
+      "one": "Добавлен $count трек",
+      "few": "Добавлено $count трека",
+      "many": "Добавлено $count треков",
+      "other": "Добавлено $count трека"
+    }
   },
   "selection": {
     "selectedCount": "Выбрано: $count"

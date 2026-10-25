@@ -112,7 +112,16 @@
     "addToPlaylist": "Add to playlist",
     "emptyPlaylist": "No tracks yet",
     "emptyPlaylistHint": "Add tracks via long-press in the library",
-    "removeFromPlaylist": "Remove from playlist"
+    "removeFromPlaylist": "Remove from playlist",
+    "addTracks": "Add tracks",
+    "addTracksCount": {
+      "one": "Add $count track",
+      "other": "Add $count tracks"
+    },
+    "addedCount": {
+      "one": "$count track added",
+      "other": "$count tracks added"
+    }
   },
   "selection": {
     "selectedCount": "$count selected"
