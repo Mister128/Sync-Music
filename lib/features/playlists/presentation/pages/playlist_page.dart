@@ -19,7 +19,13 @@ import 'package:sync_music/features/playlists/presentation/widgets/playlist_form
 import 'package:sync_music/i18n/strings.g.dart';
 
 /// Playlist detail.
-class PlaylistPage extends ConsumerWidget {
+///
+/// Selection mode is the COMBINED edit mode:
+/// checkboxes + explicit drag handles + the action bar instead of the
+/// MiniPlayer. The plain list is a regular ListView - long-press must be
+/// free to ENTER selection mode. Route pops are intercepted: back
+/// cancels selection first.
+class PlaylistPage extends ConsumerStatefulWidget {
   const new({required this.playlistId, required this.name, super.key});
 
   final String playlistId;
@@ -29,11 +35,68 @@ class PlaylistPage extends ConsumerWidget {
   final String name;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<PlaylistPage> createState() => _PlaylistPageState();
+}
+
+class _PlaylistPageState extends ConsumerState<PlaylistPage> {
+  static const _optimisticTtl = Duration(seconds: 3);
+
+  /// Track ids in the just-dragged order, kept until the DB stream
+  /// catches up (exact match) or the safety timer fires (failed write).
+  List<String>? _optimisticOrder;
+  Timer? _optimisticTimeout;
+
+  String get playlistId => widget.playlistId;
+
+  @override
+  void dispose() {
+    _optimisticTimeout?.cancel();
+    super.dispose();
+  }
+
+  void _onReorder(List<Track> displayed, int oldIndex, int newIndex) {
+    // Reorder LOCALLY first - this is what kills the flash.
+    final reordered = [...displayed];
+    final moved = reordered.removeAt(oldIndex);
+    // onReorderItem normalizes newIndex itself: it is the FINAL position.
+    reordered.insert(newIndex, moved);
+
+    setState(() {
+      _optimisticOrder = [for (final track in reordered) track.id];
+    });
+    _optimisticTimeout?.cancel();
+    // Safety net: never hold a stale overlay forever (failed write).
+    _optimisticTimeout = Timer(_optimisticTtl, () {
+      if (mounted) setState(() => _optimisticOrder = null);
+    });
+
+    // Then persist. The stream emission matching the overlay clears it
+    // (see ref.listen in build).
+    unawaited(
+      ref
+          .read(playlistDaoProvider)
+          .moveTrackToIndex(
+            playlistId: playlistId,
+            trackId: displayed[oldIndex].id,
+            newIndex: newIndex,
+          ),
+    );
+  }
+
+  /// Stream value re-sorted into the optimistic order: ids that vanished
+  /// drop out; tracks that appeared meanwhile append at the end.
+  List<Track> _displayed(List<Track> value) {
+    final order = _optimisticOrder;
+    if (order == null) return value;
+    final byId = {for (final track in value) track.id: track};
+    return [for (final id in order) ?byId.remove(id), ...byId.values];
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final t = Translations.of(context);
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
-    final dao = ref.read(playlistDaoProvider);
     final selection = ref.watch(selectionControllerProvider);
     final inSelectionMode = selection.isNotEmpty;
 
@@ -42,6 +105,24 @@ class PlaylistPage extends ConsumerWidget {
     final tracksAsync = ref.watch(playlistTracksProvider(playlistId));
     final trackCount = tracksAsync.value?.length ?? playlist?.trackCount ?? 0;
 
+    // The DB caught up with the drag - drop the overlay, the stream is
+    // the truth again.
+    ref.listen(playlistTracksProvider(playlistId), (previous, next) {
+      final order = _optimisticOrder;
+      final value = next.value;
+      if (order == null || value == null) return;
+      final ids = [for (final track in value) track.id];
+      if (const ListEquality<String>().equals(ids, order)) {
+        _optimisticTimeout?.cancel();
+        setState(() => _optimisticOrder = null);
+      }
+    });
+
+    final displayed = switch (tracksAsync) {
+      AsyncData(:final value) => _displayed(value),
+      _ => const <Track>[],
+    };
+
     return PopScope(
       canPop: !inSelectionMode,
       onPopInvokedWithResult: (didPop, result) {
@@ -49,7 +130,7 @@ class PlaylistPage extends ConsumerWidget {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text(playlist?.name ?? name),
+          title: Text(playlist?.name ?? widget.name),
           actions: [
             // No playlist (deleted while open) -> nothing to add to/rename.
             // Both hidden in selection mode: pushing a route IS navigation.
@@ -83,7 +164,7 @@ class PlaylistPage extends ConsumerWidget {
           children: [
             _PlaylistHeader(
               artworkHash: playlist?.artworkHash,
-              name: playlist?.name ?? name,
+              name: playlist?.name ?? widget.name,
               trackCount: trackCount,
             ),
             Expanded(
@@ -112,30 +193,24 @@ class PlaylistPage extends ConsumerWidget {
                   ),
                 ),
 
-                // Combined edit mode: checkboxes toggle, the ⋮⋮ handle
-                // drags. Default (whole-tile) handles are OFF - they would
-                // fight the long-press and the checkbox taps.
-                AsyncData(:final value) when inSelectionMode =>
-                  ReorderableListView.builder(
-                    buildDefaultDragHandles: false,
-                    padding: const EdgeInsets.only(bottom: AppSpacing.xxl),
-                    itemCount: value.length,
-                    onReorderItem: (oldIndex, newIndex) => unawaited(
-                      dao.moveTrackToIndex(
-                        playlistId: playlistId,
-                        trackId: value[oldIndex].id,
-                        newIndex: newIndex,
-                      ),
-                    ),
-                    itemBuilder: (context, index) =>
-                        _trackTile(ref, value, index, selection, true),
-                  ),
-
-                AsyncData(:final value) => ListView.builder(
+                // Combined edit mode: checkboxes toggle, the "more" handle
+                // drags. Default (whole-tile) handles are OFF - they
+                // would fight the long-press and the checkbox taps.
+                AsyncData() when inSelectionMode => ReorderableListView.builder(
+                  buildDefaultDragHandles: false,
                   padding: const EdgeInsets.only(bottom: AppSpacing.xxl),
-                  itemCount: value.length,
+                  itemCount: displayed.length,
+                  onReorderItem: (oldIndex, newIndex) =>
+                      _onReorder(displayed, oldIndex, newIndex),
                   itemBuilder: (context, index) =>
-                      _trackTile(ref, value, index, selection, false),
+                      _trackTile(displayed, index, selection, true),
+                ),
+
+                AsyncData() => ListView.builder(
+                  padding: const EdgeInsets.only(bottom: AppSpacing.xxl),
+                  itemCount: displayed.length,
+                  itemBuilder: (context, index) =>
+                      _trackTile(displayed, index, selection, false),
                 ),
 
                 AsyncError(:final error) => Center(child: Text('$error')),
@@ -147,6 +222,7 @@ class PlaylistPage extends ConsumerWidget {
             MiniPlayerSlot(
               // Playlist context: detach from the playlist, files stay.
               onRemoveSelected: (tracks) async {
+                final dao = ref.read(playlistDaoProvider);
                 for (final track in tracks) {
                   await dao.removeTrack(
                     playlistId: playlistId,
@@ -162,9 +238,21 @@ class PlaylistPage extends ConsumerWidget {
     );
   }
 
+  /// Pushes the library picker; on return reports how many
+  /// tracks were added (null = backed out without adding).
+  Future<void> _openAddTracks(BuildContext context) async {
+    final added = await context.push<int>(Routes.addTracksPath(playlistId));
+    if (added == null || added == 0 || !context.mounted) return;
+    final t = Translations.of(context);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(t.playlists.addedCount(n: added, count: added)),
+      ),
+    );
+  }
+
   /// One row, shared by both list modes so the wiring can't drift apart.
   Widget _trackTile(
-    WidgetRef ref,
     List<Track> tracks,
     int index,
     Set<String> selection,
@@ -203,19 +291,6 @@ class PlaylistPage extends ConsumerWidget {
             )
           // ⋮ menu: queue actions + detach from this playlist.
           : TrackActionMenu(track: track, playlistId: playlistId),
-    );
-  }
-
-  /// Pushes the library picker; on return reports how many
-  /// tracks were added (null = backed out without adding).
-  Future<void> _openAddTracks(BuildContext context) async {
-    final added = await context.push<int>(Routes.addTracksPath(playlistId));
-    if (added == null || added == 0 || !context.mounted) return;
-    final t = Translations.of(context);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(t.playlists.addedCount(n: added, count: added)),
-      ),
     );
   }
 }
