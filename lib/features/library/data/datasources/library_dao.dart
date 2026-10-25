@@ -2,6 +2,7 @@ import 'package:drift/drift.dart';
 import 'package:sync_music/core/database/app_database.dart';
 import 'package:sync_music/core/database/tables/tracks.dart';
 import 'package:sync_music/core/utils/ids.dart';
+import 'package:sync_music/features/library/data/datasources/fts_query.dart';
 import 'package:sync_music/features/library/domain/entities/album.dart';
 import 'package:sync_music/features/library/domain/entities/artist.dart';
 import 'package:sync_music/features/library/domain/entities/scanned_track.dart';
@@ -206,6 +207,120 @@ class LibraryDao extends DatabaseAccessor<AppDatabase> with _$LibraryDaoMixin {
     final rows = await query.get();
     final byId = {for (final row in rows) row.id: row};
     return [for (final id in ids) ?byId[id]];
+  }
+
+  static const searchTracksLimit = 50;
+  static const searchSectionsLimit = 20;
+
+  /// Full-text track search, best matches first (FTS5 bm25 `rank`).
+  /// The ranked ids go through tracksByIds: it re-reads full rows IN
+  /// THE GIVEN ORDER and drops dead ones - ordering, alive-filtering
+  /// and row->entity mapping all come for free.
+  Future<List<Track>> searchTracks(
+    String query, {
+    int limit = searchTracksLimit,
+  }) async {
+    final match = buildMatchQuery(query);
+    if (match.isEmpty) return const [];
+
+    final rows = await customSelect(
+      'SELECT tracks.id AS id '
+      'FROM tracks_fts '
+      'JOIN tracks ON tracks.rowid = tracks_fts.rowid '
+      'WHERE tracks_fts MATCH ? AND tracks.deleted_at_ms IS NULL '
+      'ORDER BY tracks_fts.rank '
+      'LIMIT ?',
+      variables: [Variable.withString(match), Variable.withInt(limit)],
+    ).get();
+
+    return await tracksByIds([for (final row in rows) row.read<String>('id')]);
+  }
+
+  /// Albums whose TITLE matches - the same aggregates as watchAlbums(),
+  /// narrowed to the FTS-matched titles. (Deliberately not LIKE: LIKE is
+  /// case-insensitive for ASCII only, the FTS index folds Cyrillic too.)
+  Future<List<Album>> searchAlbums(
+    String query, {
+    int limit = searchSectionsLimit,
+  }) async {
+    final titles = await _matchedColumn('album_title', query, limit);
+    if (titles.isEmpty) return const [];
+
+    final albumTitle = tracks.albumTitle;
+    final repArtist = tracks.artistName.min();
+    final trackCount = countAll();
+    final anyArtwork = tracks.artworkHash.min();
+
+    final q = selectOnly(tracks)
+      ..addColumns([albumTitle, repArtist, trackCount, anyArtwork])
+      ..where(tracks.deletedAtMs.isNull() & albumTitle.isIn(titles))
+      ..groupBy([albumTitle])
+      ..orderBy([OrderingTerm.asc(albumTitle)]);
+
+    final rows = await q.get();
+    return [
+      for (final row in rows)
+        Album(
+          albumTitle: row.read(albumTitle)!,
+          artistName: row.read(repArtist)!,
+          trackCount: row.read(trackCount) ?? 0,
+          artworkHash: row.read(anyArtwork),
+        ),
+    ];
+  }
+
+  /// Artists whose NAME matches - same story as searchAlbums().
+  Future<List<Artist>> searchArtists(
+    String query, {
+    int limit = searchSectionsLimit,
+  }) async {
+    final names = await _matchedColumn('artist_name', query, limit);
+    if (names.isEmpty) return const [];
+
+    final artistName = tracks.artistName;
+    final trackCount = countAll();
+    final albumCount = tracks.albumTitle.count(distinct: true);
+    final anyArtwork = tracks.artworkHash.min();
+
+    final q = selectOnly(tracks)
+      ..addColumns([artistName, trackCount, albumCount, anyArtwork])
+      ..where(tracks.deletedAtMs.isNull() & artistName.isIn(names))
+      ..groupBy([artistName])
+      ..orderBy([OrderingTerm.asc(artistName)]);
+
+    final rows = await q.get();
+    return [
+      for (final row in rows)
+        Artist(
+          artistName: row.read(artistName)!,
+          trackCount: row.read(trackCount) ?? 0,
+          albumCount: row.read(albumCount) ?? 0,
+          artworkHash: row.read(anyArtwork),
+        ),
+    ];
+  }
+
+  /// DISTINCT alive values of one indexed column matched by FTS.
+  /// [column] is ALWAYS one of the hardcoded literals above - never
+  /// user input (it goes into the SQL text, not into a variable).
+  Future<List<String>> _matchedColumn(
+    String column,
+    String query,
+    int limit,
+  ) async {
+    final match = buildMatchQuery(query);
+    if (match.isEmpty) return const [];
+
+    final rows = await customSelect(
+      'SELECT DISTINCT tracks.$column AS v '
+      'FROM tracks_fts '
+      'JOIN tracks ON tracks.rowid = tracks_fts.rowid '
+      'WHERE tracks_fts MATCH ? AND tracks.deleted_at_ms IS NULL '
+      'AND tracks.$column IS NOT NULL '
+      'LIMIT ?',
+      variables: [Variable.withString(match), Variable.withInt(limit)],
+    ).get();
+    return [for (final row in rows) row.read<String>('v')];
   }
 }
 

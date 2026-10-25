@@ -31,4 +31,14 @@ class LibraryRepositoryImpl implements LibraryRepository {
   List<Track> _toEntities(List<db.Track> rows) => [
     for (final db.Track row in rows) row.toEntity(),
   ];
+
+  @override
+  Future<List<Track>> searchTracks(String query) =>
+      _dao.searchTracks(query).then(_toEntities);
+
+  @override
+  Future<List<Album>> searchAlbums(String query) => _dao.searchAlbums(query);
+
+  @override
+  Future<List<Artist>> searchArtists(String query) => _dao.searchArtists(query);
 }

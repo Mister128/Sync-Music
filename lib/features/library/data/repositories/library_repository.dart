@@ -21,5 +21,12 @@ abstract interface class LibraryRepository {
   /// All tracks of one artist, grouped by album.
   Stream<List<Track>> watchArtistTracks(String artistName);
 
-  // TODO(Mister128): Grow later search(), watchFolders()...
+  /// One-shot search. Tracks come in FTS rank order; albums and
+  /// artists are matched names with the usual aggregates. A blank query
+  /// yields empty lists without touching the database.
+  Future<List<Track>> searchTracks(String query);
+
+  Future<List<Album>> searchAlbums(String query);
+
+  Future<List<Artist>> searchArtists(String query);
 }
