@@ -11,6 +11,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:sync_music/app/app.dart';
 import 'package:sync_music/core/logging/app_logger.dart';
 import 'package:sync_music/core/storage/artwork_paths.dart';
+import 'package:sync_music/features/library/data/library_providers.dart';
 import 'package:sync_music/features/library/presentation/controllers/library_scan_controller.dart';
 import 'package:sync_music/features/player/data/playback_state_store.dart';
 import 'package:sync_music/features/player/data/player_providers.dart';
@@ -72,6 +73,16 @@ Future<void> bootstrap() async {
       ),
     ),
   );
+
+  // First-launch media permission gate
+  if (Platform.isAndroid) {
+    final scanner = container.read(platformMediaScannerProvider);
+    if (!await scanner.hasPermission()) {
+      await scanner.requestPermission();
+      // Settings could already be open with a stale "denied" status.
+      container.invalidate(audioPermissionProvider);
+    }
+  }
 
   // Silent incremental scan right after launch. NOT awaited - the UI comes up
   // while the scan runs in the background; streams will refresh it live

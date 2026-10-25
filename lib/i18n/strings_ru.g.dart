@@ -118,7 +118,7 @@ class _Translations$settings$ru extends Translations$settings$en {
 	@override String get removeFolder => 'Убрать';
 	@override String get scanNow => 'Сканировать библиотеку';
 	@override String get androidSourceTitle => 'Системная медиатека';
-	@override String get androidSourceSubtitle => 'Сканируется всё, что знает MediaStore — выбирать папки не нужно';
+	@override String get androidSourceSubtitle => 'Сканируется всё, что знает MediaStore';
 	@override String get grantAudioAccess => 'Разрешить доступ к аудио';
 	@override String get audioAccessGranted => 'Доступ к аудио разрешён';
 }
@@ -319,7 +319,7 @@ extension on TranslationsRu {
 			'settings.removeFolder' => 'Убрать',
 			'settings.scanNow' => 'Сканировать библиотеку',
 			'settings.androidSourceTitle' => 'Системная медиатека',
-			'settings.androidSourceSubtitle' => 'Сканируется всё, что знает MediaStore — выбирать папки не нужно',
+			'settings.androidSourceSubtitle' => 'Сканируется всё, что знает MediaStore',
 			'settings.grantAudioAccess' => 'Разрешить доступ к аудио',
 			'settings.audioAccessGranted' => 'Доступ к аудио разрешён',
 			'library.tracksEmpty' => 'Нет треков',

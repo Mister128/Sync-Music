@@ -2,6 +2,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'package:sync_music/core/design_system/theme/app_spacing.dart';
 import 'package:sync_music/core/platform/platform_info.dart';
@@ -54,9 +55,16 @@ class _AndroidLibrarySection extends ConsumerWidget {
             child: FilledButton.icon(
               onPressed: () async {
                 final scanner = ref.read(platformMediaScannerProvider);
-                final granted = await scanner.requestPermission();
+                var granted = await scanner.requestPermission();
+                if (!granted) {
+                  // Permanently denied ("don't ask again"): the system
+                  // dialog will never come back - app settings is the
+                  // only way out. Re-check when the user returns.
+                  await openAppSettings();
+                  granted = await scanner.hasPermission();
+                }
                 ref.invalidate(audioPermissionProvider);
-                // Ask only once; scan immediately when it was just granted.
+                // Ask only once; scan immediately when it was granted.
                 if (granted) {
                   await ref
                       .read(libraryScanControllerProvider.notifier)

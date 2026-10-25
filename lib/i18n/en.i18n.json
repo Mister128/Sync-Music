@@ -39,7 +39,7 @@
     "removeFolder": "Remove",
     "scanNow": "Scan library now",
     "androidSourceTitle": "System media library",
-    "androidSourceSubtitle": "Everything MediaStore knows is scanned - no folders to pick",
+    "androidSourceSubtitle": "Everything MediaStore knows is scanned",
     "grantAudioAccess": "Grant audio access",
     "audioAccessGranted": "Audio access granted"
   },

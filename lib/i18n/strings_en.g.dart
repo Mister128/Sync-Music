@@ -187,8 +187,8 @@ class Translations$settings$en {
 	/// en: 'System media library'
 	String get androidSourceTitle => 'System media library';
 
-	/// en: 'Everything MediaStore knows is scanned - no folders to pick'
-	String get androidSourceSubtitle => 'Everything MediaStore knows is scanned - no folders to pick';
+	/// en: 'Everything MediaStore knows is scanned'
+	String get androidSourceSubtitle => 'Everything MediaStore knows is scanned';
 
 	/// en: 'Grant audio access'
 	String get grantAudioAccess => 'Grant audio access';
@@ -499,7 +499,7 @@ extension on Translations {
 			'settings.removeFolder' => 'Remove',
 			'settings.scanNow' => 'Scan library now',
 			'settings.androidSourceTitle' => 'System media library',
-			'settings.androidSourceSubtitle' => 'Everything MediaStore knows is scanned - no folders to pick',
+			'settings.androidSourceSubtitle' => 'Everything MediaStore knows is scanned',
 			'settings.grantAudioAccess' => 'Grant audio access',
 			'settings.audioAccessGranted' => 'Audio access granted',
 			'library.tracksEmpty' => 'No tracks yet',

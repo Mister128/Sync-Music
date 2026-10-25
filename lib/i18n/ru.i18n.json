@@ -39,7 +39,7 @@
     "removeFolder": "Убрать",
     "scanNow": "Сканировать библиотеку",
     "androidSourceTitle": "Системная медиатека",
-    "androidSourceSubtitle": "Сканируется всё, что знает MediaStore — выбирать папки не нужно",
+    "androidSourceSubtitle": "Сканируется всё, что знает MediaStore",
     "grantAudioAccess": "Разрешить доступ к аудио",
     "audioAccessGranted": "Доступ к аудио разрешён"
   },
