@@ -64,6 +64,14 @@ dev_dependencies:
   very_good_analysis: ^11.0.0
   drift_dev: ^2.35.1
   freezed: ^4.0.2
+  flutter_launcher_icons: ^0.14.4
+
+flutter_launcher_icons:
+  # for android icon was used android studio
+  image_path: "assets/icon/icon.png"
+  windows:
+    generate: true
+    icon_size: 256
 
 flutter:
   uses-material-design: true
