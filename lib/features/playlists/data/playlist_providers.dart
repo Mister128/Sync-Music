@@ -20,3 +20,9 @@ final StreamProviderFamily<List<Track>, String> playlistTracksProvider =
       (ref, playlistId) =>
           ref.watch(playlistDaoProvider).watchPlaylistTracks(playlistId),
     );
+
+/// Favorite track ids. ONE stream for every heart in the app;
+/// while loading it resolves to "not favorite" at the call sites.
+final favoriteIdsProvider = StreamProvider<Set<String>>(
+  (ref) => ref.watch(playlistDaoProvider).watchFavoriteIds(),
+);

@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sync_music/core/database/app_database.dart';
 import 'package:sync_music/core/utils/fractional_index.dart';
 import 'package:sync_music/features/playlists/data/datasources/playlist_dao.dart';
+import 'package:sync_music/features/playlists/domain/entities/playlist.dart';
 
 void main() {
   late AppDatabase db;
@@ -198,5 +199,55 @@ void main() {
         expect(await db.select(db.playlistTracks).get(), hasLength(2));
       },
     );
+  });
+
+  group('favorites', () {
+    test('toggle seeds the system playlist and adds the track', () async {
+      await seedTrack('t1');
+
+      await dao.toggleFavorite('t1');
+
+      expect(await dao.watchFavoriteIds().first, {'t1'});
+      final tracks = await dao.watchPlaylistTracks(kFavoritesPlaylistId).first;
+      expect(tracks.map((track) => track.id), ['t1']);
+      // The system playlist NEVER shows up in the user-facing stream.
+      expect(await dao.watchPlaylists().first, isEmpty);
+    });
+
+    test('second toggle tombstones the membership', () async {
+      await seedTrack('t1');
+      await dao.toggleFavorite('t1');
+
+      await dao.toggleFavorite('t1');
+
+      expect(await dao.watchFavoriteIds().first, isEmpty);
+    });
+
+    test('re-toggle revives and appends AT THE END', () async {
+      await seedTrack('t1');
+      await seedTrack('t2');
+      await dao.toggleFavorite('t1');
+      await dao.toggleFavorite('t2');
+
+      await dao.toggleFavorite('t1'); // off
+      await dao.toggleFavorite('t1'); // on again -> after t2
+
+      final tracks = await dao.watchPlaylistTracks(kFavoritesPlaylistId).first;
+      expect(tracks.map((track) => track.id), ['t2', 't1']);
+    });
+
+    test('dead track hides from the list but KEEPS its membership', () async {
+      await seedTrack('t1');
+      await dao.toggleFavorite('t1');
+
+      await (db.update(db.tracks)..where((t) => t.id.equals('t1'))).write(
+        const TracksCompanion(deletedAtMs: Value(1)),
+      );
+
+      final tracks = await dao.watchPlaylistTracks(kFavoritesPlaylistId).first;
+      expect(tracks, isEmpty);
+      // Same philosophy as playlists: restore the file -> track is back.
+      expect(await dao.watchFavoriteIds().first, {'t1'});
+    });
   });
 }

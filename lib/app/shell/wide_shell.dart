@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sync_music/app/router/routes.dart';
 import 'package:sync_music/app/shell/section_page.dart';
+import 'package:sync_music/app/shell/sections.dart';
 import 'package:sync_music/core/design_system/theme/app_spacing.dart';
-import 'package:sync_music/core/design_system/widgets/placeholder_page.dart';
 import 'package:sync_music/core/selection/selection_controller.dart';
 import 'package:sync_music/features/library/presentation/actions/delete_tracks_flow.dart';
 import 'package:sync_music/features/player/presentation/widgets/mini_player_slot.dart';
@@ -26,7 +26,7 @@ class _WideShellState extends ConsumerState<WideShell> {
   @override
   Widget build(BuildContext context) {
     final t = Translations.of(context);
-    const sections = PlaceholderSection.values;
+    const sections = AppSection.values;
     final inSelectionMode = ref.watch(
       selectionControllerProvider.select((selection) => selection.isNotEmpty),
     );

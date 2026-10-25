@@ -13,6 +13,7 @@ import 'package:sync_music/features/player/data/artwork_palette.dart';
 import 'package:sync_music/features/player/domain/entities/player_snapshot.dart';
 import 'package:sync_music/features/player/domain/entities/repeat_mode.dart';
 import 'package:sync_music/features/player/presentation/controllers/player_controller.dart';
+import 'package:sync_music/features/playlists/presentation/widgets/favorite_button.dart';
 import 'package:sync_music/i18n/strings.g.dart';
 
 /// Full-screen "now playing", opened by a tap or a swipe-up on the
@@ -81,7 +82,7 @@ class FullPlayerPage extends ConsumerWidget {
               constraints: const BoxConstraints(maxWidth: _maxContentWidth),
               child: Column(
                 children: [
-                  const _TopBar(),
+                  _TopBar(trackId: track.id),
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
@@ -115,7 +116,9 @@ class FullPlayerPage extends ConsumerWidget {
 
 /// Collapse / caption / queue - the only navigating row.
 class _TopBar extends StatelessWidget {
-  const new();
+  const new({required this.trackId});
+
+  final String trackId;
 
   @override
   Widget build(BuildContext context) {
@@ -141,6 +144,7 @@ class _TopBar extends StatelessWidget {
             ),
           ),
         ),
+        FavoriteButton(trackId: trackId),
         IconButton(
           tooltip: t.player.queue,
           icon: const Icon(Icons.queue_music),

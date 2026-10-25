@@ -48,6 +48,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$library$en library = Translations$library$en.internal(_root);
 	late final Translations$player$en player = Translations$player$en.internal(_root);
 	late final Translations$playlists$en playlists = Translations$playlists$en.internal(_root);
+	late final Translations$favorites$en favorites = Translations$favorites$en.internal(_root);
 	late final Translations$selection$en selection = Translations$selection$en.internal(_root);
 }
 
@@ -396,6 +397,27 @@ class Translations$playlists$en {
 	);
 }
 
+// Path: favorites
+class Translations$favorites$en {
+	Translations$favorites$en.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Add to favorites'
+	String get addToFavorites => 'Add to favorites';
+
+	/// en: 'Remove from favorites'
+	String get removeFromFavorites => 'Remove from favorites';
+
+	/// en: 'No favorites yet'
+	String get empty => 'No favorites yet';
+
+	/// en: 'Tap the heart in the player or in a track's menu'
+	String get emptyHint => 'Tap the heart in the player or in a track\'s menu';
+}
+
 // Path: selection
 class Translations$selection$en {
 	Translations$selection$en.internal(this._root);
@@ -502,6 +524,10 @@ extension on Translations {
 			'playlists.addTracks' => 'Add tracks',
 			'playlists.addTracksCount' => ({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: 'Add ${count} track', other: 'Add ${count} tracks', ), 
 			'playlists.addedCount' => ({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '${count} track added', other: '${count} tracks added', ), 
+			'favorites.addToFavorites' => 'Add to favorites',
+			'favorites.removeFromFavorites' => 'Remove from favorites',
+			'favorites.empty' => 'No favorites yet',
+			'favorites.emptyHint' => 'Tap the heart in the player or in a track\'s menu',
 			'selection.selectedCount' => ({required Object count}) => '${count} selected',
 			_ => null,
 		};

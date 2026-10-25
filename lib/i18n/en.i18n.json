@@ -123,6 +123,12 @@
       "other": "$count tracks added"
     }
   },
+  "favorites": {
+    "addToFavorites": "Add to favorites",
+    "removeFromFavorites": "Remove from favorites",
+    "empty": "No favorites yet",
+    "emptyHint": "Tap the heart in the player or in a track's menu"
+  },
   "selection": {
     "selectedCount": "$count selected"
   }

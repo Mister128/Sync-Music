@@ -8,6 +8,7 @@ import 'package:sync_music/features/library/presentation/actions/delete_tracks_f
 import 'package:sync_music/features/player/domain/services/enqueue_policy.dart';
 import 'package:sync_music/features/player/presentation/controllers/player_controller.dart';
 import 'package:sync_music/features/playlists/data/playlist_providers.dart';
+import 'package:sync_music/features/playlists/domain/entities/playlist.dart';
 import 'package:sync_music/features/playlists/presentation/widgets/playlist_picker_sheet.dart';
 import 'package:sync_music/i18n/strings.g.dart';
 
@@ -20,6 +21,8 @@ class TrackActionMenu extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final t = Translations.of(context);
+    final isFavorite =
+        ref.watch(favoriteIdsProvider).value?.contains(track.id) ?? false;
 
     return PopupMenuButton<_TrackAction>(
       icon: const Icon(Icons.more_vert),
@@ -36,7 +39,15 @@ class TrackActionMenu extends ConsumerWidget {
           value: _TrackAction.addToPlaylist,
           child: Text(t.playlists.addToPlaylist),
         ),
-        if (playlistId != null)
+        PopupMenuItem(
+          value: _TrackAction.toggleFavorite,
+          child: Text(
+            isFavorite
+                ? t.favorites.removeFromFavorites
+                : t.favorites.addToFavorites,
+          ),
+        ),
+        if (playlistId != null && playlistId != kFavoritesPlaylistId)
           PopupMenuItem(
             value: _TrackAction.removeFromPlaylist,
             child: Text(t.playlists.removeFromPlaylist),
@@ -69,6 +80,9 @@ class TrackActionMenu extends ConsumerWidget {
       case _TrackAction.addToPlaylist:
         unawaited(showPlaylistPickerSheet(context, [track]));
 
+      case _TrackAction.toggleFavorite:
+        unawaited(ref.read(playlistDaoProvider).toggleFavorite(track.id));
+
       case _TrackAction.removeFromPlaylist:
         unawaited(
           ref
@@ -93,5 +107,6 @@ enum _TrackAction {
   addToQueue,
   addToPlaylist,
   removeFromPlaylist,
+  toggleFavorite,
   deleteForever,
 }

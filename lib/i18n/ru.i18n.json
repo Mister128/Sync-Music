@@ -139,6 +139,12 @@
       "other": "Добавлено $count трека"
     }
   },
+  "favorites": {
+    "addToFavorites": "Добавить в избранное",
+    "removeFromFavorites": "Убрать из избранного",
+    "empty": "В избранном пока пусто",
+    "emptyHint": "Нажмите на сердце в плеере или в меню трека"
+  },
   "selection": {
     "selectedCount": "Выбрано: $count"
   }

@@ -46,6 +46,7 @@ class TranslationsRu extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$library$ru library = _Translations$library$ru._(_root);
 	@override late final _Translations$player$ru player = _Translations$player$ru._(_root);
 	@override late final _Translations$playlists$ru playlists = _Translations$playlists$ru._(_root);
+	@override late final _Translations$favorites$ru favorites = _Translations$favorites$ru._(_root);
 	@override late final _Translations$selection$ru selection = _Translations$selection$ru._(_root);
 }
 
@@ -238,6 +239,19 @@ class _Translations$playlists$ru extends Translations$playlists$en {
 	);
 }
 
+// Path: favorites
+class _Translations$favorites$ru extends Translations$favorites$en {
+	_Translations$favorites$ru._(TranslationsRu root) : this._root = root, super.internal(root);
+
+	final TranslationsRu _root; // ignore: unused_field
+
+	// Translations
+	@override String get addToFavorites => 'Добавить в избранное';
+	@override String get removeFromFavorites => 'Убрать из избранного';
+	@override String get empty => 'В избранном пока пусто';
+	@override String get emptyHint => 'Нажмите на сердце в плеере или в меню трека';
+}
+
 // Path: selection
 class _Translations$selection$ru extends Translations$selection$en {
 	_Translations$selection$ru._(TranslationsRu root) : this._root = root, super.internal(root);
@@ -342,6 +356,10 @@ extension on TranslationsRu {
 			'playlists.addTracks' => 'Добавить треки',
 			'playlists.addTracksCount' => ({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('ru'))(n, one: 'Добавить ${count} трек', few: 'Добавить ${count} трека', many: 'Добавить ${count} треков', other: 'Добавить ${count} трека', ), 
 			'playlists.addedCount' => ({required num n, required Object count}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('ru'))(n, one: 'Добавлен ${count} трек', few: 'Добавлено ${count} трека', many: 'Добавлено ${count} треков', other: 'Добавлено ${count} трека', ), 
+			'favorites.addToFavorites' => 'Добавить в избранное',
+			'favorites.removeFromFavorites' => 'Убрать из избранного',
+			'favorites.empty' => 'В избранном пока пусто',
+			'favorites.emptyHint' => 'Нажмите на сердце в плеере или в меню трека',
 			'selection.selectedCount' => ({required Object count}) => 'Выбрано: ${count}',
 			_ => null,
 		};

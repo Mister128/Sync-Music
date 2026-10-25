@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sync_music/app/router/routes.dart';
 import 'package:sync_music/app/shell/section_page.dart';
+import 'package:sync_music/app/shell/sections.dart';
 import 'package:sync_music/core/design_system/theme/app_spacing.dart';
-import 'package:sync_music/core/design_system/widgets/placeholder_page.dart';
 import 'package:sync_music/core/selection/selection_controller.dart';
 import 'package:sync_music/features/library/presentation/actions/delete_tracks_flow.dart';
 import 'package:sync_music/features/player/presentation/widgets/mini_player_slot.dart';
@@ -23,7 +23,7 @@ class PhoneShell extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final t = Translations.of(context);
     final scheme = Theme.of(context).colorScheme;
-    const sections = PlaceholderSection.values;
+    const sections = AppSection.values;
     final inSelectionMode = ref.watch(
       selectionControllerProvider.select((selection) => selection.isNotEmpty),
     );
@@ -63,8 +63,7 @@ class PhoneShell extends ConsumerWidget {
                     animation: tabController,
                     builder: (context, _) {
                       if (inSelectionMode ||
-                          tabController.index !=
-                              PlaceholderSection.playlists.index) {
+                          tabController.index != AppSection.playlists.index) {
                         return const SizedBox.shrink();
                       }
                       final t = Translations.of(context);

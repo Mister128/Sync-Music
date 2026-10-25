@@ -19,7 +19,7 @@ class PlaylistDao extends DatabaseAccessor<AppDatabase>
     with _$PlaylistDaoMixin {
   new(super.attachedDatabase);
 
-  /// Live playlists with derived aggregates. trackCount counts only ALIVE
+  /// Live USER playlists with derived aggregates. trackCount counts only ALIVE
   /// tracks of ALIVE memberships (COUNT on the joined tracks.id ignores
   /// NULLs from both left joins); the cover is MIN(artwork_hash) - any
   /// track's cover, albums convention.
@@ -40,7 +40,9 @@ class PlaylistDao extends DatabaseAccessor<AppDatabase>
                   tracks.deletedAtMs.isNull(),
             ),
           ])
-          ..where(playlists.deletedAtMs.isNull())
+          ..where(
+            playlists.deletedAtMs.isNull() & playlists.isSystem.equals(false),
+          )
           ..addColumns([anyArtwork, trackCount])
           ..groupBy([playlists.id])
           ..orderBy([OrderingTerm.asc(playlists.name)]);
@@ -210,5 +212,56 @@ class PlaylistDao extends DatabaseAccessor<AppDatabase>
       for (final row in rows)
         (row.read(playlistTracks.trackId)!, row.read(playlistTracks.sortKey)!),
     ];
+  }
+
+  /// Seeds the favorites playlist if absent (idempotent insertOrIgnore).
+  /// toggleFavorite calls it itself - nobody has to mind the ordering.
+  Future<void> ensureFavoritesPlaylist() {
+    final now = DateTime.now().millisecondsSinceEpoch;
+    return into(playlists).insert(
+      PlaylistsCompanion.insert(
+        id: kFavoritesPlaylistId,
+        // Never displayed (the UI uses the localized label) - fallback.
+        name: 'Favorites',
+        isSystem: const Value(true),
+        createdAtMs: now,
+        updatedAtMs: now,
+      ),
+      mode: InsertMode.insertOrIgnore,
+    );
+  }
+
+  /// Live favorite track ids. ONE small stream feeds every heart in the
+  /// app - widgets watch this set instead of querying per track.
+  Stream<Set<String>> watchFavoriteIds() {
+    final query = select(playlistTracks)
+      ..where(
+        (pt) =>
+            pt.playlistId.equals(kFavoritesPlaylistId) &
+            pt.deletedAtMs.isNull(),
+      );
+    return query.watch().map((rows) => {for (final row in rows) row.trackId});
+  }
+
+  /// Heart toggle. Self-seeding, one transaction: a live membership gets
+  /// tombstoned; anything else (absent or tombstoned) is added back -
+  /// addTrack revives and appends AT THE END.
+  Future<void> toggleFavorite(String trackId) async {
+    await ensureFavoritesPlaylist();
+    await transaction(() async {
+      final query = select(playlistTracks)
+        ..where(
+          (pt) =>
+              pt.playlistId.equals(kFavoritesPlaylistId) &
+              pt.trackId.equals(trackId) &
+              pt.deletedAtMs.isNull(),
+        );
+      final alive = await query.getSingleOrNull();
+      if (alive != null) {
+        await removeTrack(playlistId: kFavoritesPlaylistId, trackId: trackId);
+      } else {
+        await addTrack(playlistId: kFavoritesPlaylistId, trackId: trackId);
+      }
+    });
   }
 }
