@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sync_music/core/design_system/widgets/sm_section_header.dart';
+import 'package:sync_music/features/settings/data/app_info_provider.dart';
 import 'package:sync_music/i18n/strings.g.dart';
 
-class AboutSection extends StatelessWidget {
+class AboutSection extends ConsumerWidget {
   const new({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final t = Translations.of(context);
+    final version = ref.watch(appVersionProvider).value;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -15,8 +19,11 @@ class AboutSection extends StatelessWidget {
         ListTile(
           leading: const Icon(Icons.info_outline),
           title: Text(t.app.title),
-          // Hardcoded for now; package_info_plus comes at a later stage.
-          subtitle: Text('${t.settings.version} 0.1.0'),
+          subtitle: Text(
+            version == null
+                ? t.settings.version
+                : '${t.settings.version} $version',
+          ),
         ),
       ],
     );

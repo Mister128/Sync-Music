@@ -54,6 +54,8 @@ dependencies:
   material_color_utilities: ^0.13.0
 
   riverpod: any
+  package_info_plus: ^10.2.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
