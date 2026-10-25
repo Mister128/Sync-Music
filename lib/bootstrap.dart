@@ -50,15 +50,21 @@ Future<void> bootstrap() async {
       config: const AudioServiceConfig(
         androidNotificationChannelId: 'com.mistery.sync_music.channel.audio',
         androidNotificationChannelName: 'Music playback',
+        androidNotificationIcon: 'drawable/ic_stat_music',
       ),
     );
     log.info('audio_service initialized');
-
-    unawaited(Permission.notification.request());
   }
 
   final playbackState = container.read(playbackStateStoreProvider);
-  await playbackState.restore();
+  try {
+    await playbackState.restore();
+  } on Object catch (e) {
+    // A broken session (unreadable files after a permission revoke,
+    // corrupt row, engine hiccup) must never take the app down before
+    // runApp - worst case we start with an empty queue.
+    log.warn('session restore failed, starting clean: $e');
+  }
   playbackState.startAutoSave();
 
   // Android may kill the process after backgrounding (a recents swipe also
@@ -74,18 +80,25 @@ Future<void> bootstrap() async {
     ),
   );
 
-  // First-launch media permission gate
+  // First-launch permission gate
+  await WidgetsBinding.instance.endOfFrame;
+
   if (Platform.isAndroid) {
+    if (!await Permission.notification.isGranted) {
+      final status = await Permission.notification.request();
+      log.info('notification permission: $status');
+    }
+
     final scanner = container.read(platformMediaScannerProvider);
     if (!await scanner.hasPermission()) {
-      await scanner.requestPermission();
+      final granted = await scanner.requestPermission();
+      log.info('media permission: $granted');
       // Settings could already be open with a stale "denied" status.
       container.invalidate(audioPermissionProvider);
     }
   }
 
-  // Silent incremental scan right after launch. NOT awaited - the UI comes up
-  // while the scan runs in the background; streams will refresh it live
+  // Silent incremental scan right after launch.
   unawaited(container.read(libraryScanControllerProvider.notifier).startScan());
 }
 

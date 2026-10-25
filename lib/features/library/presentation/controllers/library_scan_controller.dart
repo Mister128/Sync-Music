@@ -50,6 +50,8 @@ class LibraryScanController extends Notifier<ScanUiState> {
       };
     }
 
+    ref.invalidate(audioPermissionProvider);
+
     // Coalesced request: something changed while we were scanning.
     if (_rerunRequested) {
       _rerunRequested = false;

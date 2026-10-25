@@ -15,7 +15,7 @@ import 'package:sync_music/features/player/domain/services/skip_policy.dart';
 /// The UI only ever sees PlaybackService.
 class JustAudioPlayback implements PlaybackService {
   new({AudioPlayer? player})
-      : _player = player ?? AudioPlayer(maxSkipsOnError: _maxSkipsOnError) {
+    : _player = player ?? AudioPlayer(maxSkipsOnError: _maxSkipsOnError) {
     _subscriptions = [
       // player.currentIndex is a PLAY-ORDER position (we never enable
       // backend shuffle, so the loaded order can't diverge from ours).
@@ -34,7 +34,7 @@ class JustAudioPlayback implements PlaybackService {
       // maxSkipsOnError auto-skips broken files; here we only explain WHY
       // a track was skipped (talker scope: player).
       _player.errorStream.listen(
-            (e) => _log.warn('playback error ${e.code}: ${e.message}'),
+        (e) => _log.warn('playback error ${e.code}: ${e.message}'),
       ),
     ];
   }
@@ -90,10 +90,10 @@ class JustAudioPlayback implements PlaybackService {
 
   @override
   Future<void> restoreQueue(
-      List<Track> tracks, {
-        int startIndex = 0,
-        Duration position = Duration.zero,
-      }) async {
+    List<Track> tracks, {
+    int startIndex = 0,
+    Duration position = Duration.zero,
+  }) async {
     final playable = _playable(tracks);
     if (playable.isEmpty) {
       _log.debug('restoreQueue: nothing playable, session dropped');
@@ -114,10 +114,10 @@ class JustAudioPlayback implements PlaybackService {
   /// sources and republishes. Whether playback starts is the CALLER's
   /// decision.
   Future<void> _loadQueue(
-      List<Track> playable, {
-        required int initialIndex,
-        Duration initialPosition = Duration.zero,
-      }) async {
+    List<Track> playable, {
+    required int initialIndex,
+    Duration initialPosition = Duration.zero,
+  }) async {
     _queue = List.unmodifiable(playable);
     if (_shuffleEnabled) {
       _playOrder = _shuffledOrder(playable[initialIndex]);
@@ -134,14 +134,28 @@ class JustAudioPlayback implements PlaybackService {
     required int startIndex,
     Duration position = Duration.zero,
   }) async {
-    await _player.setAudioSources(
-      [
-        for (final track in _playOrder)
-          AudioSource.uri(Uri.file(track.localPath!), tag: track.id),
-      ],
-      initialIndex: startIndex,
-      initialPosition: position,
-    );
+    try {
+      await _player.setAudioSources(
+        [
+          for (final track in _playOrder)
+            AudioSource.uri(Uri.file(track.localPath!), tag: track.id),
+        ],
+        initialIndex: startIndex,
+        initialPosition: position,
+      );
+    } on Object catch (e) {
+      // Preparing the initial item can fail HARD - e.g. the media
+      // permission was revoked in system settings while a session was
+      // saved, so every /storage/... file became unreadable. A dead
+      // session must degrade to "no queue", never into a crash: without
+      // this, restoreQueue takes the whole bootstrap down before runApp.
+      _log.warn('setAudioSources failed, queue dropped: $e');
+      _queue = const [];
+      _playOrder = const [];
+      _currentTrackId = null;
+      _publish();
+      return;
+    }
     _currentTrackId = _playOrder[startIndex].id;
     _publish();
   }
@@ -332,7 +346,7 @@ class JustAudioPlayback implements PlaybackService {
 
     if (enabled) {
       final current = _queue.firstWhere(
-            (track) => track.id == currentId,
+        (track) => track.id == currentId,
         orElse: () => _queue.first,
       );
       _playOrder = _shuffledOrder(current);
@@ -360,9 +374,7 @@ class JustAudioPlayback implements PlaybackService {
   /// _playOrder because backend shuffle is never enabled and every
   /// source edit updates _playOrder synchronously first).
   void _syncCurrentTrack(int? playIndex) {
-    if (playIndex == null ||
-        playIndex < 0 ||
-        playIndex >= _playOrder.length) {
+    if (playIndex == null || playIndex < 0 || playIndex >= _playOrder.length) {
       _currentTrackId = null;
       return;
     }
