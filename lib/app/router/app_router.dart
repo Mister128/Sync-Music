@@ -9,6 +9,7 @@ import 'package:sync_music/features/player/presentation/pages/full_player_page.d
 import 'package:sync_music/features/player/presentation/pages/queue_page.dart';
 import 'package:sync_music/features/playlists/presentation/pages/add_tracks_page.dart';
 import 'package:sync_music/features/playlists/presentation/pages/playlist_page.dart';
+import 'package:sync_music/features/search/presentation/pages/search_page.dart';
 import 'package:sync_music/features/settings/presentation/pages/settings_page.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -86,6 +87,11 @@ final routerProvider = Provider<GoRouter>((ref) {
         parentNavigatorKey: rootKey,
         builder: (context, state) =>
             AddTracksPage(playlistId: state.uri.queryParameters['id'] ?? ''),
+      ),
+      GoRoute(
+        path: Routes.search,
+        parentNavigatorKey: rootKey,
+        builder: (context, state) => const SearchPage(),
       ),
     ],
   );

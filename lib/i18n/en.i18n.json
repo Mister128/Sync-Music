@@ -129,6 +129,14 @@
     "empty": "No favorites yet",
     "emptyHint": "Tap the heart in the player or in a track's menu"
   },
+  "search": {
+    "title": "Search",
+    "hint": "Tracks, albums, artists",
+    "clear": "Clear",
+    "startHint": "Search your library",
+    "noResults": "Nothing found for \"$query\"",
+    "filterTracks": "Filter tracks"
+  },
   "selection": {
     "selectedCount": "$count selected"
   }

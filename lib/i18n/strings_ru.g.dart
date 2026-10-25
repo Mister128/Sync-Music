@@ -47,6 +47,7 @@ class TranslationsRu extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$player$ru player = _Translations$player$ru._(_root);
 	@override late final _Translations$playlists$ru playlists = _Translations$playlists$ru._(_root);
 	@override late final _Translations$favorites$ru favorites = _Translations$favorites$ru._(_root);
+	@override late final _Translations$search$ru search = _Translations$search$ru._(_root);
 	@override late final _Translations$selection$ru selection = _Translations$selection$ru._(_root);
 }
 
@@ -252,6 +253,21 @@ class _Translations$favorites$ru extends Translations$favorites$en {
 	@override String get emptyHint => 'Нажмите на сердце в плеере или в меню трека';
 }
 
+// Path: search
+class _Translations$search$ru extends Translations$search$en {
+	_Translations$search$ru._(TranslationsRu root) : this._root = root, super.internal(root);
+
+	final TranslationsRu _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Поиск';
+	@override String get hint => 'Треки, альбомы, артисты';
+	@override String get clear => 'Очистить';
+	@override String get startHint => 'Ищите по своей библиотеке';
+	@override String noResults({required Object query}) => 'По запросу «${query}» ничего не найдено';
+	@override String get filterTracks => 'Поиск по трекам';
+}
+
 // Path: selection
 class _Translations$selection$ru extends Translations$selection$en {
 	_Translations$selection$ru._(TranslationsRu root) : this._root = root, super.internal(root);
@@ -360,6 +376,12 @@ extension on TranslationsRu {
 			'favorites.removeFromFavorites' => 'Убрать из избранного',
 			'favorites.empty' => 'В избранном пока пусто',
 			'favorites.emptyHint' => 'Нажмите на сердце в плеере или в меню трека',
+			'search.title' => 'Поиск',
+			'search.hint' => 'Треки, альбомы, артисты',
+			'search.clear' => 'Очистить',
+			'search.startHint' => 'Ищите по своей библиотеке',
+			'search.noResults' => ({required Object query}) => 'По запросу «${query}» ничего не найдено',
+			'search.filterTracks' => 'Поиск по трекам',
 			'selection.selectedCount' => ({required Object count}) => 'Выбрано: ${count}',
 			_ => null,
 		};

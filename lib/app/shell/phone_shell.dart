@@ -77,6 +77,13 @@ class PhoneShell extends ConsumerWidget {
                 },
               ),
               IconButton(
+                tooltip: t.search.title,
+                icon: const Icon(Icons.search),
+                onPressed: inSelectionMode
+                    ? null
+                    : () => context.push(Routes.search),
+              ),
+              IconButton(
                 icon: const Icon(Icons.settings),
                 onPressed: inSelectionMode
                     ? null

@@ -60,11 +60,23 @@ class _WideShellState extends ConsumerState<WideShell> {
                   const Spacer(),
                   Padding(
                     padding: const EdgeInsets.only(bottom: AppSpacing.lg),
-                    child: IconButton(
-                      onPressed: inSelectionMode
-                          ? null
-                          : () => context.push(Routes.settings),
-                      icon: const Icon(Icons.settings),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          tooltip: t.search.title,
+                          onPressed: inSelectionMode
+                              ? null
+                              : () => context.push(Routes.search),
+                          icon: const Icon(Icons.search),
+                        ),
+                        IconButton(
+                          onPressed: inSelectionMode
+                              ? null
+                              : () => context.push(Routes.settings),
+                          icon: const Icon(Icons.settings),
+                        ),
+                      ],
                     ),
                   ),
                 ],

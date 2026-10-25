@@ -8,6 +8,7 @@ abstract final class Routes {
   static const playlistDetail = '/playlist';
   static const queue = '/queue';
   static const player = '/player';
+  static const search = '/search';
 
   static String addTracksPath(String playlistId) =>
       '/add-tracks?${Uri(queryParameters: {'id': playlistId}).query}';

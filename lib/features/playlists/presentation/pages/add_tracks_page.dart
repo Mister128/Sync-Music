@@ -31,6 +31,7 @@ class AddTracksPage extends ConsumerStatefulWidget {
 
 class _AddTracksPageState extends ConsumerState<AddTracksPage> {
   final Set<String> _selected = {};
+  String _filter = '';
 
   void _toggle(String id) => setState(() {
     if (!_selected.remove(id)) _selected.add(id);
@@ -62,6 +63,16 @@ class _AddTracksPageState extends ConsumerState<AddTracksPage> {
               const <Track>[])
         track.id,
     };
+    final filter = _filter.trim().toLowerCase();
+    final visible = filter.isEmpty
+        ? tracks
+        : tracks
+              .where(
+                (track) =>
+                    track.title.toLowerCase().contains(filter) ||
+                    track.artistName.toLowerCase().contains(filter),
+              )
+              .toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -84,6 +95,18 @@ class _AddTracksPageState extends ConsumerState<AddTracksPage> {
       ),
       body: Column(
         children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.lg,
+              AppSpacing.sm,
+              AppSpacing.lg,
+              AppSpacing.sm,
+            ),
+            child: SearchBar(
+              hintText: t.search.filterTracks,
+              onChanged: (value) => setState(() => _filter = value),
+            ),
+          ),
           Expanded(
             child: switch (tracksAsync) {
               AsyncData(:final value) when value.isEmpty => Column(
@@ -104,11 +127,30 @@ class _AddTracksPageState extends ConsumerState<AddTracksPage> {
                   ),
                 ],
               ),
-              AsyncData(:final value) => ListView.builder(
-                itemCount: value.length,
+
+              // Library is not empty, but the FILTER matched nothing.
+              AsyncData() when visible.isEmpty => Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.search_off,
+                    size: 48,
+                    color: scheme.onSurfaceVariant,
+                  ),
+                  const SizedBox(height: AppSpacing.lg),
+                  Text(
+                    t.search.noResults(query: _filter),
+                    style: theme.textTheme.titleMedium,
+                  ),
+                ],
+              ),
+
+              AsyncData() => ListView.builder(
+                itemCount: visible.length,
                 itemBuilder: (context, index) {
-                  final track = value[index];
+                  final track = visible[index];
                   final alreadyAdded = existingIds.contains(track.id);
+
                   return SmTrackTile(
                     title: track.title,
                     subtitle: track.artistName,
@@ -117,11 +159,11 @@ class _AddTracksPageState extends ConsumerState<AddTracksPage> {
                     selected: alreadyAdded || _selected.contains(track.id),
                     selectionEnabled: !alreadyAdded,
                     onToggleSelect: () => _toggle(track.id),
-                    // Whole-row tap toggles too; picked rows ignore taps.
                     onTap: alreadyAdded ? null : () => _toggle(track.id),
                   );
                 },
               ),
+
               AsyncError(:final error) => Center(child: Text('$error')),
               AsyncLoading() => const Center(
                 child: CircularProgressIndicator(),

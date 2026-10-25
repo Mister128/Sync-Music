@@ -49,6 +49,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$player$en player = Translations$player$en.internal(_root);
 	late final Translations$playlists$en playlists = Translations$playlists$en.internal(_root);
 	late final Translations$favorites$en favorites = Translations$favorites$en.internal(_root);
+	late final Translations$search$en search = Translations$search$en.internal(_root);
 	late final Translations$selection$en selection = Translations$selection$en.internal(_root);
 }
 
@@ -418,6 +419,33 @@ class Translations$favorites$en {
 	String get emptyHint => 'Tap the heart in the player or in a track\'s menu';
 }
 
+// Path: search
+class Translations$search$en {
+	Translations$search$en.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Search'
+	String get title => 'Search';
+
+	/// en: 'Tracks, albums, artists'
+	String get hint => 'Tracks, albums, artists';
+
+	/// en: 'Clear'
+	String get clear => 'Clear';
+
+	/// en: 'Search your library'
+	String get startHint => 'Search your library';
+
+	/// en: 'Nothing found for "$query"'
+	String noResults({required Object query}) => 'Nothing found for "${query}"';
+
+	/// en: 'Filter tracks'
+	String get filterTracks => 'Filter tracks';
+}
+
 // Path: selection
 class Translations$selection$en {
 	Translations$selection$en.internal(this._root);
@@ -528,6 +556,12 @@ extension on Translations {
 			'favorites.removeFromFavorites' => 'Remove from favorites',
 			'favorites.empty' => 'No favorites yet',
 			'favorites.emptyHint' => 'Tap the heart in the player or in a track\'s menu',
+			'search.title' => 'Search',
+			'search.hint' => 'Tracks, albums, artists',
+			'search.clear' => 'Clear',
+			'search.startHint' => 'Search your library',
+			'search.noResults' => ({required Object query}) => 'Nothing found for "${query}"',
+			'search.filterTracks' => 'Filter tracks',
 			'selection.selectedCount' => ({required Object count}) => '${count} selected',
 			_ => null,
 		};
